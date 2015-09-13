@@ -1,9 +1,25 @@
 <?php
+/*
+ * Posibles valores para recuperar datos de una Partida
+ */
+define('PARTIDA_INFRACCIONES', 'infracciones');
+define('_PARTIDA_DATOS_','datos');
+define('_PARTIDA_INFRACCIONES_DATOS_','todos');
+
+/**
+ * Includes
+ */
+module_load_include('inc','rj_simulador','rj_simulador.resources');
+
 /**
  * Implementation of hook_permission().
  */
 function rj_simulador_permission() {
   return array(
+    'crear partidas' => array(
+      'title' => t('Crear nuevas partidas'),
+      'description' => t('Permite a los usuarios con este permiso almacenar los datos de una partida'),
+    ),
     'gestionar estadisticas' => array(
       'title' => t('Ver la pagina de estadisticas'),
       'description' => t('Permite a los usuarios con este permiso ver sus estadísticas de partida'),
@@ -19,8 +35,8 @@ function rj_simulador_menu() {
   $items['admin/content/estadisticas'] = array(
     'title' => 'Gestionar estadisticas',
     'page callback' => 'listado_estadisticas_page',
-    'file' => 'rj_simulador.forms.inc',
-    'access arguments' => array('listar helice encuesta'),
+    'file' => 'rj_simulador.inc',
+    'access arguments' => array('gestionar estadisticas'),
     'type' => MENU_NORMAL_ITEM,
   );
   $items['admin/content/estadisticas/crear-estadistica'] = array(
@@ -33,4 +49,13 @@ function rj_simulador_menu() {
     'type' => MENU_LOCAL_ACTION,
   );
   return $items;
+}
+
+/**
+ *  Implements hook_services_resources().
+ */
+function rj_simulador_services_resources(){
+  $resources = array();
+  $resources += partida_resource_definition();
+  return $resources;
 }
