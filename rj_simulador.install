@@ -108,6 +108,12 @@ function rj_simulador_schema()
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0),
+      'observaciones' => array(
+        'description' => 'Observaciones sobre la infracción',
+        'type' => 'varchar',
+        'length' => 250,
+        'not null' => FALSE,
+        'default' => ' '),
     ),
     'primary key' => array('id_partida', 'instante', 'id_infraccion'),
   );
@@ -126,6 +132,27 @@ function rj_simulador_schema()
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0),
+      'posicion_x' => array(
+        'description' => 'La posicion X del coche',
+        'type' => 'float',
+        'precision' => 12,
+        'scale' => 6,
+        'not null' => TRUE,
+        'default' => 0),
+      'posicion_y' => array(
+        'description' => 'La posicion Y del coche',
+        'type' => 'float',
+        'precision' => 12,
+        'scale' => 6,
+        'not null' => TRUE,
+        'default' => 0),
+      'posicion_z' => array(
+        'description' => 'La posicion Z del coche',
+        'type' => 'float',
+        'precision' => 12,
+        'scale' => 6,
+        'not null' => TRUE,
+        'default' => 0),
       'velocidad' => array(
         'description' => 'La velocidad del coche',
         'type' => 'float',
@@ -133,7 +160,7 @@ function rj_simulador_schema()
         'scale' => 6,
         'not null' => TRUE,
         'default' => 0),
-      'revoluciones' => array(
+      'rpm' => array(
         'description' => 'Las revoluciones por minuto del coche',
         'type' => 'float',
         'precision' => 12,
