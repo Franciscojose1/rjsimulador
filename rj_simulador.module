@@ -2,14 +2,9 @@
 /*
  * Posibles valores para recuperar datos de una Partida
  */
-define('PARTIDA_INFRACCIONES', 'infracciones');
+define('_PARTIDA_INFRACCIONES_', 'infracciones');
 define('_PARTIDA_DATOS_','datos');
 define('_PARTIDA_INFRACCIONES_DATOS_','todos');
-
-/**
- * Includes
- */
-module_load_include('inc','rj_simulador','rj_simulador.resources');
 
 /**
  * Implementation of hook_permission().
@@ -55,6 +50,8 @@ function rj_simulador_menu() {
  *  Implements hook_services_resources().
  */
 function rj_simulador_services_resources(){
+  // Include resources definitions
+  module_load_include('inc','rj_simulador','resources/rj_simulador_partida.resource');
   $resources = array();
   $resources += partida_resource_definition();
   return $resources;

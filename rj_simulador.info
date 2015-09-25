@@ -2,7 +2,13 @@ name = Análisis de datos de simulación
 description = Gestión de los resultados recibidos desde la aplicación de conducción de Unity.
 package = UVa Simulador
 core = 7.x
-files[] = rj_simulador.classes.inc
-files[] = rj_simulador.resources.inc
+; Includes - Interfaces
+files[] = src/interfaces/ServicesAdapterInterface.inc
+; Includes - Classes
+files[] = src/classes/Partida.class.inc
+files[] = src/classes/Infraccion.class.inc
+files[] = src/classes/DatoInstantaneo.class.inc
+files[] = src/classes/Simulacion.class.inc
+; Dependencies
 dependencies[] = services
 dependencies[] = charts
