@@ -2,6 +2,12 @@
 
 class Partida implements ServicesAdapterInterface
 {
+  /*
+ * Posibles valores para recuperar datos de una Partida
+ */
+  const PARTIDA_INFRACCIONES = 'infracciones';
+  const PARTIDA_DATOS = 'datos';
+  const PARTIDA_INFRACCIONES_DATOS = 'todos';
   /* ********************************************************************************* */
   /*                                      PROPERTIES                                   */
   /* ********************************************************************************* */
@@ -225,7 +231,7 @@ class Partida implements ServicesAdapterInterface
    * @param object $infraccion
    * @throws InvalidArgumentException
    */
-  public function addInfraccion($infraccion)
+  public function addInfraccion(Infraccion $infraccion)
   {
     if (is_object($infraccion)) {
       $this->infracciones[] = $infraccion;
@@ -238,7 +244,7 @@ class Partida implements ServicesAdapterInterface
    * @param object $dato
    * @throws InvalidArgumentException
    */
-  public function addDato($dato)
+  public function addDato(DatoInstantaneo $dato)
   {
     if (is_object($dato)) {
       $this->datos[] = $dato;

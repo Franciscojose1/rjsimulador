@@ -3,12 +3,12 @@ description = Gestión de los resultados recibidos desde la aplicación de condu
 package = UVa Simulador
 core = 7.x
 ; Includes - Interfaces
-files[] = src/interfaces/ServicesAdapterInterface.inc
+files[] = src/interfaces/ServicesAdapterInterface.php
 ; Includes - Classes
-files[] = src/classes/Partida.class.inc
-files[] = src/classes/Infraccion.class.inc
-files[] = src/classes/DatoInstantaneo.class.inc
-files[] = src/classes/Simulacion.class.inc
+files[] = src/classes/Partida.php
+files[] = src/classes/Infraccion.php
+files[] = src/classes/DatoInstantaneo.php
+files[] = src/classes/Simulacion.php
 ; Dependencies
 dependencies[] = services
 dependencies[] = charts

@@ -1,15 +1,10 @@
 <?php
-/*
- * Posibles valores para recuperar datos de una Partida
- */
-define('_PARTIDA_INFRACCIONES_', 'infracciones');
-define('_PARTIDA_DATOS_','datos');
-define('_PARTIDA_INFRACCIONES_DATOS_','todos');
 
 /**
  * Implementation of hook_permission().
  */
-function rj_simulador_permission() {
+function rj_simulador_permission()
+{
   return array(
     'crear partidas' => array(
       'title' => t('Crear nuevas partidas'),
@@ -25,7 +20,8 @@ function rj_simulador_permission() {
 /**
  * Implementation of hook_menu().
  */
-function rj_simulador_menu() {
+function rj_simulador_menu()
+{
   $items = array();
   $items['admin/content/estadisticas'] = array(
     'title' => 'Gestionar estadisticas',
@@ -49,9 +45,10 @@ function rj_simulador_menu() {
 /**
  *  Implements hook_services_resources().
  */
-function rj_simulador_services_resources(){
+function rj_simulador_services_resources()
+{
   // Include resources definitions
-  module_load_include('inc','rj_simulador','resources/rj_simulador_partida.resource');
+  module_load_include('inc', 'rj_simulador', 'resources/rj_simulador_partida.resource');
   $resources = array();
   $resources += partida_resource_definition();
   return $resources;

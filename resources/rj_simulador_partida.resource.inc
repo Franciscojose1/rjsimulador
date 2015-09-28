@@ -6,6 +6,7 @@ function partida_resource_definition()
       'operations' => array(
         'create' => array(
           'help' => 'Crea una nueva partida junto con sus datos e infracciones',
+          'file' => array('type' => 'inc', 'module' => 'rj_simulador', 'name' => 'resources/rj_simulador_partida.resource'),
           'callback' => '_rj_simulador_partida_add',
           'access callback' => 'user_access',
           'access arguments' => array('crear partidas'),
@@ -33,26 +34,6 @@ function partida_resource_definition()
               'type' => 'int',
               'description' => 'El id de la partida a recuperar',
               'source' => array('path' => 0),
-              'optional' => FALSE,
-            ),
-          ),
-        ),
-      ),
-    ),
-    'rj_simulador_simulacion' => array(
-      'actions' => array(
-        'retrieve_statistics' => array(
-          'help' => 'Recupera las estadísticas de un tipo de simulación',
-          'callback' => '_rj_simulador_retrieve_statistics',
-          'access callback' => 'user_access',
-          'access arguments' => array('gestionar estadisticas'),
-          'access arguments append' => FALSE,
-          'args' => array(
-            array(
-              'name' => 'id_simulacion',
-              'type' => 'int',
-              'description' => 'El ID de la simulación',
-              'source' => array('data' => 'id_simulacion'),
               'optional' => FALSE,
             ),
           ),
@@ -95,7 +76,7 @@ function _rj_simulador_partida_add($partida)
 function _rj_simulador_partida_retrieve($id_partida)
 {
   try {
-    $partida = Partida::loadPartidaById($id_partida, _PARTIDA_INFRACCIONES_DATOS_);
+    $partida = Partida::loadPartidaById($id_partida, Partida::PARTIDA_INFRACCIONES_DATOS);
     return $partida->convertPropertiesToArrayForServices();
   } catch (Exception $e) {
     watchdog_exception('Recuperando partida.', $e);
