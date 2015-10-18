@@ -8,6 +8,9 @@ class Infraccion implements ServicesAdapterInterface
   private $id_partida;
   private $instante;
   private $id_infraccion;
+  private $posicion_x;
+  private $posicion_y;
+  private $posicion_z;
   private $nombre_infraccion;
   private $observaciones;
 
@@ -104,6 +107,93 @@ class Infraccion implements ServicesAdapterInterface
   }
 
   /**
+   * @return float
+   */
+  public function getPosicionX()
+  {
+    return $this->posicion_x;
+  }
+
+  /**
+   * @param float $posicion_x
+   * @throws InvalidArgumentException
+   */
+  public function setPosicionX($posicion_x)
+  {
+    if (is_numeric($posicion_x)) {
+      $this->posicion_x = $posicion_x;
+    } else {
+      throw new InvalidArgumentException("La posición X debe ser un número.");
+    }
+  }
+
+  /**
+   * @return float
+   */
+  public function getPosicionY()
+  {
+    return $this->posicion_y;
+  }
+
+  /**
+   * @param float $posicion_y
+   * @throws InvalidArgumentException
+   */
+  public function setPosicionY($posicion_y)
+  {
+    if (is_numeric($posicion_y)) {
+      $this->posicion_y = $posicion_y;
+    } else {
+      throw new InvalidArgumentException("La posición Y debe ser un número.");
+    }
+  }
+
+  /**
+   * @return float
+   */
+  public function getPosicionZ()
+  {
+    return $this->posicion_z;
+  }
+
+  /**
+   * @param float $posicion_z
+   * @throws InvalidArgumentException
+   */
+  public function setPosicionZ($posicion_z)
+  {
+    if (is_numeric($posicion_z)) {
+      $this->posicion_z = $posicion_z;
+    } else {
+      throw new InvalidArgumentException("La posición Z debe ser un número.");
+    }
+  }
+
+  /**
+   * @return array $posicion
+   */
+  public function getPosicion()
+  {
+    $posicion = array('x' => $this->getPosicionX(), 'y' => $this->getPosicionY(), 'z' => $this->getPosicionZ());
+    return $posicion;
+  }
+
+  /**
+   * @param array $posicion
+   * @throws InvalidArgumentException
+   */
+  public function setPosicion($posicion)
+  {
+    if (is_array($posicion) && isset($posicion['x']) && isset($posicion['y']) && isset($posicion['z'])) {
+      $this->setPosicionX($posicion['x']);
+      $this->setPosicionY($posicion['y']);
+      $this->setPosicionZ($posicion['z']);
+    } else {
+      throw new InvalidArgumentException("La posicion debe ser un array asociativo con x, y y z.");
+    }
+  }
+
+  /**
    * @return mixed
    */
   public function getObservaciones()
@@ -153,7 +243,7 @@ class Infraccion implements ServicesAdapterInterface
     }
 
     $queryInfracciones = db_insert('rjsim_infracciones_partida')
-      ->fields(array('id_partida', 'instante', 'id_infraccion', 'observaciones'))
+      ->fields(array('id_partida', 'instante', 'id_infraccion', 'posicion_x', 'posicion_y', 'posicion_z', 'observaciones'))
       ->values($this->convertPropertiesToArrayForInsert())
       ->execute();
   }

@@ -54,6 +54,9 @@ function _rj_simulador_partida_add($partida)
     $newPartida = new Partida($usuario->uid, REQUEST_TIME, $partida['id_simulacion']);
     foreach ($partida['infracciones'] as $infraccion) {
       $record = new Infraccion($infraccion['instante'], $infraccion['id_infraccion']);
+      $record->setPosicionX($infraccion['posicion_x']);
+      $record->setPosicionY($infraccion['posicion_y']);
+      $record->setPosicionZ($infraccion['posicion_z']);
       $record->setObservaciones($infraccion['observaciones']);
       $newPartida->addInfraccion($record);
     }
