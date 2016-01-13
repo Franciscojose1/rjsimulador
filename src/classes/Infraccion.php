@@ -251,9 +251,9 @@ class Infraccion implements ServicesAdapterInterface
     }
 
     $queryInfracciones = db_insert('rjsim_infracciones_partida')
-      ->fields(array('id_partida', 'instante', 'id_infraccion', 'posicion_x', 'posicion_y', 'posicion_z', 'observaciones'))
-      ->values($this->convertPropertiesToArrayForInsert())
-      ->execute();
+      ->fields(array('id_partida', 'instante', 'id_infraccion', 'posicion_x', 'posicion_y', 'posicion_z', 'observaciones'));
+    $queryInfracciones->values($this->convertPropertiesToArrayForInsert());
+    $queryInfracciones->execute();
   }
 
   /*
