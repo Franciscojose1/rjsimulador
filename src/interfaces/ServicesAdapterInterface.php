@@ -1,5 +1,6 @@
 <?php
 
-interface ServicesAdapterInterface {
+interface ServicesAdapterInterface
+{
   public function convertPropertiesToArrayForServices();
 } 

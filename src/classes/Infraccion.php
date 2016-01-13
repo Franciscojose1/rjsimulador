@@ -5,13 +5,21 @@ class Infraccion implements ServicesAdapterInterface
   /* ********************************************************************************* */
   /*                                      PROPERTIES                                   */
   /* ********************************************************************************* */
+  /* @var int $id_partida */
   private $id_partida;
+  /* @var float $instante */
   private $instante;
+  /* @var int $id_infraccion */
   private $id_infraccion;
+  /* @var float $posicion_x */
   private $posicion_x;
+  /* @var float $posicion_y */
   private $posicion_y;
+  /* @var float $posicion_z */
   private $posicion_z;
+  /* @var string $nombre_infraccion */
   private $nombre_infraccion;
+  /* @var string $observaciones */
   private $observaciones;
 
   /* ********************************************************************************* */
@@ -28,7 +36,7 @@ class Infraccion implements ServicesAdapterInterface
   /*                                      ACCESSORS                                    */
   /* ********************************************************************************* */
   /**
-   * @return int
+   * @return float
    */
   public function getInstante()
   {
@@ -36,12 +44,12 @@ class Infraccion implements ServicesAdapterInterface
   }
 
   /**
-   * @param int $instante
+   * @param float $instante
    * @throws InvalidArgumentException
    */
   private function setInstante($instante)
   {
-    if (is_numeric($instante)) {
+    if (is_float($instante)) {
       $this->instante = $instante;
     } else {
       throw new InvalidArgumentException("El instante de la infracción debe ser un número.");
@@ -91,7 +99,7 @@ class Infraccion implements ServicesAdapterInterface
   }
 
   /**
-   * @return mixed
+   * @return string
    */
   public function getNombreInfraccion()
   {
@@ -99,7 +107,7 @@ class Infraccion implements ServicesAdapterInterface
   }
 
   /**
-   * @param mixed $nombre_infraccion
+   * @param string $nombre_infraccion
    */
   public function setNombreInfraccion($nombre_infraccion)
   {
@@ -170,7 +178,7 @@ class Infraccion implements ServicesAdapterInterface
   }
 
   /**
-   * @return array $posicion
+   * @return array $posicion Position as array keys [x], [y] y [z]
    */
   public function getPosicion()
   {
@@ -179,7 +187,7 @@ class Infraccion implements ServicesAdapterInterface
   }
 
   /**
-   * @param array $posicion
+   * @param array $posicion Position as array keys [x], [y] y [z]
    * @throws InvalidArgumentException
    */
   public function setPosicion($posicion)
@@ -194,7 +202,7 @@ class Infraccion implements ServicesAdapterInterface
   }
 
   /**
-   * @return mixed
+   * @return string
    */
   public function getObservaciones()
   {
@@ -202,7 +210,7 @@ class Infraccion implements ServicesAdapterInterface
   }
 
   /**
-   * @param mixed $observaciones
+   * @param string $observaciones
    */
   public function setObservaciones($observaciones)
   {
@@ -249,7 +257,7 @@ class Infraccion implements ServicesAdapterInterface
   }
 
   /*
-   * Return array of the same properties that are stored in DB
+   * @return array Array of the same properties that are stored in DB
    */
   private function convertPropertiesToArrayForInsert()
   {
@@ -259,7 +267,7 @@ class Infraccion implements ServicesAdapterInterface
   }
 
   /*
-   * Return array of the properties that are going to be returned for Web Services
+   * @return array Array of the properties that are going to be returned for Web Services
    */
   public function convertPropertiesToArrayForServices()
   {

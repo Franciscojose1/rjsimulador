@@ -29,12 +29,23 @@ function rj_simulador_install()
     ->values(array('Colisión con un vehículo'))
     ->values(array('Subirse a la acera'))
     ->values(array('Exceso del límite de velocidad'))
+    ->values(array('Salida tomada en la rotonda incorrecta'))
+    ->values(array('Ruta en la rotonda realizada incorrectamente'))
+    ->values(array('Salida tomada en la intersección incorrecta'))
+    ->values(array('Stop realizado de forma incorrecta'))
+    ->values(array('Ceda el paso realizado incorrectamente'))
+    ->values(array('Realizado el cruce con el semáforo en rojo'))
+    ->values(array('Colisión con un objeto del escenario (no con un vehículo)'))
+    ->values(array('Se ha cruzado la línea continua de la carretera'))
     ->execute();
 
   db_insert('rjsim_simulacion')
     ->fields(array('nombre_simulacion'))
-    ->values(array('Simulación 1'))
-    ->values(array('Simulación 2'))
+    ->values(array('Simulación 1: Recorrido por ciudad'))
+    ->values(array('Simulación 2: Recorrido por el exterior'))
+    ->values(array('Simulación 3: Recorrido del interior al exterior'))
+    ->values(array('Simulación 4: Recorrido del exterior al interior'))
+    ->values(array('Simulación 5: Recorrido libre'))
     ->execute();
 }
 
@@ -66,6 +77,27 @@ function rj_simulador_schema()
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 1),
+      'consumo_medio' => array(
+        'description' => 'Consumo medio del vehículo durante la partida',
+        'type' => 'float',
+        'precision' => 12,
+        'scale' => 6,
+        'not null' => TRUE,
+        'default' => 0),
+      'consumo_total' => array(
+        'description' => 'Consumo total del vehículo al finalizar la partida',
+        'type' => 'float',
+        'precision' => 12,
+        'scale' => 6,
+        'not null' => TRUE,
+        'default' => 0),
+      'tiempo_total' => array(
+        'description' => 'Duración total de la partida',
+        'type' => 'float',
+        'precision' => 12,
+        'scale' => 6,
+        'not null' => TRUE,
+        'default' => 0),
     ),
     'primary key' => array('id_partida'),
   );
@@ -212,6 +244,20 @@ function rj_simulador_schema()
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 1),
+      'consumo_instantaneo' => array(
+        'description' => 'El consumo instanteo del coche',
+        'type' => 'float',
+        'precision' => 12,
+        'scale' => 6,
+        'not null' => TRUE,
+        'default' => 0),
+      'consumo_total' => array(
+        'description' => 'El consumo acumulado del coche',
+        'type' => 'float',
+        'precision' => 12,
+        'scale' => 6,
+        'not null' => TRUE,
+        'default' => 0),
     ),
     'primary key' => array('id_partida', 'instante'),
   );

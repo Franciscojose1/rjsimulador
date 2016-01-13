@@ -48,10 +48,12 @@ function _rj_simulador_partida_add($partida)
 {
   $usuario = user_uid_optional_load();
 
-  // Create a transaction; if we catch exception, rollback and store watchdog exception
-  $transaction = db_transaction();
   try {
     $newPartida = new Partida($usuario->uid, REQUEST_TIME, $partida['id_simulacion']);
+    $newPartida->setConsumoMedio($partida['consumo_medio']);
+    $newPartida->setConsumoTotal($partida['consumo_total']);
+    $newPartida->setTiempoTotal($partida['tiempo_total']);
+
     foreach ($partida['infracciones'] as $infraccion) {
       $record = new Infraccion($infraccion['instante'], $infraccion['id_infraccion']);
       $record->setPosicionX($infraccion['posicion_x']);
@@ -60,17 +62,21 @@ function _rj_simulador_partida_add($partida)
       $record->setObservaciones($infraccion['observaciones']);
       $newPartida->addInfraccion($record);
     }
+
     foreach ($partida['datos'] as $dato) {
       $record = new DatoInstantaneo($dato['instante'], $dato['velocidad'], $dato['rpm'], $dato['marcha']);
       $record->setPosicionX($dato['posicion_x']);
       $record->setPosicionY($dato['posicion_y']);
       $record->setPosicionZ($dato['posicion_z']);
+      $record->setConsumoInstantaneo($dato['consumo_instantaneo']);
+      $record->setConsumoTotal('consumo_total');
       $newPartida->addDato($record);
     }
+
     $newPartida->savePartida();
+
     return array("message" => "Partida creada correctamente");
   } catch (Exception $e) {
-    $transaction->rollback();
     watchdog_exception('Insertando partida.', $e);
     return services_error('Error al insertar la partida en la BBDD.', 406, array("error" => "Error al guardar la partida: " . $e->getMessage()));
   }
@@ -84,17 +90,5 @@ function _rj_simulador_partida_retrieve($id_partida)
   } catch (Exception $e) {
     watchdog_exception('Recuperando partida.', $e);
     return services_error('Error recuperando partida.', 406, array("error" => 'Error al recuperar la partida: ' . $e->getMessage()));
-  }
-}
-
-function _rj_simulador_retrieve_statistics($id_simulacion)
-{
-  try {
-    $usuario = user_uid_optional_load();
-    $simulacion = new Simulacion($id_simulacion, $usuario->uid);
-    return $simulacion;
-  } catch (Exception $e) {
-    watchdog_exception('Recuperando estadísticas de simulación.', $e);
-    return services_error('Error recuperando estadísticas.', 406, array("error" => 'Error al recuperar estadísticas de la simulación: ' . $e->getMessage()));
   }
 }
