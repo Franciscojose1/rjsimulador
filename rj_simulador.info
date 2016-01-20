@@ -9,6 +9,7 @@ files[] = src/classes/Partida.php
 files[] = src/classes/Infraccion.php
 files[] = src/classes/DatoInstantaneo.php
 files[] = src/classes/Simulacion.php
+files[] = src/classes/GestorSimulaciones.php
 ; Dependencies
 dependencies[] = services
 dependencies[] = charts

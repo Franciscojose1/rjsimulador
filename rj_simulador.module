@@ -23,10 +23,17 @@ function rj_simulador_permission()
 function rj_simulador_menu()
 {
   $items = array();
-  $items['admin/content/estadisticas'] = array(
+  $items['mis_partidas'] = array(
+    'title' => 'Mis partidas realizadas',
+    'page callback' => 'listado_partidas_page',
+    'file' => 'rj_simulador.pages.inc',
+    'access arguments' => array('user access'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  /*$items['admin/content/estadisticas'] = array(
     'title' => 'Gestionar estadisticas',
     'page callback' => 'listado_estadisticas_page',
-    'file' => 'rj_simulador.inc',
+    'file' => 'rj_simulador.pages.inc',
     'access arguments' => array('gestionar estadisticas'),
     'type' => MENU_NORMAL_ITEM,
   );
@@ -38,7 +45,7 @@ function rj_simulador_menu()
     'file' => 'rj_simulador.forms.inc',
     'access arguments' => array('gestionar estadisticas'),
     'type' => MENU_LOCAL_ACTION,
-  );
+  );*/
   return $items;
 }
 
@@ -52,4 +59,24 @@ function rj_simulador_services_resources()
   $resources = array();
   $resources += partida_resource_definition();
   return $resources;
+}
+
+
+function rj_simulador_theme()
+{
+  return array(
+    'lista_partidas' => array(
+      'template' => 'templates/lista-partidas',
+      'variables' => array('bloque_superior' => NULL, 'bloque_inferior' => NULL)
+    )
+  );
+}
+
+
+/**
+ *  Implements hook_preprocess_HOOK().
+ */
+function rj_simulador_preprocess_lista_partidas(&$variables)
+{
+  dpm($variables);
 }

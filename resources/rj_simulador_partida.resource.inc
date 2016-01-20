@@ -69,7 +69,7 @@ function _rj_simulador_partida_add($partida)
       $record->setPosicionY($dato['posicion_y']);
       $record->setPosicionZ($dato['posicion_z']);
       $record->setConsumoInstantaneo($dato['consumo_instantaneo']);
-      $record->setConsumoTotal('consumo_total');
+      $record->setConsumoTotal($dato['consumo_total']);
       $newPartida->addDato($record);
     }
 

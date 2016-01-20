@@ -49,7 +49,7 @@ class Infraccion implements ServicesAdapterInterface
    */
   private function setInstante($instante)
   {
-    if (is_float($instante)) {
+    if (is_numeric($instante)) {
       $this->instante = $instante;
     } else {
       throw new InvalidArgumentException("El instante de la infracción debe ser un número.");

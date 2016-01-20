@@ -127,6 +127,14 @@ class Partida implements ServicesAdapterInterface
   }
 
   /**
+   * @return DateTime
+   */
+  public function getFechaAsObject()
+  {
+    return (new DateTime())->setTimestamp($this->fecha);
+  }
+
+  /**
    * @param int $fecha Fecha en tiempo UNIX
    * @throws InvalidArgumentException
    */
@@ -222,10 +230,10 @@ class Partida implements ServicesAdapterInterface
    */
   public function setConsumoMedio($consumo_medio)
   {
-    if (is_float($consumo_medio)) {
+    if (is_numeric($consumo_medio)) {
       $this->consumo_medio = $consumo_medio;
     } else {
-      throw new InvalidArgumentException("El Consumo Medio tiene que ser un número decimal.");
+      throw new InvalidArgumentException("El Consumo Medio " . $consumo_medio . " tiene que ser un número decimal.");
     }
   }
 
@@ -243,7 +251,7 @@ class Partida implements ServicesAdapterInterface
    */
   public function setConsumoTotal($consumo_total)
   {
-    if (is_float($consumo_total)) {
+    if (is_numeric($consumo_total)) {
       $this->consumo_total = $consumo_total;
     } else {
       throw new InvalidArgumentException("El Consumo Total tiene que ser un número decimal.");
@@ -264,7 +272,7 @@ class Partida implements ServicesAdapterInterface
    */
   public function setTiempoTotal($tiempo_total)
   {
-    if (is_float($tiempo_total)) {
+    if (is_numeric($tiempo_total)) {
       $this->tiempo_total = $tiempo_total;
     } else {
       throw new InvalidArgumentException("El Tiempo Total de la simulación tiene que ser un número decimal.");
@@ -463,5 +471,41 @@ class Partida implements ServicesAdapterInterface
       $partida['datos'][$key] = $dato->convertPropertiesToArrayForServices();
     }
     return $partida;
+  }
+
+  public static function sortByFechaASC(Partida $partida1, Partida $partida2) {
+    if ($partida1->getFecha() == $partida1->getFecha()) {
+      return 0;
+    }
+
+    return ($partida1->getFecha() > $partida2->getFecha()) ? +1 : -1;
+  }
+
+  public static function sortByFechaDESC(Partida $a, Partida $b) {
+    if ($a->getFecha() == $b->getFecha()) {
+      return 0;
+    }
+
+    return ($a->getFecha() < $b->getFecha()) ? +1 : -1;
+  }
+
+  public static function sorByNombreSimulacionASC(Partida $a, Partida $b)
+  {
+    $aNombreSimulacion = strtolower($a->getNombreSimulacion());
+    $bNombreSimulacion = strtolower($b->getNombreSimulacion());
+    if ($aNombreSimulacion == $bNombreSimulacion) {
+      return 0;
+    }
+    return ($aNombreSimulacion > $bNombreSimulacion) ? +1 : -1;
+  }
+
+  public static function sorByNombreSimulacionDESC(Partida $a, Partida $b)
+  {
+    $aNombreSimulacion = strtolower($a->getNombreSimulacion());
+    $bNombreSimulacion = strtolower($b->getNombreSimulacion());
+    if ($aNombreSimulacion == $bNombreSimulacion) {
+      return 0;
+    }
+    return ($aNombreSimulacion < $bNombreSimulacion) ? +1 : -1;
   }
 }

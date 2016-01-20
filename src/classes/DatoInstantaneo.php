@@ -75,7 +75,7 @@ class DatoInstantaneo implements ServicesAdapterInterface
    */
   public function setInstante($instante)
   {
-    if (is_float($instante)) {
+    if (is_numeric($instante)) {
       $this->instante = $instante;
     } else {
       throw new InvalidArgumentException("El instante del dato debe ser un número.");
@@ -96,7 +96,7 @@ class DatoInstantaneo implements ServicesAdapterInterface
    */
   public function setRpm($rpm)
   {
-    if (is_float($rpm)) {
+    if (is_numeric($rpm)) {
       $this->rpm = $rpm;
     } else {
       throw new InvalidArgumentException("Las RPM deben ser un número.");
@@ -138,7 +138,7 @@ class DatoInstantaneo implements ServicesAdapterInterface
    */
   public function setPosicionX($posicion_x)
   {
-    if (is_float($posicion_x)) {
+    if (is_numeric($posicion_x)) {
       $this->posicion_x = $posicion_x;
     } else {
       throw new InvalidArgumentException("La posición X debe ser un número.");
@@ -159,7 +159,7 @@ class DatoInstantaneo implements ServicesAdapterInterface
    */
   public function setPosicionY($posicion_y)
   {
-    if (is_float($posicion_y)) {
+    if (is_numeric($posicion_y)) {
       $this->posicion_y = $posicion_y;
     } else {
       throw new InvalidArgumentException("La posición Y debe ser un número.");
@@ -180,7 +180,7 @@ class DatoInstantaneo implements ServicesAdapterInterface
    */
   public function setPosicionZ($posicion_z)
   {
-    if (is_float($posicion_z)) {
+    if (is_numeric($posicion_z)) {
       $this->posicion_z = $posicion_z;
     } else {
       throw new InvalidArgumentException("La posición Z debe ser un número.");
@@ -225,7 +225,7 @@ class DatoInstantaneo implements ServicesAdapterInterface
    */
   public function setVelocidad($velocidad)
   {
-    if (is_float($velocidad)) {
+    if (is_numeric($velocidad)) {
       $this->velocidad = $velocidad;
     } else {
       throw new InvalidArgumentException("La velocidad debe ser un número.");
@@ -246,7 +246,7 @@ class DatoInstantaneo implements ServicesAdapterInterface
    */
   public function setConsumoInstantaneo($consumo_instantaneo)
   {
-    if (is_float($consumo_instantaneo)) {
+    if (is_numeric($consumo_instantaneo)) {
       $this->consumo_instantaneo = $consumo_instantaneo;
     } else {
       throw new InvalidArgumentException("El Consumo Instantáneo tiene que ser un número decimal.");
@@ -267,10 +267,10 @@ class DatoInstantaneo implements ServicesAdapterInterface
    */
   public function setConsumoTotal($consumo_total)
   {
-    if (is_float($consumo_total)) {
+    if (is_numeric($consumo_total)) {
       $this->consumo_total = $consumo_total;
     } else {
-      throw new InvalidArgumentException("El Consumo Total tiene que ser un número decimal.");
+      throw new InvalidArgumentException("El Consumo Total " . $consumo_total . " tiene que ser un número decimal.");
     }
   }
 
