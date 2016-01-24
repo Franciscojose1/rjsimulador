@@ -25,10 +25,27 @@ function rj_simulador_menu()
   $items = array();
   $items['mis_partidas'] = array(
     'title' => 'Mis partidas realizadas',
-    'page callback' => 'listado_partidas_page',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('rj_simulador_pagina_form'),
     'file' => 'rj_simulador.pages.inc',
     'access arguments' => array('user access'),
     'type' => MENU_NORMAL_ITEM,
+  );
+  $items['mis_partidas/%'] = array(
+    'title' => 'Información de mi partida',
+    'file' => 'rj_simulador.pages.inc',
+    'page callback' => 'partida_page',
+    'page arguments' => array(1),
+    'access arguments' => array('user access'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['prueba/form'] = array(
+    'title' => 'Formulario',
+    'file' => 'rj_simulador.forms.inc',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('rj_simulador_pagina_form'),
+    'access arguments' => array('user access'),
+    'type' => MENU_CALLBACK,
   );
   /*$items['admin/content/estadisticas'] = array(
     'title' => 'Gestionar estadisticas',
@@ -67,7 +84,7 @@ function rj_simulador_theme()
   return array(
     'lista_partidas' => array(
       'template' => 'templates/lista-partidas',
-      'variables' => array('bloque_superior' => NULL, 'bloque_inferior' => NULL)
+      'variables' => array('upper_left' => NULL, 'upper_right' => NULL, 'main_content' => NULL)
     )
   );
 }
@@ -78,5 +95,4 @@ function rj_simulador_theme()
  */
 function rj_simulador_preprocess_lista_partidas(&$variables)
 {
-  dpm($variables);
 }

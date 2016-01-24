@@ -1,8 +1,12 @@
 <div class="prueba1">
-    <div>
-      <?php print render($bloque_superior); ?>
+    <div style="float:left;width:50%;">
+      <?php print render($upper_left); ?>
     </div>
-    <div>
-      <?php print render($bloque_inferior); ?>
+    <div style="float:left;width:50%;">
+      <?php print render($upper_right); ?>
+    </div>
+    <div style="clear:both;"></div>
+    <div style="float:left;width: 100%">
+      <?php print render($main_content); ?>
     </div>
 </div>

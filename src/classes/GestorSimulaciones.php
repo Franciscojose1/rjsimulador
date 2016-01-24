@@ -8,8 +8,8 @@ class GestorSimulaciones
   const SIMULACION_CUATRO = 4;
   const SIMULACION_CINCO = 5;
 
-  /* @var Simulacion[] */
-  private $simulaciones;
+  /* @var ListaSimulaciones */
+  private $listaSimulaciones;
   /* @var int|null */
   private $uid;
 
@@ -19,10 +19,9 @@ class GestorSimulaciones
    */
   public function __construct($idsSimulacionesACargar, $uid = null)
   {
+    $this->listaSimulaciones = new ListaSimulaciones();
     foreach ($idsSimulacionesACargar as $id) {
-      dpm($id);
-      $this->simulaciones[] = new Simulacion($id, $uid);
-      dpm($this->simulaciones);
+      $this->listaSimulaciones->add(new Simulacion($id, $uid));
     }
 
     $this->uid = $uid;
@@ -45,34 +44,25 @@ class GestorSimulaciones
   }
 
   /**
-   * @return Simulacion[]
+   * @return ListaSimulaciones
    */
-  public function getSimulaciones()
+  public function getListaSimulaciones()
   {
-    return $this->simulaciones;
-  }
-
-  /**
-   * @param Simulacion[] $simulaciones
-   */
-  public function setSimulaciones($simulaciones)
-  {
-    $this->simulaciones = $simulaciones;
+    return $this->listaSimulaciones;
   }
 
 
   /**
-   * @return Partida[] Listado de partidas de este usuario para esta simulación (o para todas)
+   * @return ListaPartidas Listado de partidas de este usuario para esta simulación (o para todas)
    */
-  function retrieveSimulationsPartidas()
+  function retrieveAllSimulationsPartidas()
   {
-    $partidas = array();
+    $listaPartidas = new ListaPartidas();
 
-    foreach ($this->simulaciones as $simulacion) {
-      $partidas = array_merge($partidas, $simulacion->retrieveListOfPartidas());
+    foreach ($this->listaSimulaciones as $simulacion) {
+      $listaPartidas->mergeList($simulacion->getListaPartidas());
     }
-    error_log(print_r($this->simulaciones, TRUE));
-    dpm($partidas);
-    return $partidas;
+
+    return $listaPartidas;
   }
 } 

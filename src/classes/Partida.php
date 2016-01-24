@@ -2,13 +2,6 @@
 
 class Partida implements ServicesAdapterInterface
 {
-  /*
- * Posibles valores para recuperar datos de una Partida
- */
-  const PARTIDA_INFRACCIONES = 'infracciones';
-  const PARTIDA_DATOS = 'datos';
-  const PARTIDA_INFRACCIONES_DATOS = 'todos';
-
   /* ********************************************************************************* */
   /*                                      PROPERTIES                                   */
   /* ********************************************************************************* */
@@ -28,10 +21,10 @@ class Partida implements ServicesAdapterInterface
   private $consumo_total;
   /* @var float $tiempo_total */
   private $tiempo_total;
-  /* @var $infracciones Infraccion[] */
-  private $infracciones;  // Array de objetos InfraccionInstantanea
-  /*  @var $datos DatoInstantaneo[] */
-  private $datos;         // Array de objetos DatoInstantaneo
+  /* @var ListaInfracciones $listaInfracciones */
+  private $listaInfracciones;
+  /*  @var ListaDatosInstantaneos $datos */
+  private $listaDatos;
 
   /* ********************************************************************************* */
   /*                                     CONSTRUCTOR                                   */
@@ -50,7 +43,7 @@ class Partida implements ServicesAdapterInterface
    * @param string datos_a_recuperar -> 'datos', 'infracciones', 'todos', null
    * @return Partida El objeto Partida
    */
-  public static function loadPartidaById($id_partida, $datos_a_recuperar = null)
+  public static function loadPartidaById($id_partida)
   {
     $partida = null;
 
@@ -71,20 +64,6 @@ class Partida implements ServicesAdapterInterface
       $partida->setTiempoTotal($record['tiempo_total']);
     }
 
-    if (isset($datos_a_recuperar)) {
-      switch ($datos_a_recuperar) {
-        case 'infracciones':
-          $partida->loadInfracciones();
-          break;
-        case 'datos':
-          $partida->loadDatos();
-          break;
-        case 'todos':
-          $partida->loadInfracciones();
-          $partida->loadDatos();
-      }
-    }
-
     return $partida;
   }
 
@@ -92,30 +71,14 @@ class Partida implements ServicesAdapterInterface
   /*                                      ACCESSORS                                    */
   /* ********************************************************************************* */
   /**
-   * @return DatoInstantaneo[]
+   * @return ListaDatosInstantaneos
    */
-  public function getDatos()
+  public function getListaDatos()
   {
-    return $this->datos;
-  }
-
-  /**
-   * @param DatoInstantaneo[] $datos
-   * @throws InvalidArgumentException
-   */
-  public function setDatos($datos)
-  {
-    if (is_array($datos)) {
-      foreach ($datos as $dato) {
-        try {
-          $this->addDato($dato);
-        } catch (InvalidArgumentException $e) {
-          throw $e;
-        }
-      }
-    } else {
-      throw new InvalidArgumentException("Los datos deben ser un array.");
+    if(!isset($this->listaDatos)) {
+      $this->loadListaDatos();
     }
+    return $this->listaDatos;
   }
 
   /**
@@ -190,30 +153,14 @@ class Partida implements ServicesAdapterInterface
   }
 
   /**
-   * @return Infraccion[]
+   * @return ListaInfracciones
    */
-  public function getInfracciones()
+  public function getListaInfracciones()
   {
-    return $this->infracciones;
-  }
-
-  /**
-   * @param Infraccion[] $infracciones
-   * @throws InvalidArgumentException
-   */
-  public function setInfracciones($infracciones)
-  {
-    if (is_array($infracciones)) {
-      foreach ($infracciones as $infraccion) {
-        try {
-          $this->addInfraccion($infraccion);
-        } catch (InvalidArgumentException $e) {
-          throw $e;
-        }
-      }
-    } else {
-      throw new InvalidArgumentException("Las infracciones deben ser un array.");
+    if (!isset($this->listaInfracciones)) {
+      $this->loadListaInfracciones();
     }
+    return $this->listaInfracciones;
   }
 
   /**
@@ -320,29 +267,17 @@ class Partida implements ServicesAdapterInterface
   /*                                      METHODS                                      */
   /* ********************************************************************************* */
   /**
-   * @param Infraccion $infraccion
-   * @throws InvalidArgumentException
+   * @return string URL para ver los datos de una partida.
    */
-  public function addInfraccion(Infraccion $infraccion)
+  public function getURLToPartidaPage($type = null)
   {
-    if ($infraccion instanceof Infraccion) {
-      $this->infracciones[] = $infraccion;
-    } else {
-      throw new InvalidArgumentException("La infraccion a introducir debe ser un objeto de tipo Infraccion");
-    }
-  }
+    $url = base_path() . 'mis_simulaciones/' . $this->getIdSimulacion() . '/mis_partidas/' . $this->getIdPartida();
 
-  /**
-   * @param DatoInstantaneo $dato
-   * @thows InvalidArgumentException
-   */
-  public function addDato(DatoInstantaneo $dato)
-  {
-    if ($dato instanceof DatoInstantaneo) {
-      $this->datos[] = $dato;
-    } else {
-      throw new InvalidArgumentException("El dato a introducir deber ser un objeto de tipo DatoInstantaneo");
+    if (isset($type) && $type == 'html_link') {
+      return '<a href="' .$url. '">Ver partida</a>';
     }
+
+    return $url;
   }
 
   /*
@@ -372,16 +307,16 @@ class Partida implements ServicesAdapterInterface
       $this->setIdPartida($id_partida);
 
       // If not exists infracciones, don't insert anything
-      if (!empty($this->infracciones)) {
-        foreach ($this->infracciones as $infraccion) {
+      if (isset($this->listaInfraccioneslista) && $this->listaInfracciones->count() > 0) {
+        foreach ($this->listaInfracciones as $infraccion) {
           $infraccion->setIdPartida($id_partida);
           $infraccion->saveInfraccion();
         }
       }
 
       // If not exists datos, don't insert anything
-      if (!empty($this->datos)) {
-        foreach ($this->datos as $dato) {
+      if (isset($this->listaDatos) && $this->listaDatos->count() > 0) {
+        foreach ($this->listaDatos as $dato) {
           $dato->setIdPartida($id_partida);
           $dato->saveDato();
         }
@@ -416,10 +351,13 @@ class Partida implements ServicesAdapterInterface
   }
 
   /*
-   * Load array of Infraccion on Partida object from persistent storage
+   * Carga la lista de Infracciones de la Partida
+   * Usamos la Lazy Initialization
    */
-  public function loadInfracciones()
+  private function loadListaInfracciones()
   {
+    $this->listaInfracciones = new ListaInfracciones();
+
     $query = db_select('rjsim_infracciones_partida', 'ip');
     $query->fields('ip', array('instante', 'id_infraccion', 'posicion_x', 'posicion_y', 'posicion_z', 'observaciones'))
       ->condition('ip.id_partida', $this->id_partida, '=');
@@ -433,19 +371,22 @@ class Partida implements ServicesAdapterInterface
         $infraccion->setPosicionY($resultado['posicion_y']);
         $infraccion->setPosicionZ($resultado['posicion_z']);
         $infraccion->setObservaciones($resultado['observaciones']);
-        $this->addInfraccion($infraccion);
+        $this->listaInfracciones->add($infraccion);
       }
     }
   }
 
   /*
-   * Retrieve array of DatoInstantaneo from persistent storage
+   * Carga la lista de Datos de la Partida
+   * Usamos la Lazy Initialization
    */
-  public function loadDatos()
+  private function loadListaDatos()
   {
+    $this->listaDatos = new ListaDatosInstantaneos();
+
     $query = db_select('rjsim_datos_partida', 'dp');
     $query->fields('dp', array('instante', 'posicion_x', 'posicion_y', 'posicion_z', 'velocidad', 'rpm', 'marcha',
-              'consumo_instantaneo', 'consumo_total'))
+      'consumo_instantaneo', 'consumo_total'))
       ->condition('dp.id_partida', $this->id_partida, '=');
     $resultados = $query->execute();
 
@@ -456,7 +397,7 @@ class Partida implements ServicesAdapterInterface
         $dato->setPosicion(array('x' => $resultado['posicion_x'], 'y' => $resultado['posicion_y'], 'z' => $resultado['posicion_z']));
         $dato->setConsumoInstantaneo($resultado['consumo_instantaneo']);
         $dato->setConsumoTotal($resultado['consumo_total']);
-        $this->addDato($dato);
+        $this->listaDatos->add($dato);
       }
     }
   }
@@ -464,48 +405,15 @@ class Partida implements ServicesAdapterInterface
   public function convertPropertiesToArrayForServices()
   {
     $partida = get_object_vars($this);
-    foreach ($this->getInfracciones() as $key => $infraccion) {
+
+    foreach ($this->getListaInfracciones() as $key => $infraccion) {
       $partida['infracciones'][$key] = $infraccion->convertPropertiesToArrayForServices();
     }
-    foreach ($this->getDatos() as $key => $dato) {
+
+    foreach ($this->getListaDatos() as $key => $dato) {
       $partida['datos'][$key] = $dato->convertPropertiesToArrayForServices();
     }
+
     return $partida;
-  }
-
-  public static function sortByFechaASC(Partida $partida1, Partida $partida2) {
-    if ($partida1->getFecha() == $partida1->getFecha()) {
-      return 0;
-    }
-
-    return ($partida1->getFecha() > $partida2->getFecha()) ? +1 : -1;
-  }
-
-  public static function sortByFechaDESC(Partida $a, Partida $b) {
-    if ($a->getFecha() == $b->getFecha()) {
-      return 0;
-    }
-
-    return ($a->getFecha() < $b->getFecha()) ? +1 : -1;
-  }
-
-  public static function sorByNombreSimulacionASC(Partida $a, Partida $b)
-  {
-    $aNombreSimulacion = strtolower($a->getNombreSimulacion());
-    $bNombreSimulacion = strtolower($b->getNombreSimulacion());
-    if ($aNombreSimulacion == $bNombreSimulacion) {
-      return 0;
-    }
-    return ($aNombreSimulacion > $bNombreSimulacion) ? +1 : -1;
-  }
-
-  public static function sorByNombreSimulacionDESC(Partida $a, Partida $b)
-  {
-    $aNombreSimulacion = strtolower($a->getNombreSimulacion());
-    $bNombreSimulacion = strtolower($b->getNombreSimulacion());
-    if ($aNombreSimulacion == $bNombreSimulacion) {
-      return 0;
-    }
-    return ($aNombreSimulacion < $bNombreSimulacion) ? +1 : -1;
   }
 }

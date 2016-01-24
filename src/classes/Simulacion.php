@@ -6,6 +6,7 @@ class Simulacion
   private $uid;
   private $nombre_simulacion;
   private $datos_medios;
+  private $listaPartidas;
 
   /*
     Constructor -> Retrieve basic data of a certain Simulacion from Database
@@ -95,6 +96,17 @@ class Simulacion
     $this->uid = $uid;
   }
 
+  /**
+   * @return ListaPartidas
+   */
+  public function getListaPartidas()
+  {
+    if(!isset($this->listaPartidas)) {
+      $this->loadListaPartidas();
+    }
+
+    return $this->listaPartidas;
+  }
 
   public function retrieveAverageData($parameter, $uid = null)
   {
@@ -128,11 +140,11 @@ class Simulacion
   }
 
   /**
-   * @return Partida[] Listado de partidas de este usuario para esta simulación
+   * Carga la Lista de Partidas de la Simulación.
+   * Usamos la Lazy Initialization
    */
-  function retrieveListOfPartidas()
-  {
-    $partidas = array();
+  private function loadListaPartidas() {
+    $this->listaPartidas = new ListaPartidas();
 
     $query = db_select('rjsim_partida', 'p');
     $query->fields('p', array('id_partida'))
@@ -142,9 +154,7 @@ class Simulacion
     $resultado = $query->execute();
 
     while ($record = $resultado->fetchAssoc()) {
-      $partidas[] = Partida::loadPartidaById($record['id_partida']);
+      $this->listaPartidas->add(Partida::loadPartidaById($record['id_partida']));
     }
-
-    return $partidas;
   }
 }

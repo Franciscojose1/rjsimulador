@@ -60,7 +60,7 @@ function _rj_simulador_partida_add($partida)
       $record->setPosicionY($infraccion['posicion_y']);
       $record->setPosicionZ($infraccion['posicion_z']);
       $record->setObservaciones($infraccion['observaciones']);
-      $newPartida->addInfraccion($record);
+      $newPartida->getListaInfracciones()->add($record);
     }
 
     foreach ($partida['datos'] as $dato) {
@@ -70,7 +70,7 @@ function _rj_simulador_partida_add($partida)
       $record->setPosicionZ($dato['posicion_z']);
       $record->setConsumoInstantaneo($dato['consumo_instantaneo']);
       $record->setConsumoTotal($dato['consumo_total']);
-      $newPartida->addDato($record);
+      $newPartida->getListaDatos()->add($record);
     }
 
     $newPartida->savePartida();
@@ -85,7 +85,7 @@ function _rj_simulador_partida_add($partida)
 function _rj_simulador_partida_retrieve($id_partida)
 {
   try {
-    $partida = Partida::loadPartidaById($id_partida, Partida::PARTIDA_INFRACCIONES_DATOS);
+    $partida = Partida::loadPartidaById($id_partida);
     return $partida->convertPropertiesToArrayForServices();
   } catch (Exception $e) {
     watchdog_exception('Recuperando partida.', $e);
