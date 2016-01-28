@@ -48,20 +48,20 @@ class ListaInfracciones extends Lista
   }
 
   /**
-   * @param ListaInfracciones $lista Lista a mezclar con la actual
+   * @param ListaInfracciones $lista Lista a mezclar con la actual.
    */
   public function mergeList(Lista $lista)
   {
     if ($lista instanceof ListaInfracciones) {
       parent::mergeList($lista);
     } else {
-      throw new InvalidArgumentException("La lista pasada tiene ques ser de tipo ListaInfracciones");
+      throw new InvalidArgumentException("La lista pasada tiene que ser de tipo ListaInfracciones");
     }
   }
 
   /**
    * @param FilterInterface $filtro
-   * @return ListaInfracciones Lista de partidas que cumple con el filtro
+   * @return ListaInfracciones Lista de partidas que cumple con el filtro.
    */
   public function filterBy(FilterInterface $filtro)
   {

@@ -2,7 +2,6 @@
 
 function rj_simulador_simulaciones_upper_left_form($form, &$form_state, GestorSimulaciones $gestorSimulaciones)
 {
-  dpm($form_state);
   $listaPartidas = $gestorSimulaciones->retrieveAllSimulationsPartidas();
 
   $provider = FactoryDataProvider::createDataProvider();
@@ -113,7 +112,7 @@ function rj_simulador_partidas_form($form, &$form_state)
   $gestorSimulaciones = new GestorSimulaciones($idsSimulaciones, $usuario->uid);
 
 
-  $renderArrayChart = createPieChart();
+  $renderArrayChart = null;//createPieChart();
 
   $arrayData = array();
   $xLabels = array();

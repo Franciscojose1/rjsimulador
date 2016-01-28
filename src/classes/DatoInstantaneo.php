@@ -291,20 +291,10 @@ class DatoInstantaneo implements ServicesAdapterInterface
     $saver->saveDatoInstantaneo($this);
   }
 
-  /*
-   * @return array Array of the same properties that are stored in DB
+  /**
+   * @inheritdoc
    */
-  public function convertPropertiesToArrayForInsert()
-  {
-    $resultado = get_object_vars($this);
-    unset($resultado['nombre_infraccion']);
-    return $resultado;
-  }
-
-  /*
-   * @return array Array of the properties that are going to be returned for Web Services
-   */
-  public function convertPropertiesToArrayForServices()
+  public function convertPropertiesToArray()
   {
     return get_object_vars($this);
   }

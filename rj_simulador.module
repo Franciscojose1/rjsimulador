@@ -27,7 +27,7 @@ function rj_simulador_menu()
     'title' => 'Mis datos de las simulaciones',
     'page callback' => 'rj_simulador_simulaciones_page',
     'file' => 'rj_simulador.pages.inc',
-    'access arguments' => array('user access'),
+    'access arguments' => array('ver info partidas'),
     'type' => MENU_NORMAL_ITEM,
   );
   $items['simulaciones/%/partidas'] = array(
@@ -36,7 +36,7 @@ function rj_simulador_menu()
     'file' => 'rj_simulador.pages.inc',
     'page callback' => 'rj_simulador_partidas_simulacion_page',
     'page arguments' => array(1),
-    'access arguments' => array('user access'),
+    'access arguments' => array('ver info partidas'),
     'type' => MENU_CALLBACK,
   );
   $items['simulaciones/%/partidas/%'] = array(
@@ -45,7 +45,7 @@ function rj_simulador_menu()
     'file' => 'rj_simulador.pages.inc',
     'page callback' => 'rj_simulador_partida_page',
     'page arguments' => array(3),
-    'access arguments' => array('user access'),
+    'access arguments' => array('ver info partidas'),
     'type' => MENU_CALLBACK,
   );
   /*$items['admin/content/estadisticas'] = array(

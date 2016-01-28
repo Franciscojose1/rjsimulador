@@ -5,13 +5,6 @@ interface DataSaver
   /**
    * Almacena una partida de forma persistente.
    * @param Partida $partida El objeto a almacenar.
-   * @throws Exception Si se produce algún error almacenando la partida.
-   */
-  public function saveCompletePartida(Partida $partida);
-
-  /**
-   * Almacena una partida de forma persistente.
-   * @param Partida $partida El objeto a almacenar.
    */
   public function savePartida(Partida $partida);
 

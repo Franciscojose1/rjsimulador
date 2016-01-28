@@ -287,17 +287,19 @@ class Partida implements ServicesAdapterInterface
     }
   }
 
-
-  public function convertPropertiesToArrayForServices()
+  /**
+   * @inheritdoc
+   */
+  public function convertPropertiesToArray()
   {
     $partida = get_object_vars($this);
 
     foreach ($this->getListaInfracciones() as $key => $infraccion) {
-      $partida['infracciones'][$key] = $infraccion->convertPropertiesToArrayForServices();
+      $partida['infracciones'][$key] = $infraccion->convertPropertiesToArray();
     }
 
     foreach ($this->getListaDatos() as $key => $dato) {
-      $partida['datos'][$key] = $dato->convertPropertiesToArrayForServices();
+      $partida['datos'][$key] = $dato->convertPropertiesToArray();
     }
 
     return $partida;
