@@ -4,7 +4,8 @@ class Simulacion
 {
   private $id_simulacion;
   private $nombre_simulacion;
-  private $uid;
+  /* @var stdClass */
+  private $usuario;
   private $datos_medios;
   private $listaPartidas;
 
@@ -12,17 +13,19 @@ class Simulacion
     Constructor -> Retrieve basic data of a certain Simulacion from Database
     @param int id_partida -> Simulacion ID
   */
-  public function __construct($id_simulacion, $uid)
+  public function __construct($id_simulacion, $usuario)
   {
-    if (!is_numeric($id_simulacion) || !is_numeric($uid)) {
-      throw new InvalidArgumentException("El id de la simulación y el UID tienen que ser un entero.");
+    if (!is_numeric($id_simulacion)) {
+      throw new InvalidArgumentException("El id de la simulación tiene que ser un entero.");
+    } else if (!is_object($usuario) || !($usuario instanceof stdClass)) {
+      throw new InvalidArgumentException("El usuario tiene que ser un usuario válido de Drupal.");
     }
 
     $provider = FactoryDataProvider::createDataProvider();
 
     $this->id_simulacion = $id_simulacion;
     $this->nombre_simulacion = $provider->getNombreSimulacionFromID($id_simulacion);
-    $this->uid = $uid;
+    $this->usuario = $usuario;
   }
 
   /**
@@ -76,17 +79,17 @@ class Simulacion
   /**
    * @return mixed
    */
-  public function getUid()
+  public function getUsuario()
   {
-    return $this->uid;
+    return $this->usuario;
   }
 
   /**
    * @param mixed $uid
    */
-  public function setUid($uid)
+  public function setUsuario($usuario)
   {
-    $this->uid = $uid;
+    $this->usuario = $usuario;
   }
 
   /**

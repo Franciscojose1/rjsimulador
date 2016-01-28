@@ -19,7 +19,7 @@ function rj_simulador_simulaciones_upper_left_form($form, &$form_state, GestorSi
     $data[] = $listaResultados->filterBy(new FilterByID(array($id)))->count();
   }
 
-  $form['chart'] = createPieChart("Procentaje infracciones totales", $labels, $data);
+  $form['chart'] = createPieChart("Porcentaje infracciones totales", $labels, $data);
   $form['name'] = array(
     '#type' => 'textfield',
     '#title' => t('Name'),
@@ -60,7 +60,7 @@ function createPieChart($title, array $labels, array $data)
 {
   $chart = array(
     '#type' => 'chart',
-    '#title' => t('Pie simple'),
+    '#title' => t($title),
     '#chart_type' => 'pie',
     '#chart_library' => 'highcharts',
     '#legend_position' => 'bottom',
@@ -69,7 +69,7 @@ function createPieChart($title, array $labels, array $data)
   );
   $chart['pie_data'] = array(
     '#type' => 'chart_data',
-    '#title' => t($title),
+    '#title' => t('Infracciones'),
     '#labels' => $labels,
     '#data' => $data,
   );

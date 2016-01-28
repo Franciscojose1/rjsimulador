@@ -67,7 +67,7 @@ class DBDataProvider implements DataProvider
 
     $query = db_select('rjsim_partida', 'p');
     $query->fields('p', array('id_partida'))
-      ->condition('uid', $simulation->getUid(), '=')
+      ->condition('uid', $simulation->getUsuario()->uid, '=')
       ->condition('id_simulacion', $simulation->getIdSimulacion(), '=');
 
     $resultado = $query->execute();
