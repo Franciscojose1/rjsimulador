@@ -3,8 +3,8 @@
 class Simulacion
 {
   private $id_simulacion;
-  private $uid;
   private $nombre_simulacion;
+  private $uid;
   private $datos_medios;
   private $listaPartidas;
 
@@ -14,22 +14,15 @@ class Simulacion
   */
   public function __construct($id_simulacion, $uid)
   {
-    $query = db_select('rjsim_simulacion', 's');
-    $query->fields('s', array('nombre_simulacion'))
-      ->condition('id_simulacion', $id_simulacion, '=');
-    $resultado = $query->execute();
-
-    while ($record = $resultado->fetchAssoc()) {
-      $this->id_simulacion = $id_simulacion;
-      $this->uid = $uid;
-      $this->nombre_simulacion = $record['nombre_simulacion'];
-      $this->datos_medios['velocidad_media'] = $this->retrieveAverageData('velocidad');
-      $this->datos_medios['revoluciones_medias'] = $this->retrieveAverageData('rpm');
-      if ($uid > 0) {
-        $this->datos_medios['velocidad_media_usuario'] = $this->retrieveAverageData('velocidad', $uid);
-        $this->datos_medios['revoluciones_medias_usuario'] = $this->retrieveAverageData('rpm', $uid);
-      }
+    if (!is_numeric($id_simulacion) || !is_numeric($uid)) {
+      throw new InvalidArgumentException("El id de la simulación y el UID tienen que ser un entero.");
     }
+
+    $provider = FactoryDataProvider::createDataProvider();
+
+    $this->id_simulacion = $id_simulacion;
+    $this->nombre_simulacion = $provider->getNombreSimulacionFromID($id_simulacion);
+    $this->uid = $uid;
   }
 
   /**
@@ -102,10 +95,28 @@ class Simulacion
   public function getListaPartidas()
   {
     if(!isset($this->listaPartidas)) {
-      $this->loadListaPartidas();
+      $provider = FactoryDataProvider::createDataProvider();
+      $this->listaPartidas = $provider->loadListaPartidasBySimulation($this);
     }
 
     return $this->listaPartidas;
+  }
+
+  /* ********************************************************************************* */
+  /*                                      METHODS                                      */
+  /* ********************************************************************************* */
+  /**
+   * @return string URL para ver los datos de una partida.
+   */
+  public function getURLToSimulacionPage($type = null)
+  {
+    $url = base_path() . 'simulaciones/' . $this->getIdSimulacion() . '/partidas';
+
+    if (isset($type) && $type == 'html_link') {
+      return '<a href="' .$url. '">Ver partidas de simulación</a>';
+    }
+
+    return $url;
   }
 
   public function retrieveAverageData($parameter, $uid = null)
@@ -137,24 +148,5 @@ class Simulacion
     }
 
     return $resultado;
-  }
-
-  /**
-   * Carga la Lista de Partidas de la Simulación.
-   * Usamos la Lazy Initialization
-   */
-  private function loadListaPartidas() {
-    $this->listaPartidas = new ListaPartidas();
-
-    $query = db_select('rjsim_partida', 'p');
-    $query->fields('p', array('id_partida'))
-      ->condition('uid', $this->uid, '=')
-      ->condition('id_simulacion', $this->id_simulacion, '=');
-
-    $resultado = $query->execute();
-
-    while ($record = $resultado->fetchAssoc()) {
-      $this->listaPartidas->add(Partida::loadPartidaById($record['id_partida']));
-    }
   }
 }

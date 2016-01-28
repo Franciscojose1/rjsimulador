@@ -73,7 +73,7 @@ function _rj_simulador_partida_add($partida)
       $newPartida->getListaDatos()->add($record);
     }
 
-    $newPartida->savePartida();
+    $newPartida->save();
 
     return array("message" => "Partida creada correctamente");
   } catch (Exception $e) {
@@ -85,7 +85,7 @@ function _rj_simulador_partida_add($partida)
 function _rj_simulador_partida_retrieve($id_partida)
 {
   try {
-    $partida = Partida::loadPartidaById($id_partida);
+    $partida = Partida::loadById($id_partida);
     return $partida->convertPropertiesToArrayForServices();
   } catch (Exception $e) {
     watchdog_exception('Recuperando partida.', $e);

@@ -10,7 +10,7 @@ function rj_simulador_permission()
       'title' => t('Crear nuevas partidas'),
       'description' => t('Permite a los usuarios con este permiso almacenar los datos de una partida'),
     ),
-    'gestionar estadisticas' => array(
+    'ver info partidas' => array(
       'title' => t('Ver la pagina de estadisticas'),
       'description' => t('Permite a los usuarios con este permiso ver sus estadísticas de partida'),
     ),
@@ -23,27 +23,28 @@ function rj_simulador_permission()
 function rj_simulador_menu()
 {
   $items = array();
-  $items['mis_partidas'] = array(
-    'title' => 'Mis partidas realizadas',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('rj_simulador_pagina_form'),
+  $items['simulaciones'] = array(
+    'title' => 'Mis datos de las simulaciones',
+    'page callback' => 'rj_simulador_simulaciones_page',
     'file' => 'rj_simulador.pages.inc',
     'access arguments' => array('user access'),
     'type' => MENU_NORMAL_ITEM,
   );
-  $items['mis_partidas/%'] = array(
-    'title' => 'Información de mi partida',
+  $items['simulaciones/%/partidas'] = array(
+    'title' => 'Partidas de la Simulación @n_simulacion',
+    'title arguments' => array('@n_simulacion' => 1),
     'file' => 'rj_simulador.pages.inc',
-    'page callback' => 'partida_page',
+    'page callback' => 'rj_simulador_partidas_simulacion_page',
     'page arguments' => array(1),
     'access arguments' => array('user access'),
     'type' => MENU_CALLBACK,
   );
-  $items['prueba/form'] = array(
-    'title' => 'Formulario',
-    'file' => 'rj_simulador.forms.inc',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('rj_simulador_pagina_form'),
+  $items['simulaciones/%/partidas/%'] = array(
+    'title' => 'Partida número @n_partida de la Simulación @n_simulacion',
+    'title arguments' => array('@n_simulacion' => 1, '@n_partida' => 3),
+    'file' => 'rj_simulador.pages.inc',
+    'page callback' => 'rj_simulador_partida_page',
+    'page arguments' => array(3),
     'access arguments' => array('user access'),
     'type' => MENU_CALLBACK,
   );
@@ -78,12 +79,11 @@ function rj_simulador_services_resources()
   return $resources;
 }
 
-
 function rj_simulador_theme()
 {
   return array(
-    'lista_partidas' => array(
-      'template' => 'templates/lista-partidas',
+    'lista_simulaciones' => array(
+      'template' => 'templates/lista-simulaciones',
       'variables' => array('upper_left' => NULL, 'upper_right' => NULL, 'main_content' => NULL)
     )
   );
@@ -93,6 +93,6 @@ function rj_simulador_theme()
 /**
  *  Implements hook_preprocess_HOOK().
  */
-function rj_simulador_preprocess_lista_partidas(&$variables)
+function rj_simulador_preprocess_lista_simulaciones(&$variables)
 {
 }

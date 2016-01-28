@@ -1,81 +1,77 @@
 <?php
 
-function createPieChart() {
-  $chart = array(
-    '#type' => 'chart',
-    '#title' => t('Pie simple'),
-    '#chart_type' => 'pie',
-    '#chart_library' => 'highcharts',
-    '#legend_position' => 'right',
-    '#data_labels' => TRUE,
-    '#tooltips' => TRUE
-  );
-  $chart['pie_data'] = array(
-    '#type' => 'chart_data',
-    '#title' => t('Gender'),
-    '#labels' => array('Male', 'Female'),
-    '#data' => array(10, 20),
-  );
-  $chart['pie_data'][0] = array(
-    '#type' => 'chart_data_item',
-    '#data' => 15,
-    '#color' => 'red',
-    '#title' => t('Dudes'),
-  );
-  $chart['pie_data'][1] = array(
-    '#type' => 'chart_data_item',
-    '#data' => 20,
-    '#title' => t('Chicks'),
-  );
-
-  return $chart;
-}
-
-function createColumnChart($arrayNumeroPartidas, $arrayXLabels) {
-  $chart = array(
-    '#type' => 'chart',
-    '#chart_type' => 'column',
-    '#chart_library' => 'highcharts',
-    '#title' => t('Número de partidas jugadas a cada simulación'),
-  );
-  $chart['simulation'] = array(
-    '#type' => 'chart_data',
-    '#title' => t('Nº'),
-    '#data' => $arrayNumeroPartidas,
-    '#suffix' => 'Nº partidas',
-  );
-  $chart['xaxis'] = array(
-    '#type' => 'chart_xaxis',
-    '#labels' => $arrayXLabels,
-  );
-
-  return $chart;
-}
-
-function rj_simulador_pagina_form($form, &$form_state) {
+function rj_simulador_simulaciones_page()
+{
   // Recuperamos el usuario original
   $usuario = user_uid_optional_load();
-
-  // LAnzamos el GestorSimulaciones y cargamos todas las Partidas de las simulaciones pasadas
+  
+  // Lanzamos el GestorSimulaciones y cargamos las Simulaciones pasadas
   $idsSimulaciones = array(GestorSimulaciones::SIMULACION_UNO, GestorSimulaciones::SIMULACION_DOS, GestorSimulaciones::SIMULACION_TRES,
     GestorSimulaciones::SIMULACION_CUATRO, GestorSimulaciones::SIMULACION_CINCO);
   $gestorSimulaciones = new GestorSimulaciones($idsSimulaciones, $usuario->uid);
 
+  module_load_include('inc', 'rj_simulador', 'rj_simulador.forms');
+  $renderUpperLeftForm = drupal_get_form('rj_simulador_simulaciones_upper_left_form', $gestorSimulaciones);
+
+  $renderUpperRightForm = drupal_get_form('rj_simulador_simulaciones_upper_right_form', $gestorSimulaciones);
+
+  // Creamos la tabla a sacar para mostrar las partidas
+  // Headers array
+  $headers = array(
+    array('data' => t('Nº de simulación')),
+    array('data' => t('Nombre Simulación')),
+    array('data' => t('Enlaces'))
+  );
 
 
-  $renderArrayChart = createPieChart();
-
-  $arrayData = array();
-  $xLabels = array();
-
+  $rows = array();
   foreach ($gestorSimulaciones->getListaSimulaciones() as $simulacion) {
-    $arrayData[] = $simulacion->getListaPartidas()->count();
-    $xLabels[] = $simulacion->getNombreSimulacion();
+    $rows[] = array(
+      array('data' => $simulacion->getIdSimulacion()),
+      array('data' => $simulacion->getNombreSimulacion()),
+      array('data' => $simulacion->getURLToSimulacionPage('html_link'))
+    );
   }
 
-  $renderArrayChart2 = createColumnChart($arrayData, $xLabels);
+  $renderArrayTableSimulaciones = null;
+  if (!empty($rows)) {
+    $limit = 5;
+    $page = pager_default_initialize(count($rows), $limit, 0);
+    $offset = $limit * $page;
+    $renderArrayTableSimulaciones =
+      array(
+        array(
+          '#theme' => 'table',
+          '#header' => $headers,
+          '#rows' => array_slice($rows, $offset, $limit),
+          '#empty' => t('No existen simulaciones almacenadas en el servidor.')
+        ),
+        array(
+          '#theme' => 'pager',
+          '#element' => 0,
+          '#parameters' => array('filter' => isset($form_state['storage']['name']) ? $form_state['storage']['name'] : "")
+        ),
+      );
+  }
 
-  $listadoPartidas = $gestorSimulaciones->retrieveAllSimulationsPartidas();
+  $renderArrayFinal = array(
+    '#theme' => 'lista_simulaciones',
+    '#upper_left' => $renderUpperLeftForm,
+    '#upper_right' => $renderUpperRightForm,
+    '#main_content' => array($renderUpperLeftForm, $renderArrayTableSimulaciones)
+  );
+
+  return $renderArrayFinal;
+}
+
+function rj_simulador_partidas_simulacion_page($id_simulacion)
+{
+  // Recuperamos el usuario actual
+  $usuario = user_uid_optional_load();
+
+  $simulacion = new Simulacion($id_simulacion, $usuario->uid);
+
+  $listadoPartidas = $simulacion->getListaPartidas();
 
   // Creamos la tabla a sacar para mostrar las partidas
   // Headers array
@@ -88,14 +84,12 @@ function rj_simulador_pagina_form($form, &$form_state) {
     array('data' => t('Enlaces'))
   );
 
-  $listadoPartidas = $listadoPartidas->filterBy(new FilterByFecha(array('fecha_fin' => new DateTime("21-01-2016"))));
-
   // Getting the current sort and order parameters from the url
   $order = tablesort_get_order($headers);
   $sort = tablesort_get_sort($headers);
 
-  if(isset($order) && isset($sort)) {
-    $listadoPartidas->sortBy($order['sql'],$sort);
+  if (isset($order) && isset($sort)) {
+    $listadoPartidas->sortBy($order['sql'], $sort);
   }
 
   $rows = array();
@@ -112,7 +106,7 @@ function rj_simulador_pagina_form($form, &$form_state) {
 
   $renderArrayTablePartidas = null;
   if (!empty($rows)) {
-    $limit = 2;
+    $limit = 5;
     $page = pager_default_initialize(count($rows), $limit, 0);
     $offset = $limit * $page;
     $renderArrayTablePartidas =
@@ -121,56 +115,34 @@ function rj_simulador_pagina_form($form, &$form_state) {
           '#theme' => 'table',
           '#header' => $headers,
           '#rows' => array_slice($rows, $offset, $limit),
-          '#empty'=> t('No tienes partidas almacenadas en el servidor.')
+          '#empty' => t('No tienes partidas almacenadas en el servidor.')
         ),
         array(
           '#theme' => 'pager',
           '#element' => 0,
-          '#parameters' => array('filter' => isset($form_state['storage']['name'])?$form_state['storage']['name']:"")
+          '#parameters' => array('filter' => isset($form_state['storage']['name']) ? $form_state['storage']['name'] : "")
         ),
       );
   }
 
-
-  $form['name'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Name'),
-  );
-
-  $sip['apellidos'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Apellidos'),
-  );
-
-  // Adds a simple submit button that refreshes the form and clears its contents -- this is the default behavior for forms.
-  $form['submit'] = array(
-    '#type' => 'submit',
-    '#value' => 'Submit',
-  );
-
-  $form['hola'] = array(
-    '#theme' => 'lista_partidas',
-    '#upper_left' => array($renderArrayChart, $sip),
-    '#upper_right' => array($renderArrayChart2),
+  $renderArrayFinal = array(
+    '#theme' => 'lista_simulaciones',
+    '#upper_left' => null,
+    '#upper_right' => null,
     '#main_content' => array($renderArrayTablePartidas)
   );
 
-  return $form;
+  return $renderArrayFinal;
 }
 
-function rj_simulador_pagina_form_submit($form,&$form_state){
-  $form_state['storage']['name'] = $form_state['values']['name'];
-  $form_state['rebuild'] = TRUE;
-}
-
-function partida_page($id_partida) {
-
-  $miPartida = Partida::loadPartidaById($id_partida);
+function rj_simulador_partida_page($id_partida)
+{
+  $miPartida = Partida::loadById($id_partida);
 
   // Creamos la tabla a sacar para mostrar las partidas
   // Headers array
   $headers = array(
-    array('data' => t('Instante') ),
+    array('data' => t('Instante')),
     array('data' => t('Velocidad')),
     array('data' => t('Revoluciones (RPM)')),
     array('data' => t('Marcha')),
@@ -199,7 +171,7 @@ function partida_page($id_partida) {
           '#theme' => 'table',
           '#header' => $headers,
           '#rows' => array_slice($rows, $offset, $limit),
-          '#empty'=> t('No hay datos para esta partida.')
+          '#empty' => t('No hay datos para esta partida.')
         ),
         array(
           '#theme' => 'pager',
@@ -211,7 +183,7 @@ function partida_page($id_partida) {
   // Creamos la tabla a sacar para mostrar las partidas
   // Headers array
   $headers = array(
-    array('data' => t('Instante') ),
+    array('data' => t('Instante')),
     array('data' => t('Nombre Infracción')),
     array('data' => t('Observaciones'))
   );
@@ -236,7 +208,7 @@ function partida_page($id_partida) {
           '#theme' => 'table',
           '#header' => $headers,
           '#rows' => array_slice($rows, $offset, $limit),
-          '#empty'=> t('No hay infracciones para esta partida.')
+          '#empty' => t('No hay infracciones para esta partida.')
         ),
         array(
           '#theme' => 'pager',
@@ -248,14 +220,14 @@ function partida_page($id_partida) {
   $link = array(
     '#type' => 'link',
     '#title' => 'Go Back',
-    '#href' => 'mis_partidas',
+    '#href' => 'simulaciones/' . $miPartida->getIdSimulacion() . '/partidas',
     '#options' => array('attributes' => array('title' => 'back',
-                                              'style' => 'padding:8px;appearance:button;-webkit-appearance:button;text-decoration:none;'), 'html' => TRUE)
+      'style' => 'padding:8px;appearance:button;-webkit-appearance:button;text-decoration:none;'), 'html' => TRUE)
   );
 
   $a = array(
     '#type' => 'container',
-    '#attributes' => array('id' => 'my-id', 'style' => array('text-align:center;','color:red;')),
+    '#attributes' => array('id' => 'my-id', 'style' => array('text-align:center;', 'color:red;')),
     'enlace' => $link
   );
 
@@ -265,4 +237,9 @@ function partida_page($id_partida) {
   );
 
   return $renderArrayFinal;
+}
+
+function a()
+{
+
 }

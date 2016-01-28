@@ -48,6 +48,9 @@ class ListaPartidas extends Lista implements SortableInterface
     return parent::remove($numberKey);
   }
 
+  /**
+   * @param ListaPartidas $lista Lista a mezclar con la actual
+   */
   public function mergeList(Lista $lista)
   {
     if ($lista instanceof ListaPartidas) {

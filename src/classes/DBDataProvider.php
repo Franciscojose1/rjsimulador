@@ -1,0 +1,162 @@
+<?php
+
+class DBDataProvider implements DataProvider
+{
+  /* @var DBDataProvider */
+  private static $provider;
+
+  /**
+   * Constructor privado para evitar instanciaciones externas de la clase.
+   */
+  private function __construct()
+  {
+  }
+
+  /**
+   * Singleton pattern
+   * @return DBDataProvider Devuelve la única instancia del Provider.
+   */
+  public static function getInstance()
+  {
+    if (self::$provider == null) {
+      self::$provider = new DBDataProvider();
+    }
+    return self::$provider;
+  }
+
+  /**
+   * @return array|null Devuelve un array de la forma $id=>$nombre_simulacion
+   */
+  public function getAllIdsInfracciones()
+  {
+    $query = db_select('rjsim_infracciones', 'i')
+      ->fields('i', array('id_infraccion', 'nombre_infraccion'));
+    $resultados = $query->execute();
+
+    $idsInfracciones = null;
+    while ($resultado = $resultados->fetchAssoc()) {
+      $idsInfracciones[$resultado['id_infraccion']] = $resultado['nombre_infraccion'];
+    }
+
+    return $idsInfracciones;
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function getNombreSimulacionFromID($id_simulacion)
+  {
+    $query = db_select('rjsim_simulacion', 's');
+    $query->fields('s', array('nombre_simulacion'))
+      ->condition('id_simulacion', $id_simulacion, '=');
+    $resultados = $query->execute();
+
+    $nombre_simulacion = null;
+    while ($resultado = $resultados->fetchAssoc()) {
+      $nombre_simulacion = $resultado['nombre_simulacion'];
+    }
+
+    return $nombre_simulacion;
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function loadListaPartidasBySimulation(Simulacion $simulation) {
+    $listaPartidas = new ListaPartidas();
+
+    $query = db_select('rjsim_partida', 'p');
+    $query->fields('p', array('id_partida'))
+      ->condition('uid', $simulation->getUid(), '=')
+      ->condition('id_simulacion', $simulation->getIdSimulacion(), '=');
+
+    $resultado = $query->execute();
+
+    while ($record = $resultado->fetchAssoc()) {
+      $listaPartidas->add(Partida::loadById($record['id_partida']));
+    }
+
+    return $listaPartidas;
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function loadPartidaById($id_partida)
+  {
+    $partida = null;
+
+    $query = db_select('rjsim_partida', 'p');
+    $query->fields('p', array('uid', 'fecha', 'id_simulacion', 'consumo_medio', 'consumo_total', 'tiempo_total'))
+      ->condition('id_partida', $id_partida, '=');
+    $resultado = $query->execute();
+
+    if ($resultado->rowCount() == 0) {
+      throw new NoSuchElementException("No existe una partida con ese ID.");
+    }
+
+    while ($record = $resultado->fetchAssoc()) {
+      $partida = new Partida($record['uid'], $record['fecha'], $record['id_simulacion']);
+      $partida->setIdPartida($id_partida);
+      $partida->setConsumoMedio($record['consumo_medio']);
+      $partida->setConsumoTotal($record['consumo_total']);
+      $partida->setTiempoTotal($record['tiempo_total']);
+    }
+
+    return $partida;
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function loadListaInfraccionesByPartida(Partida $partida)
+  {
+    $listaInfracciones = new ListaInfracciones();
+
+    $query = db_select('rjsim_infracciones_partida', 'ip');
+    $query->fields('ip', array('instante', 'id_infraccion', 'posicion_x', 'posicion_y', 'posicion_z', 'observaciones'))
+      ->condition('ip.id_partida', $partida->getIdPartida(), '=');
+    $resultados = $query->execute();
+
+    if ($resultados->rowCount() > 0) {
+      while ($resultado = $resultados->fetchAssoc()) {
+        $infraccion = new Infraccion($resultado['instante'], $resultado['id_infraccion']);
+        $infraccion->setIdPartida($partida->getIdPartida());
+        $infraccion->setPosicionX($resultado['posicion_x']);
+        $infraccion->setPosicionY($resultado['posicion_y']);
+        $infraccion->setPosicionZ($resultado['posicion_z']);
+        $infraccion->setObservaciones($resultado['observaciones']);
+        $listaInfracciones->add($infraccion);
+      }
+    }
+
+    return $listaInfracciones;
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function loadListaDatosByPartida(Partida $partida)
+  {
+    $listaDatos = new ListaDatosInstantaneos();
+
+    $query = db_select('rjsim_datos_partida', 'dp');
+    $query->fields('dp', array('instante', 'posicion_x', 'posicion_y', 'posicion_z', 'velocidad', 'rpm', 'marcha',
+      'consumo_instantaneo', 'consumo_total'))
+      ->condition('dp.id_partida', $partida->getIdPartida(), '=');
+    $resultados = $query->execute();
+
+    if ($resultados->rowCount() > 0) {
+      while ($resultado = $resultados->fetchAssoc()) {
+        $dato = new DatoInstantaneo($resultado['instante'], $resultado['velocidad'], $resultado['rpm'], $resultado['marcha']);
+        $dato->setIdPartida($partida->getIdPartida());
+        $dato->setPosicion(array('x' => $resultado['posicion_x'], 'y' => $resultado['posicion_y'], 'z' => $resultado['posicion_z']));
+        $dato->setConsumoInstantaneo($resultado['consumo_instantaneo']);
+        $dato->setConsumoTotal($resultado['consumo_total']);
+        $listaDatos->add($dato);
+      }
+    }
+
+    return $listaDatos;
+  }
+} 

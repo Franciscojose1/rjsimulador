@@ -278,22 +278,23 @@ class DatoInstantaneo implements ServicesAdapterInterface
   /* ********************************************************************************* */
   /*                                     METHODS                                       */
   /* ********************************************************************************* */
-  /*
-   * Save actual DatoInstantaneo on persistent storage
+  /**
+   * @throws Exception
    */
-  public function saveDato()
+  public function save()
   {
-    $queryDatos = db_insert('rjsim_datos_partida')
-      ->fields(array('id_partida', 'instante', 'posicion_x', 'posicion_y', 'posicion_z', 'velocidad', 'rpm', 'marcha',
-        'consumo_instantaneo', 'consumo_total'));
-    $queryDatos->values($this->convertPropertiesToArrayForInsert());
-    $queryDatos->execute();
+    if ($this->getIdPartida() == null || $this->getInstante() == null) {
+      throw new Exception("Los campos ID de Partida e Instante son necesarios para almacenar un nuevo Dato.");
+    }
+
+    $saver = FactoryDataSaver::createDataSaver();
+    $saver->saveDatoInstantaneo($this);
   }
 
   /*
    * @return array Array of the same properties that are stored in DB
    */
-  private function convertPropertiesToArrayForInsert()
+  public function convertPropertiesToArrayForInsert()
   {
     $resultado = get_object_vars($this);
     unset($resultado['nombre_infraccion']);

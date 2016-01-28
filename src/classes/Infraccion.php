@@ -240,26 +240,24 @@ class Infraccion implements ServicesAdapterInterface
     }
   }
 
-  /*
-   * Save Infraccion on persistent storage
-   * @throws Exception
+  /**
+   * Almacena el objeto de forma persistente.
+   * @throws Exception Si ocurre un error durante el almacenamiento.
    */
-  public function saveInfraccion()
+  public function save()
   {
-    if (!isset($this->id_partida) || !isset($this->id_infraccion) || !isset($this->instante)) {
+    if ($this->getIdPartida() == null || $this->getIdInfraccion() == null || $this->getInstante() == null) {
       throw new Exception("Los campos ID de Partida, Instante e ID de Infracción son necesarios para almacenar una nueva Infraccion");
     }
 
-    $queryInfracciones = db_insert('rjsim_infracciones_partida')
-      ->fields(array('id_partida', 'instante', 'id_infraccion', 'posicion_x', 'posicion_y', 'posicion_z', 'observaciones'));
-    $queryInfracciones->values($this->convertPropertiesToArrayForInsert());
-    $queryInfracciones->execute();
+    $saver = FactoryDataSaver::createDataSaver();
+    $saver->saveInfraccion($this);
   }
 
   /*
    * @return array Array of the same properties that are stored in DB
    */
-  private function convertPropertiesToArrayForInsert()
+  public function convertPropertiesToArrayForInsert()
   {
     $resultado = get_object_vars($this);
     unset($resultado['nombre_infraccion']);

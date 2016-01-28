@@ -46,4 +46,26 @@ class ListaInfracciones extends Lista
   {
     return parent::remove($numberKey);
   }
+
+  /**
+   * @param ListaInfracciones $lista Lista a mezclar con la actual
+   */
+  public function mergeList(Lista $lista)
+  {
+    if ($lista instanceof ListaInfracciones) {
+      parent::mergeList($lista);
+    } else {
+      throw new InvalidArgumentException("La lista pasada tiene ques ser de tipo ListaInfracciones");
+    }
+  }
+
+  /**
+   * @param FilterInterface $filtro
+   * @return ListaInfracciones Lista de partidas que cumple con el filtro
+   */
+  public function filterBy(FilterInterface $filtro)
+  {
+    $listaResultado = new ListaInfracciones();
+    return parent::filterItems($listaResultado, $filtro);
+  }
 } 

@@ -77,14 +77,6 @@ abstract class Lista implements Iterator, Countable
   }
 
   /**
-   * @return array Devuelve los elementos internos de la lista.
-   */
-  protected function getItems()
-  {
-    return $this->items;
-  }
-
-  /**
    * @param int $numberKey Clave del elemento a recuperar
    * @return mixed Devuelve el item de la lista en esa posición
    * @throws InvalidArgumentException Si la key pasada no es numérica

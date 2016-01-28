@@ -10,8 +10,6 @@ class GestorSimulaciones
 
   /* @var ListaSimulaciones */
   private $listaSimulaciones;
-  /* @var int|null */
-  private $uid;
 
   /**
    * @param array $idsSimulacionesACargar

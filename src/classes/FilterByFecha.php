@@ -7,7 +7,7 @@ class FilterByFecha implements FilterInterface
   /* @var DateTime */
   private $fechaFin;
 
-  public function __construct($arrayFechas)
+  public function __construct(array $arrayFechas)
   {
     if(isset($arrayFechas['fecha_inicio'])) {
       if($arrayFechas['fecha_inicio'] instanceof DateTime) {
@@ -48,7 +48,7 @@ class FilterByFecha implements FilterInterface
   private function filterPartidaByFecha(Partida $item)
   {
     if (isset($this->fechaInicio)) {
-      $cumpleFechaMayorQueInicio =  ($item->getFecha() > $this->fechaInicio->getTimestamp());
+      $cumpleFechaMayorQueInicio =  ($item->getFecha() >= $this->fechaInicio->getTimestamp());
     }
 
     if (isset($this->fechaFin)) {
