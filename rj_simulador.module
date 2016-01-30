@@ -11,8 +11,12 @@ function rj_simulador_permission()
       'description' => t('Permite a los usuarios con este permiso almacenar los datos de una partida'),
     ),
     'ver info partidas' => array(
-      'title' => t('Ver la pagina de estadisticas'),
+      'title' => t('Ver tus estadísticas del Simulador'),
       'description' => t('Permite a los usuarios con este permiso ver sus estadísticas de partida'),
+    ),
+    'comparar info partidas' => array(
+      'title' => t('Acceder a toda la información del Simulador'),
+      'description' => t('Permite a los usuarios con este permiso ver toda la información de todos los usuarios'),
     ),
   );
 }
@@ -40,12 +44,12 @@ function rj_simulador_menu()
     'type' => MENU_CALLBACK,
   );
   $items['simulaciones/%/partidas/%'] = array(
-    'title' => 'Partida número @n_partida de la Simulación @n_simulacion',
-    'title arguments' => array('@n_simulacion' => 1, '@n_partida' => 3),
+    'title' => 'Datos de la Partida',
     'file' => 'rj_simulador.pages.inc',
     'page callback' => 'rj_simulador_partida_page',
     'page arguments' => array(3),
-    'access arguments' => array('ver info partidas'),
+    'access callback' => 'check_user_access_to_partida',
+    'access arguments' => array('ver info partidas', 3),
     'type' => MENU_CALLBACK,
   );
   /*$items['admin/content/estadisticas'] = array(
@@ -89,6 +93,12 @@ function rj_simulador_theme()
   );
 }
 
+function check_user_access_to_partida($permission,$id_partida) {
+  // Comprobamos si el usuario que accede tiene permisos y si la partida a la que accede la creó él
+  $usuario = user_uid_optional_load();
+  $partida = Partida::loadById($id_partida);
+  return user_access($permission) && $usuario->uid == $partida->getUid();
+}
 
 /**
  *  Implements hook_preprocess_HOOK().

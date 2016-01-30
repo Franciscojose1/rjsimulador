@@ -2,7 +2,7 @@
 
 function rj_simulador_simulaciones_upper_left_form($form, &$form_state, GestorSimulaciones $gestorSimulaciones)
 {
-  $listaPartidas = $gestorSimulaciones->retrieveAllSimulationsPartidas();
+  $listaPartidas = $gestorSimulaciones->retrieveAllPartidas();
 
   $provider = FactoryDataProvider::createDataProvider();
   $idsInfracciones = $provider->getAllIdsInfracciones();
@@ -19,7 +19,22 @@ function rj_simulador_simulaciones_upper_left_form($form, &$form_state, GestorSi
     $data[] = $listaResultados->filterBy(new FilterByID(array($id)))->count();
   }
 
-  $form['chart'] = createPieChart("Porcentaje infracciones totales", $labels, $data);
+  $form['chart'] = array(
+    '#type' => 'chart',
+    '#title' => t("Porcentaje infracciones totales"),
+    '#chart_type' => 'pie',
+    '#chart_library' => 'highcharts',
+    '#legend_position' => 'bottom',
+    '#data_labels' => TRUE,
+    '#tooltips' => TRUE,
+    'pie_data' =>
+      array(
+        '#type' => 'chart_data',
+        '#title' => t('Infracciones'),
+        '#labels' => $labels,
+        '#data' => $data,
+      )
+  );
   $form['name'] = array(
     '#type' => 'textfield',
     '#title' => t('Name'),
@@ -42,7 +57,7 @@ function rj_simulador_simulaciones_upper_right_form ($form, $form_state, GestorS
   $arrayData = array();
   $xLabels = array();
 
-  foreach ($gestorSimulaciones->getListaSimulaciones() as $simulacion) {
+  foreach ($gestorSimulaciones->getListaSimulacionesUsuarioActual() as $simulacion) {
     $arrayData[] = $simulacion->getListaPartidas()->count();
     $xLabels[] = $simulacion->getNombreSimulacion();
   }
@@ -54,27 +69,6 @@ function rj_simulador_simulaciones_upper_right_form ($form, $form_state, GestorS
   );
 
   return $form;
-}
-
-function createPieChart($title, array $labels, array $data)
-{
-  $chart = array(
-    '#type' => 'chart',
-    '#title' => t($title),
-    '#chart_type' => 'pie',
-    '#chart_library' => 'highcharts',
-    '#legend_position' => 'bottom',
-    '#data_labels' => TRUE,
-    '#tooltips' => TRUE
-  );
-  $chart['pie_data'] = array(
-    '#type' => 'chart_data',
-    '#title' => t('Infracciones'),
-    '#labels' => $labels,
-    '#data' => $data,
-  );
-
-  return $chart;
 }
 
 function createColumnChart($arrayNumeroPartidas, $arrayXLabels)
@@ -97,123 +91,4 @@ function createColumnChart($arrayNumeroPartidas, $arrayXLabels)
   );
 
   return $chart;
-}
-
-
-
-function rj_simulador_partidas_form($form, &$form_state)
-{
-  // Recuperamos el usuario original
-  $usuario = user_uid_optional_load();
-
-  // LAnzamos el GestorSimulaciones y cargamos todas las Partidas de las simulaciones pasadas
-  $idsSimulaciones = array(GestorSimulaciones::SIMULACION_UNO, GestorSimulaciones::SIMULACION_DOS, GestorSimulaciones::SIMULACION_TRES,
-    GestorSimulaciones::SIMULACION_CUATRO, GestorSimulaciones::SIMULACION_CINCO);
-  $gestorSimulaciones = new GestorSimulaciones($idsSimulaciones, $usuario->uid);
-
-
-  $renderArrayChart = null;//createPieChart();
-
-  $arrayData = array();
-  $xLabels = array();
-
-  foreach ($gestorSimulaciones->getListaSimulaciones() as $simulacion) {
-    $arrayData[] = $simulacion->getListaPartidas()->count();
-    $xLabels[] = $simulacion->getNombreSimulacion();
-  }
-
-  $renderArrayChart2 = createColumnChart($arrayData, $xLabels);
-
-  $listadoPartidas = $gestorSimulaciones->retrieveAllSimulationsPartidas();
-
-  // Creamos la tabla a sacar para mostrar las partidas
-  // Headers array
-  $headers = array(
-    array('data' => t('Fecha'), 'field' => 'Fecha', 'sort' => 'desc'),
-    array('data' => t('Nombre Simulación'), 'field' => 'NombreSimulacion'),
-    array('data' => t('Consumo Medio')),
-    array('data' => t('Consumo Total')),
-    array('data' => t('Tiempo Total')),
-    array('data' => t('Enlaces'))
-  );
-
-  $listadoPartidas = $listadoPartidas->filterBy(new FilterByFecha(array('fecha_fin' => new DateTime("21-01-2016"))));
-
-  // Getting the current sort and order parameters from the url
-  $order = tablesort_get_order($headers);
-  $sort = tablesort_get_sort($headers);
-
-  if (isset($order) && isset($sort)) {
-    $listadoPartidas->sortBy($order['sql'], $sort);
-  }
-
-  $rows = array();
-  foreach ($listadoPartidas as $partida) {
-    $rows[] = array(
-      array('data' => $partida->getFechaAsObject()->format("Y-m-d H:i:s")),
-      array('data' => $partida->getNombreSimulacion()),
-      array('data' => $partida->getConsumoMedio()),
-      array('data' => $partida->getConsumoTotal()),
-      array('data' => $partida->getTiempoTotal()),
-      array('data' => $partida->getURLToPartidaPage('html_link'))
-    );
-  }
-
-  $renderArrayTablePartidas = null;
-  if (!empty($rows)) {
-    $limit = 2;
-    $page = pager_default_initialize(count($rows), $limit, 0);
-    $offset = $limit * $page;
-    $renderArrayTablePartidas =
-      array(
-        array(
-          '#theme' => 'table',
-          '#header' => $headers,
-          '#rows' => array_slice($rows, $offset, $limit),
-          '#empty' => t('No tienes partidas almacenadas en el servidor.')
-        ),
-        array(
-          '#theme' => 'pager',
-          '#element' => 0,
-          '#parameters' => array('filter' => isset($form_state['storage']['name']) ? $form_state['storage']['name'] : "")
-        ),
-      );
-  }
-
-
-  $form['upper_left'] = array(
-    '#type' => 'fieldset',
-    '#attributes' => array('style' => 'width:50%;')
-  );
-
-  $form['upper_left']['name'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Name'),
-  );
-  $form['upper_left']['content'] = array($renderArrayChart);
-
-  $form['upper_right'] = array(
-    '#type' => 'container'
-  );
-
-  $form['upper_right']['apellidos'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Apellidos'),
-  );
-
-  $form['upper_right']['content'] = array($renderArrayChart2);
-
-  $form['main'] = array(
-    '#type' => 'fieldset',
-  );
-
-  $form['main']['content'] = array($renderArrayTablePartidas);
-
-  // Adds a simple submit button that refreshes the form and clears its contents -- this is the default behavior for forms.
-  $form['submit'] = array(
-    '#type' => 'submit',
-    '#value' => 'Submit',
-  );
-
-  return $form;
 }

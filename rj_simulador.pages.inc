@@ -6,9 +6,10 @@ function rj_simulador_simulaciones_page()
   $usuario = user_uid_optional_load();
   
   // Lanzamos el GestorSimulaciones y cargamos las Simulaciones pasadas
-  $idsSimulaciones = array(GestorSimulaciones::SIMULACION_UNO, GestorSimulaciones::SIMULACION_DOS, GestorSimulaciones::SIMULACION_TRES,
-    GestorSimulaciones::SIMULACION_CUATRO, GestorSimulaciones::SIMULACION_CINCO);
-  $gestorSimulaciones = new GestorSimulaciones($idsSimulaciones, $usuario->uid);
+  $idsSimulaciones = array(GestorSimulaciones::SIM_UNO, GestorSimulaciones::SIM_DOS, GestorSimulaciones::SIM_TRES,
+                           GestorSimulaciones::SIM_CUATRO, GestorSimulaciones::SIM_CINCO);
+
+  $gestorSimulaciones = new GestorSimulaciones($idsSimulaciones, $usuario);
 
   module_load_include('inc', 'rj_simulador', 'rj_simulador.forms');
   $renderUpperLeftForm = drupal_get_form('rj_simulador_simulaciones_upper_left_form', $gestorSimulaciones);
@@ -25,7 +26,7 @@ function rj_simulador_simulaciones_page()
 
 
   $rows = array();
-  foreach ($gestorSimulaciones->getListaSimulaciones() as $simulacion) {
+  foreach ($gestorSimulaciones->getListaSimulacionesByUser($usuario) as $simulacion) {
     $rows[] = array(
       array('data' => $simulacion->getIdSimulacion()),
       array('data' => $simulacion->getNombreSimulacion()),
@@ -69,7 +70,7 @@ function rj_simulador_partidas_simulacion_page($id_simulacion)
   // Recuperamos el usuario actual
   $usuario = user_uid_optional_load();
 
-  $simulacion = new Simulacion($id_simulacion, $usuario->uid);
+  $simulacion = new Simulacion($id_simulacion, $usuario);
 
   $listadoPartidas = $simulacion->getListaPartidas();
 
@@ -237,9 +238,4 @@ function rj_simulador_partida_page($id_partida)
   );
 
   return $renderArrayFinal;
-}
-
-function a()
-{
-
 }
