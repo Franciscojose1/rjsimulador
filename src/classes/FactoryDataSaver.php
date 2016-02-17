@@ -1,7 +1,6 @@
 <?php
 
-class FactoryDataSaver
-{
+class FactoryDataSaver {
   const DATABASE = 'database';
 
   /**
@@ -9,8 +8,7 @@ class FactoryDataSaver
    * @return DataSaver
    * @throws Exception Si no se selecciona un tipo adecuado en la Factory.
    */
-  public static function createDataSaver($config = self::DATABASE)
-  {
+  public static function createDataSaver($config = self::DATABASE) {
     switch ($config) {
       case self::DATABASE:
         return DBDataSaver::getInstance();

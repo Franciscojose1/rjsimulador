@@ -1,6 +1,5 @@
 <?php
 
-interface SortableInterface
-{
+interface SortableInterface {
   public function sortBy($sortField, $sort);
 } 

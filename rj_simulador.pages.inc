@@ -1,20 +1,32 @@
 <?php
+module_load_include('inc', 'rj_simulador', 'rj_simulador.forms');
 
-function rj_simulador_simulaciones_page()
-{
+/* *************************************************************************** */
+/* *                        PÁGINA DE SIMULACIONES                             */
+/* *************************************************************************** */
+function rj_simulador_simulaciones_page($uid = NULL, $adminMode = FALSE) {
   // Recuperamos el usuario original
-  $usuario = user_uid_optional_load();
-  
-  // Lanzamos el GestorSimulaciones y cargamos las Simulaciones pasadas
-  $idsSimulaciones = array(GestorSimulaciones::SIM_UNO, GestorSimulaciones::SIM_DOS, GestorSimulaciones::SIM_TRES,
-                           GestorSimulaciones::SIM_CUATRO, GestorSimulaciones::SIM_CINCO);
+  if (isset($uid)) {
+    $user = user_uid_optional_load($uid);
+  }
+  else {
+    $user = user_uid_optional_load();
+  }
 
-  $gestorSimulaciones = new GestorSimulaciones($idsSimulaciones, $usuario);
+  $usuarioSimulacion = new UsuarioSimulacion($user);
 
-  module_load_include('inc', 'rj_simulador', 'rj_simulador.forms');
-  $renderUpperLeftForm = drupal_get_form('rj_simulador_simulaciones_upper_left_form', $gestorSimulaciones);
+  try {
+    $gestorSimulaciones = new GestorSimulaciones($usuarioSimulacion);
+  } catch (LogicException $le) {
+    $renderArray = array('#markup' => '<p>' . $le->getMessage() . '</p>');
+    return $renderArray;
+  }
 
-  $renderUpperRightForm = drupal_get_form('rj_simulador_simulaciones_upper_right_form', $gestorSimulaciones);
+  $renderUpperLeftForm = drupal_get_form('rjsim_simulaciones_upper_left_form', $gestorSimulaciones);
+
+  $renderUpperRightForm = drupal_get_form('rjsim_simulaciones_upper_right_form', $gestorSimulaciones);
+
+  $renderMainForm = drupal_get_form('rjsim_simulaciones_main_form', $gestorSimulaciones);
 
   // Creamos la tabla a sacar para mostrar las partidas
   // Headers array
@@ -24,17 +36,16 @@ function rj_simulador_simulaciones_page()
     array('data' => t('Enlaces'))
   );
 
-
   $rows = array();
-  foreach ($gestorSimulaciones->getListaSimulacionesByUser($usuario) as $simulacion) {
+  foreach ($gestorSimulaciones->getUsuarioActual()->getListaSimulaciones() as $simulacion) {
     $rows[] = array(
       array('data' => $simulacion->getIdSimulacion()),
       array('data' => $simulacion->getNombreSimulacion()),
-      array('data' => $simulacion->getURLToSimulacionPage('html_link'))
+      array('data' => $simulacion->getURLToSimulacionPage($adminMode, 'html_link'))
     );
   }
 
-  $renderArrayTableSimulaciones = null;
+  $renderArrayTableSimulaciones = NULL;
   if (!empty($rows)) {
     $limit = 5;
     $page = pager_default_initialize(count($rows), $limit, 0);
@@ -50,35 +61,60 @@ function rj_simulador_simulaciones_page()
         array(
           '#theme' => 'pager',
           '#element' => 0,
-          '#parameters' => array('filter' => isset($form_state['storage']['name']) ? $form_state['storage']['name'] : "")
         ),
       );
   }
 
   $renderArrayFinal = array(
-    '#theme' => 'lista_simulaciones',
+    '#theme' => 'lista_simulaciones_partidas',
     '#upper_left' => $renderUpperLeftForm,
     '#upper_right' => $renderUpperRightForm,
-    '#main_content' => array($renderUpperLeftForm, $renderArrayTableSimulaciones)
+    '#main_content' => array($renderMainForm, $renderArrayTableSimulaciones)
   );
 
   return $renderArrayFinal;
 }
 
-function rj_simulador_partidas_simulacion_page($id_simulacion)
-{
-  // Recuperamos el usuario actual
-  $usuario = user_uid_optional_load();
+/* *************************************************************************** */
+/* *             PÁGINA DE PARTIDAS POR TIPO DE SIMULACIÓN                     */
+/* *************************************************************************** */
+function rj_simulador_partidas_simulacion_page($id_simulacion, $uid = NULL, $adminMode = FALSE) {
+  // Recuperamos el usuario original
+  if (isset($uid)) {
+    $user = user_uid_optional_load($uid);
+  }
+  else {
+    $user = user_uid_optional_load();
+  }
 
-  $simulacion = new Simulacion($id_simulacion, $usuario);
+  $usuarioSimulacion = new UsuarioSimulacion($user);
 
-  $listadoPartidas = $simulacion->getListaPartidas();
+  try {
+    $gestorSimulaciones = new GestorSimulaciones($usuarioSimulacion);
+  } catch (LogicException $le) {
+    $renderArray = array('#markup' => '<p>' . $le->getMessage() . '</p>');
+    return $renderArray;
+  }
+
+  $listadoPartidas = $gestorSimulaciones->getUsuarioActual()->retrieveAllPartidasByIdSimulacion($id_simulacion);
+
+  if ($listadoPartidas->count() == 0) {
+    $renderArray = array('#markup' => '<span>No dispones de partidas almacenadas para esta simulación.</span>');
+    return $renderArray;
+  }
+
+  $renderUpperLeftForm = drupal_get_form('rjsim_partidas_simulacion_upper_left_form', $gestorSimulaciones, $id_simulacion);
+
+  $renderUpperRightForm = drupal_get_form('rjsim_partidas_simulacion_upper_right_form', $gestorSimulaciones, $id_simulacion);
+
+  $renderUpperMainForm = drupal_get_form('rjsim_partidas_simulacion_main_form', $gestorSimulaciones, $id_simulacion);
+
 
   // Creamos la tabla a sacar para mostrar las partidas
   // Headers array
   $headers = array(
     array('data' => t('Fecha'), 'field' => 'Fecha', 'sort' => 'desc'),
-    array('data' => t('Nombre Simulación'), 'field' => 'NombreSimulacion'),
+    array('data' => t('Nombre Simulación')),
     array('data' => t('Consumo Medio')),
     array('data' => t('Consumo Total')),
     array('data' => t('Tiempo Total')),
@@ -101,11 +137,11 @@ function rj_simulador_partidas_simulacion_page($id_simulacion)
       array('data' => $partida->getConsumoMedio()),
       array('data' => $partida->getConsumoTotal()),
       array('data' => $partida->getTiempoTotal()),
-      array('data' => $partida->getURLToPartidaPage('html_link'))
+      array('data' => $partida->getURLToPartidaPage($adminMode, 'html_link'))
     );
   }
 
-  $renderArrayTablePartidas = null;
+  $renderArrayTablePartidas = NULL;
   if (!empty($rows)) {
     $limit = 5;
     $page = pager_default_initialize(count($rows), $limit, 0);
@@ -127,41 +163,45 @@ function rj_simulador_partidas_simulacion_page($id_simulacion)
   }
 
   $renderArrayFinal = array(
-    '#theme' => 'lista_simulaciones',
-    '#upper_left' => null,
-    '#upper_right' => null,
-    '#main_content' => array($renderArrayTablePartidas)
+    '#theme' => 'lista_simulaciones_partidas',
+    '#upper_left' => $renderUpperLeftForm,
+    '#upper_right' => $renderUpperRightForm,
+    '#main_content' => array($renderUpperMainForm, $renderArrayTablePartidas)
   );
 
   return $renderArrayFinal;
 }
 
-function rj_simulador_partida_page($id_partida)
-{
+/* *************************************************************************** */
+/* *                          PÁGINA DE PARTIDA                                */
+/* *************************************************************************** */
+function rj_simulador_partida_page($id_partida) {
+  drupal_add_js(drupal_get_path('module', 'rj_simulador') . '/js/rj_simulador.js');
   $miPartida = Partida::loadById($id_partida);
 
   // Creamos la tabla a sacar para mostrar las partidas
   // Headers array
   $headers = array(
+    array('data' => t('Dato Nº')),
     array('data' => t('Instante')),
-    array('data' => t('Velocidad')),
-    array('data' => t('Revoluciones (RPM)')),
-    array('data' => t('Marcha')),
-    array('data' => t('Consumo Instantaneo'))
   );
 
   $rows = array();
+  $contador = 1;
   foreach ($miPartida->getListaDatos() as $dato) {
-    $rows[] = array(
-      array('data' => $dato->getInstante()),
-      array('data' => $dato->getVelocidad()),
-      array('data' => $dato->getRpm()),
-      array('data' => $dato->getMarcha()),
-      array('data' => $dato->getConsumoInstantaneo())
-    );
+    $rows[] =
+      array(
+        'data' =>
+          array(
+            array('data' => $contador),
+            array('data' => $dato->getInstante()),
+          ),
+        'class' => array('fila-datos'),
+      );
+    $contador++;
   }
 
-  $renderArrayTableDatos = null;
+  $renderArrayTableDatos = NULL;
   if (!empty($rows)) {
     $limit = 10;
     $page = pager_default_initialize(count($rows), $limit, 0);
@@ -184,21 +224,26 @@ function rj_simulador_partida_page($id_partida)
   // Creamos la tabla a sacar para mostrar las partidas
   // Headers array
   $headers = array(
+    array('data' => t('Infracción Nº')),
     array('data' => t('Instante')),
-    array('data' => t('Nombre Infracción')),
-    array('data' => t('Observaciones'))
   );
 
   $rows = array();
+  $contador = 1;
   foreach ($miPartida->getListaInfracciones() as $elemento_lista) {
-    $rows[] = array(
-      array('data' => $elemento_lista->getInstante()),
-      array('data' => $elemento_lista->getNombreInfraccion()),
-      array('data' => $elemento_lista->getObservaciones())
-    );
+    $rows[] =
+      array(
+        'data' =>
+          array(
+            array('data' => $contador),
+            array('data' => $elemento_lista->getInstante()),
+          ),
+        'class' => array('fila-infraccion'),
+      );
+    $contador++;
   }
 
-  $renderArrayTableInfracciones = null;
+  $renderArrayTableInfracciones = NULL;
   if (!empty($rows)) {
     $limit = 10;
     $page = pager_default_initialize(count($rows), $limit, 1);
@@ -222,19 +267,20 @@ function rj_simulador_partida_page($id_partida)
     '#type' => 'link',
     '#title' => 'Go Back',
     '#href' => 'simulaciones/' . $miPartida->getIdSimulacion() . '/partidas',
-    '#options' => array('attributes' => array('title' => 'back',
-      'style' => 'padding:8px;appearance:button;-webkit-appearance:button;text-decoration:none;'), 'html' => TRUE)
-  );
-
-  $a = array(
-    '#type' => 'container',
-    '#attributes' => array('id' => 'my-id', 'style' => array('text-align:center;', 'color:red;')),
-    'enlace' => $link
+    '#options' => array(
+      'attributes' => array(
+        'title' => 'back',
+        'style' => 'padding:8px;appearance:button;-webkit-appearance:button;text-decoration:none;'
+      ),
+      'html' => TRUE
+    )
   );
 
   $renderArrayFinal = array(
-    '#type' => 'container',
-    'content' => array($renderArrayTableDatos, $renderArrayTableInfracciones, $a)
+    '#theme' => 'partida',
+    '#upper_left' => $renderArrayTableDatos,
+    '#upper_right' => $renderArrayTableInfracciones,
+    '#main_content' => $link,
   );
 
   return $renderArrayFinal;

@@ -1,11 +1,10 @@
 <?php
-class ListaInfracciones extends Lista
-{
+
+class ListaInfracciones extends Lista {
   /**
    * @return Infraccion
    */
-  public function current()
-  {
+  public function current() {
     return parent::current();
   }
 
@@ -15,8 +14,7 @@ class ListaInfracciones extends Lista
    * @throws InvalidArgumentException Si la key pasada no es numérica
    * @throws Exception Si no existe esa clave en la lista
    */
-  public function get($numberKey)
-  {
+  public function get($numberKey) {
     return parent::get($numberKey);
   }
 
@@ -25,11 +23,11 @@ class ListaInfracciones extends Lista
    * @return int Número de elementos en la lista después de añadir la infracción
    * @throws InvalidArgumentException Si el item pasado no es de tipo Infracción
    */
-  public function add($item)
-  {
+  public function add($item) {
     if ($item instanceof Infraccion) {
       parent::add($item);
-    } else {
+    }
+    else {
       throw new InvalidArgumentException("El item a añadir no es de tipo Infracción.");
     }
 
@@ -42,19 +40,18 @@ class ListaInfracciones extends Lista
    * @throws InvalidArgumentException Si la clave no es numérica.
    * @throws Exception Si no existe esa clave en la lista.
    */
-  public function remove($numberKey)
-  {
+  public function remove($numberKey) {
     return parent::remove($numberKey);
   }
 
   /**
    * @param ListaInfracciones $lista Lista a mezclar con la actual.
    */
-  public function mergeList(Lista $lista)
-  {
+  public function mergeList(Lista $lista) {
     if ($lista instanceof ListaInfracciones) {
       parent::mergeList($lista);
-    } else {
+    }
+    else {
       throw new InvalidArgumentException("La lista pasada tiene que ser de tipo ListaInfracciones");
     }
   }
@@ -63,8 +60,7 @@ class ListaInfracciones extends Lista
    * @param FilterInterface $filtro
    * @return ListaInfracciones Lista de partidas que cumple con el filtro.
    */
-  public function filterBy(FilterInterface $filtro)
-  {
+  public function filterBy(FilterInterface $filtro) {
     $listaResultado = new ListaInfracciones();
     return parent::filterItems($listaResultado, $filtro);
   }

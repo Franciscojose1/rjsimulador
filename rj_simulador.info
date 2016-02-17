@@ -3,12 +3,14 @@ description = Gestión de los resultados recibidos desde la aplicación de condu
 package = UVa Simulador
 core = 7.x
 ; Includes - Interfaces
+files[] = src/interfaces/CalculatedDataInterface.php
 files[] = src/interfaces/DataProvider.php
 files[] = src/interfaces/DataSaver.php
 files[] = src/interfaces/FilterInterface.php
 files[] = src/interfaces/ServicesAdapterInterface.php
 files[] = src/interfaces/SortableInterface.php
 ; Includes - Classes
+files[] = src/classes/CalculateAverageData.php
 files[] = src/classes/DatoInstantaneo.php
 files[] = src/classes/DBDataProvider.php
 files[] = src/classes/DBDataSaver.php
@@ -23,8 +25,11 @@ files[] = src/classes/ListaDatosInstantaneos.php
 files[] = src/classes/ListaInfracciones.php
 files[] = src/classes/ListaPartidas.php
 files[] = src/classes/ListaSimulaciones.php
+files[] = src/classes/ListaUsuariosDataRetriever.php
+files[] = src/classes/ListaUsuariosSimulacion.php
 files[] = src/classes/Partida.php
 files[] = src/classes/Simulacion.php
+files[] = src/classes/UsuarioSimulacion.php
 ; Dependencies
 dependencies[] = services
 dependencies[] = charts

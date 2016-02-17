@@ -1,12 +1,10 @@
 <?php
 
-class ListaSimulaciones extends Lista
-{
+class ListaSimulaciones extends Lista {
   /**
    * @return Simulacion
    */
-  public function current()
-  {
+  public function current() {
     return parent::current();
   }
 
@@ -16,8 +14,7 @@ class ListaSimulaciones extends Lista
    * @throws InvalidArgumentException Si la key pasada no es numérica
    * @throws Exception Si no existe esa clave en la lista
    */
-  public function get($numberKey)
-  {
+  public function get($numberKey) {
     return parent::get($numberKey);
   }
 
@@ -26,11 +23,11 @@ class ListaSimulaciones extends Lista
    * @return int Número de elementos en la lista después de añadir la simulación
    * @throws InvalidArgumentException Si el item pasado no es de tipo Simulacion
    */
-  public function add($item)
-  {
+  public function add($item) {
     if ($item instanceof Simulacion) {
       parent::add($item);
-    } else {
+    }
+    else {
       throw new InvalidArgumentException("El item a añadir no es de tipo Simulación.");
     }
 
@@ -43,8 +40,7 @@ class ListaSimulaciones extends Lista
    * @throws InvalidArgumentException Si la clave no es numérica.
    * @throws Exception Si no existe esa clave en la lista.
    */
-  public function remove($numberKey)
-  {
+  public function remove($numberKey) {
     return parent::remove($numberKey);
   }
 }

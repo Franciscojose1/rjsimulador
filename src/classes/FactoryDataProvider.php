@@ -1,7 +1,6 @@
 <?php
 
-class FactoryDataProvider
-{
+class FactoryDataProvider {
   const DATABASE = 'database';
 
   /**
@@ -9,8 +8,7 @@ class FactoryDataProvider
    * @return DataProvider
    * @throws Exception Si no se selecciona un tipo adecuado en la Factory.
    */
-  public static function createDataProvider($config = self::DATABASE)
-  {
+  public static function createDataProvider($config = self::DATABASE) {
     switch ($config) {
       case self::DATABASE:
         return DBDataProvider::getInstance();

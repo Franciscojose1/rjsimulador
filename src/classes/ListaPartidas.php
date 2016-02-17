@@ -1,12 +1,10 @@
 <?php
 
-class ListaPartidas extends Lista implements SortableInterface
-{
+class ListaPartidas extends Lista implements SortableInterface {
   /**
    * @return Partida
    */
-  public function current()
-  {
+  public function current() {
     return parent::current();
   }
 
@@ -16,8 +14,7 @@ class ListaPartidas extends Lista implements SortableInterface
    * @throws InvalidArgumentException Si la key pasada no es numérica
    * @throws Exception Si no existe esa clave en la lista
    */
-  public function get($numberKey)
-  {
+  public function get($numberKey) {
     return parent::get($numberKey);
   }
 
@@ -26,11 +23,11 @@ class ListaPartidas extends Lista implements SortableInterface
    * @return int Número de elementos en la lista después de añadir la partida
    * @throws InvalidArgumentException Si el item pasado no es de tipo Partida
    */
-  public function add($item)
-  {
+  public function add($item) {
     if ($item instanceof Partida) {
       parent::add($item);
-    } else {
+    }
+    else {
       throw new InvalidArgumentException("El item a añadir no es de tipo Partida.");
     }
 
@@ -43,19 +40,18 @@ class ListaPartidas extends Lista implements SortableInterface
    * @throws InvalidArgumentException Si la clave no es numérica.
    * @throws Exception Si no existe esa clave en la lista.
    */
-  public function remove($numberKey)
-  {
+  public function remove($numberKey) {
     return parent::remove($numberKey);
   }
 
   /**
    * @param ListaPartidas $lista Lista a mezclar con la actual
    */
-  public function mergeList(Lista $lista)
-  {
+  public function mergeList(Lista $lista) {
     if ($lista instanceof ListaPartidas) {
       parent::mergeList($lista);
-    } else {
+    }
+    else {
       throw new InvalidArgumentException("La lista pasada tiene ques ser de tipo ListaPartida");
     }
   }
@@ -64,14 +60,12 @@ class ListaPartidas extends Lista implements SortableInterface
    * @param FilterInterface $filtro
    * @return ListaPartidas Lista de partidas que cumple con el filtro
    */
-  public function filterBy(FilterInterface $filtro)
-  {
+  public function filterBy(FilterInterface $filtro) {
     $listaResultado = new ListaPartidas();
     return parent::filterItems($listaResultado, $filtro);
   }
 
-  public function sortBy($sortField, $sort)
-  {
+  public function sortBy($sortField, $sort) {
     $upperOrder = strtoupper($sort);
     if ($upperOrder != "ASC" && $upperOrder != "DESC") {
       throw new Exception("El orden de un campo solo puede tener los valores ASC o DESC");
@@ -87,8 +81,7 @@ class ListaPartidas extends Lista implements SortableInterface
     parent::sortList($options);
   }
 
-  protected static function sortByFechaASC(Partida $a, Partida $b)
-  {
+  protected static function sortByFechaASC(Partida $a, Partida $b) {
     if ($a->getFecha() == $b->getFecha()) {
       return 0;
     }
@@ -96,8 +89,7 @@ class ListaPartidas extends Lista implements SortableInterface
     return ($a->getFecha() > $b->getFecha()) ? +1 : -1;
   }
 
-  protected static function sortByFechaDESC(Partida $a, Partida $b)
-  {
+  protected static function sortByFechaDESC(Partida $a, Partida $b) {
     if ($a->getFecha() == $b->getFecha()) {
       return 0;
     }
@@ -105,8 +97,7 @@ class ListaPartidas extends Lista implements SortableInterface
     return ($a->getFecha() < $b->getFecha()) ? +1 : -1;
   }
 
-  protected static function sortByNombreSimulacionASC(Partida $a, Partida $b)
-  {
+  protected static function sortByNombreSimulacionASC(Partida $a, Partida $b) {
     $aNombreSimulacion = strtolower($a->getNombreSimulacion());
     $bNombreSimulacion = strtolower($b->getNombreSimulacion());
     if ($aNombreSimulacion == $bNombreSimulacion) {
@@ -115,8 +106,7 @@ class ListaPartidas extends Lista implements SortableInterface
     return ($aNombreSimulacion > $bNombreSimulacion) ? +1 : -1;
   }
 
-  protected static function sortByNombreSimulacionDESC(Partida $a, Partida $b)
-  {
+  protected static function sortByNombreSimulacionDESC(Partida $a, Partida $b) {
     $aNombreSimulacion = strtolower($a->getNombreSimulacion());
     $bNombreSimulacion = strtolower($b->getNombreSimulacion());
     if ($aNombreSimulacion == $bNombreSimulacion) {

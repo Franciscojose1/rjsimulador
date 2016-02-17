@@ -1,7 +1,6 @@
 <?php
 
-class Partida implements ServicesAdapterInterface
-{
+class Partida implements ServicesAdapterInterface {
   /* ********************************************************************************* */
   /*                                      PROPERTIES                                   */
   /* ********************************************************************************* */
@@ -29,8 +28,7 @@ class Partida implements ServicesAdapterInterface
   /* ********************************************************************************* */
   /*                                     CONSTRUCTOR                                   */
   /* ********************************************************************************* */
-  function __construct($uid, $fecha, $id_simulacion)
-  {
+  function __construct($uid, $fecha, $id_simulacion) {
     $this->setUid($uid);
     $this->setFecha($fecha);
     $this->setIdSimulacion($id_simulacion);
@@ -43,9 +41,8 @@ class Partida implements ServicesAdapterInterface
   /**
    * @return ListaDatosInstantaneos
    */
-  public function getListaDatos()
-  {
-    if(!isset($this->listaDatos)) {
+  public function getListaDatos() {
+    if (!isset($this->listaDatos)) {
       $provider = FactoryDataProvider::createDataProvider();
       $this->listaDatos = $provider->loadListaDatosByPartida($this);
     }
@@ -55,16 +52,14 @@ class Partida implements ServicesAdapterInterface
   /**
    * @return int Fecha en formato UNIX.
    */
-  public function getFecha()
-  {
+  public function getFecha() {
     return $this->fecha;
   }
 
   /**
    * @return DateTime Fecha como un DateTime.
    */
-  public function getFechaAsObject()
-  {
+  public function getFechaAsObject() {
     return (new DateTime())->setTimestamp($this->fecha);
   }
 
@@ -72,11 +67,11 @@ class Partida implements ServicesAdapterInterface
    * @param int $fecha Fecha en tiempo UNIX
    * @throws InvalidArgumentException
    */
-  public function setFecha($fecha)
-  {
+  public function setFecha($fecha) {
     if (is_numeric($fecha)) {
-      $this->fecha = $fecha;
-    } else {
+      $this->fecha = intval($fecha);
+    }
+    else {
       throw new InvalidArgumentException("La fecha se tiene que pasar convertida a tiempo UNIX.");
     }
   }
@@ -84,8 +79,7 @@ class Partida implements ServicesAdapterInterface
   /**
    * @return int
    */
-  public function getIdPartida()
-  {
+  public function getIdPartida() {
     return $this->id_partida;
   }
 
@@ -93,11 +87,11 @@ class Partida implements ServicesAdapterInterface
    * @param int $id_partida
    * @throws InvalidArgumentException
    */
-  public function setIdPartida($id_partida)
-  {
+  public function setIdPartida($id_partida) {
     if (is_numeric($id_partida)) {
-      $this->id_partida = $id_partida;
-    } else {
+      $this->id_partida = intval($id_partida);
+    }
+    else {
       throw new InvalidArgumentException("El ID de la Partida debe ser un entero");
     }
   }
@@ -105,8 +99,7 @@ class Partida implements ServicesAdapterInterface
   /**
    * @return int
    */
-  public function getIdSimulacion()
-  {
+  public function getIdSimulacion() {
     return $this->id_simulacion;
   }
 
@@ -114,11 +107,11 @@ class Partida implements ServicesAdapterInterface
    * @param int $id_simulacion
    * @throws InvalidArgumentException
    */
-  public function setIdSimulacion($id_simulacion)
-  {
+  public function setIdSimulacion($id_simulacion) {
     if (is_numeric($id_simulacion)) {
-      $this->id_simulacion = $id_simulacion;
-    } else {
+      $this->id_simulacion = intval($id_simulacion);
+    }
+    else {
       throw new InvalidArgumentException("El ID de la Simulación debe ser un entero.");
     }
   }
@@ -126,8 +119,7 @@ class Partida implements ServicesAdapterInterface
   /**
    * @return ListaInfracciones
    */
-  public function getListaInfracciones()
-  {
+  public function getListaInfracciones() {
     if (!isset($this->listaInfracciones)) {
       $provider = FactoryDataProvider::createDataProvider();
       $this->listaInfracciones = $provider->loadListaInfraccionesByPartida($this);
@@ -138,8 +130,7 @@ class Partida implements ServicesAdapterInterface
   /**
    * @return float
    */
-  public function getConsumoMedio()
-  {
+  public function getConsumoMedio() {
     return $this->consumo_medio;
   }
 
@@ -147,11 +138,11 @@ class Partida implements ServicesAdapterInterface
    * @param float $consumo_medio
    * @throws InvalidArgumentException
    */
-  public function setConsumoMedio($consumo_medio)
-  {
+  public function setConsumoMedio($consumo_medio) {
     if (is_numeric($consumo_medio)) {
-      $this->consumo_medio = $consumo_medio;
-    } else {
+      $this->consumo_medio = floatval($consumo_medio);
+    }
+    else {
       throw new InvalidArgumentException("El Consumo Medio " . $consumo_medio . " tiene que ser un número decimal.");
     }
   }
@@ -159,8 +150,7 @@ class Partida implements ServicesAdapterInterface
   /**
    * @return float
    */
-  public function getConsumoTotal()
-  {
+  public function getConsumoTotal() {
     return $this->consumo_total;
   }
 
@@ -168,11 +158,11 @@ class Partida implements ServicesAdapterInterface
    * @param float $consumo_total
    * @throws InvalidArgumentException
    */
-  public function setConsumoTotal($consumo_total)
-  {
+  public function setConsumoTotal($consumo_total) {
     if (is_numeric($consumo_total)) {
-      $this->consumo_total = $consumo_total;
-    } else {
+      $this->consumo_total = floatval($consumo_total);
+    }
+    else {
       throw new InvalidArgumentException("El Consumo Total tiene que ser un número decimal.");
     }
   }
@@ -180,8 +170,7 @@ class Partida implements ServicesAdapterInterface
   /**
    * @return float
    */
-  public function getTiempoTotal()
-  {
+  public function getTiempoTotal() {
     return $this->tiempo_total;
   }
 
@@ -189,11 +178,11 @@ class Partida implements ServicesAdapterInterface
    * @param float $tiempo_total
    * @throws InvalidArgumentException
    */
-  public function setTiempoTotal($tiempo_total)
-  {
+  public function setTiempoTotal($tiempo_total) {
     if (is_numeric($tiempo_total)) {
-      $this->tiempo_total = $tiempo_total;
-    } else {
+      $this->tiempo_total = floatval($tiempo_total);
+    }
+    else {
       throw new InvalidArgumentException("El Tiempo Total de la simulación tiene que ser un número decimal.");
     }
   }
@@ -201,11 +190,10 @@ class Partida implements ServicesAdapterInterface
   /**
    * @return string
    */
-  public function getNombreSimulacion()
-  {
-    if(!isset($this->nombre_simulacion)) {
+  public function getNombreSimulacion() {
+    if (!isset($this->nombre_simulacion)) {
       $provider = FactoryDataProvider::createDataProvider();
-      $this->setNombreSimulacion($provider->getNombreSimulacionFromID($this->getIdSimulacion()));
+      $this->setNombreSimulacion($provider->loadNombreSimulacionFromID($this->getIdSimulacion()));
     }
 
     return $this->nombre_simulacion;
@@ -214,16 +202,14 @@ class Partida implements ServicesAdapterInterface
   /**
    * @param string $nombre_simulacion
    */
-  private function setNombreSimulacion($nombre_simulacion)
-  {
+  private function setNombreSimulacion($nombre_simulacion) {
     $this->nombre_simulacion = $nombre_simulacion;
   }
 
   /**
    * @return int
    */
-  public function getUid()
-  {
+  public function getUid() {
     return $this->uid;
   }
 
@@ -231,11 +217,11 @@ class Partida implements ServicesAdapterInterface
    * @param int $uid
    * @throws InvalidArgumentException
    */
-  public function setUid($uid)
-  {
+  public function setUid($uid) {
     if (is_numeric($uid)) {
-      $this->uid = $uid;
-    } else {
+      $this->uid = intval($uid);
+    }
+    else {
       throw new InvalidArgumentException("El UID tiene que ser un entero.");
     }
   }
@@ -246,15 +232,21 @@ class Partida implements ServicesAdapterInterface
   /* ********************************************************************************* */
   /**
    * Devuelve la URL para acceder a una partida.
+   * @param bool $adminMode Si debe devolver urls de administrador o no.
    * @param string|null $type Si es "html_link" se devuelve la URL como un enlace HTML.
    * @return string URL para ver los datos de una partida.
    */
-  public function getURLToPartidaPage($type = null)
-  {
-    $url = base_path() . 'simulaciones/' . $this->getIdSimulacion() . '/partidas/' . $this->getIdPartida();
+  public function getURLToPartidaPage($adminMode, $type = NULL) {
+    $url = base_path();
+
+    if ($adminMode) {
+      $url .= 'admin/simulaciones_usuarios/' . $this->getUid() . '/';
+    }
+
+    $url .= 'simulaciones/' . $this->getIdSimulacion() . '/partidas/' . $this->getIdPartida();
 
     if (isset($type) && $type == 'html_link') {
-      return '<a href="' .$url. '">Ver partida</a>';
+      return '<a href="' . $url . '">Ver partida</a>';
     }
 
     return $url;
@@ -265,7 +257,7 @@ class Partida implements ServicesAdapterInterface
    * @throws Exception Cuando ocurre un error durante el almacenamiento.
    */
   public function save() {
-    if ($this->getUid() == null || $this->getFecha() == null || $this->getIdSimulacion() == null) {
+    if ($this->getUid() == NULL || $this->getFecha() == NULL || $this->getIdSimulacion() == NULL) {
       throw new Exception("Los campos UID, Fecha e ID de Simulación son necesarios para insertar una nueva partida");
     }
 
@@ -283,7 +275,8 @@ class Partida implements ServicesAdapterInterface
     if (is_numeric($id_partida)) {
       $provider = FactoryDataProvider::createDataProvider();
       return $provider->loadPartidaById($id_partida);
-    } else {
+    }
+    else {
       throw new Exception("El id de la partida no es un entero.");
     }
   }
@@ -291,8 +284,7 @@ class Partida implements ServicesAdapterInterface
   /**
    * @inheritdoc
    */
-  public function convertPropertiesToArray()
-  {
+  public function convertPropertiesToArray() {
     $partida = get_object_vars($this);
 
     foreach ($this->getListaInfracciones() as $key => $infraccion) {

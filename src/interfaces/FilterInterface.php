@@ -1,7 +1,6 @@
 <?php
 
-interface FilterInterface
-{
+interface FilterInterface {
   /**
    * @param mixed $item
    * @return bool Devuelve si el item cumple con los criterios del filtro.

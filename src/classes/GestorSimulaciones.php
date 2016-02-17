@@ -1,151 +1,122 @@
 <?php
 
-class GestorSimulaciones
-{
-  const SIM_UNO = 1;
-  const SIM_DOS = 2;
-  const SIM_TRES = 3;
-  const SIM_CUATRO = 4;
-  const SIM_CINCO = 5;
-
-  /* @var array */
-  private $idsSimulacionesCargadas;
-  /* @var stdClass $usuarioActual */
+class GestorSimulaciones {
+  /* @var UsuarioSimulacion $usuarioActual EL usuario actual. */
   private $usuarioActual;
-  /* @var ListaSimulaciones[] Un array de la form $uid => ListaSimulaciones */
-  private $arrayListaSimulacionesByUser;
+  /* @var ListaUsuariosSimulacion $listaTodosUsuarios Todos los usuarios que tienen partidas almacenadas de las Simulaciones. */
+  private $listaTodosUsuarios;
+  /* @var ListaUsuariosSimulacion $listaTodosUsuariosExceptoActual Todos los usuarios salvo el actual que tienen partidas
+   * almacenadas de las Simulaciones. */
+  private $listaTodosUsuariosExceptoActual;
+  /* @var array $arraySimulaciones Array de la forma $id=>$nombre_simulacion */
+  private $arraySimulaciones;
 
-  public function __construct(array $idsSimulacionesACargar, stdClass $usuarioActual)
-  {
-    $usuarios = entity_load('user');
+  /**
+   * @param UsuarioSimulacion $usuarioActual El usuario actual.
+   * @throws LogicException Si no existen usuarios en la BBD.
+   */
+  public function __construct(UsuarioSimulacion $usuarioActual = NULL) {
+    $provider = FactoryDataProvider::createDataProvider();
 
-    foreach ($usuarios as $usuario) {
-      $this->arrayListaSimulacionesByUser[$usuario->uid] = new ListaSimulaciones();
-      foreach ($idsSimulacionesACargar as $id) {
-        $this->arrayListaSimulacionesByUser[$usuario->uid]->add(new Simulacion($id, $usuario));
-      }
+    // Recuperamos los ids de las simulaciones existentes
+    $this->setArraySimulaciones($provider->loadAllIdsSimulaciones());
+
+    // Recuperamos todos los usuarios con partidas
+    $listaDeTodosLosUsuarios = $provider->loadAllSimulatorUsers();
+
+    if ($listaDeTodosLosUsuarios->count() == 0) {
+      throw new LogicException("Ningún usuario ha guardado partidas en la BBDD.");
     }
 
-    $this->setUsuarioActual($usuarioActual);
+    $this->setListaTodosUsuarios($listaDeTodosLosUsuarios);
+
+    // Comprobamos si estamos usando un usuario específico
+    if (isset($usuarioActual)) {
+      $this->setUsuarioActual($usuarioActual);
+    }
   }
 
   /**
    * @return array
    */
-  public function getIdsSimulacionesCargadas()
-  {
-    return $this->idsSimulacionesCargadas;
+  public function getArraySimulaciones() {
+    return $this->arraySimulaciones;
   }
 
   /**
-   * @param array $idsSimulacionesCargadas
+   * @param array $arraySimulaciones
    */
-  public function setIdsSimulacionesCargadas(array $idsSimulacionesCargadas)
-  {
-    $this->idsSimulacionesCargadas = $idsSimulacionesCargadas;
+  private function setArraySimulaciones(array $arraySimulaciones) {
+    $this->arraySimulaciones = $arraySimulaciones;
   }
 
   /**
-   * @return stdClass
+   * @return UsuarioSimulacion
+   * @throws Exception Si no se ha pasado un usuario al constructor del GestorSimulaciones.
    */
-  public function getUsuarioActual()
-  {
+  public function getUsuarioActual() {
+    if (!isset($this->usuarioActual)) {
+      throw new LogicException("No se ha pasado un usuario como usuario actual.");
+    }
+
     return $this->usuarioActual;
   }
 
   /**
-   * @param stdClass $usuarioActual
+   * @param UsuarioSimulacion $usuarioActual
+   * @throws LogicException Si el usuario no tiene partidas guardadas.
    */
-  public function setUsuarioActual(stdClass $usuarioActual)
-  {
-    $this->usuarioActual = $usuarioActual;
-  }
-
-  /**
-   * @return ListaSimulaciones[]
-   */
-  public function getArrayListaSimulacionesByUser()
-  {
-    return $this->arrayListaSimulacionesByUser;
-  }
-
-  /**
-   * @param stdClass $usuario
-   * @return ListaSimulaciones La lista de las simulaciones cargadas para el usuario pasado.
-   * @throws LogicException Si no existe el usuario.
-   */
-  public function getListaSimulacionesByUser(stdClass $usuario) {
-    if (array_key_exists($usuario->uid, $this->getArrayListaSimulacionesByUser())) {
-      return $this->getArrayListaSimulacionesByUser()[$usuario->uid];
+  public function setUsuarioActual(UsuarioSimulacion $usuarioActual) {
+    if ($usuarioActual->countPartidas() > 0) {
+      $this->usuarioActual = $usuarioActual;
     } else {
-      throw new LogicException("No se han cargado las partidas de este usuario o no existe.");
+      throw new LogicException("No existen partidas guardadas en la BBDD.");
     }
   }
 
   /**
-   * @return ListaSimulaciones La lista de las simulaciones cargadas para el usuario actual de la sesión.
-   * @throws LogicException Si no existe el usuario.
+   * @return ListaUsuariosSimulacion
    */
-  public function getListaSimulacionesUsuarioActual() {
-    return $this->getListaSimulacionesByUser($this->getUsuarioActual());
+  public function getListaTodosUsuarios() {
+    return $this->listaTodosUsuarios;
   }
 
   /**
-   * @return ListaPartidas Listado de todas las partidas de todos los usuarios.
+   * @param ListaUsuariosSimulacion $listaTodosUsuarios
    */
-  public function retrieveAllPartidas()
-  {
-    $listaPartidas = new ListaPartidas();
+  private function setListaTodosUsuarios(ListaUsuariosSimulacion $listaTodosUsuarios) {
+    $this->listaTodosUsuarios = $listaTodosUsuarios;
+  }
 
-    foreach ($this->getArrayListaSimulacionesByUser() as $listaSimulaciones) {
-      foreach ($listaSimulaciones as $simulacion) {
-        $listaPartidas->mergeList($simulacion->getListaPartidas());
-      }
+  /**
+   * @return ListaUsuariosSimulacion
+   */
+  public function getListaTodosUsuariosExceptoActual() {
+    if (!isset($this->usuarioActual)) {
+      return $this->getListaTodosUsuarios();
     }
 
-    return $listaPartidas;
-  }
+    if (!isset($this->listaTodosUsuariosExceptoActual)) {
+      $listaUsuariosExceptoActual = new ListaUsuariosSimulacion();
 
-  /**
-   * @param int $idSimulation El id de la simulación para la que recuperar las partidas de los usuarios.
-   * @return ListaPartidas Lista de todas las partidas de esa simulación de todos los usuarios.
-   */
-  public function retrieveAllPartidasByIdSimulacion($idSimulation)
-  {
-    $listaPartidas = new ListaPartidas();
-
-    foreach ($this->getArrayListaSimulacionesByUser() as $listaSimulaciones) {
-      foreach ($listaSimulaciones as $simulacion) {
-        if (in_array($idSimulation, $this->getIdsSimulacionesCargadas()) && $simulacion->getIdSimulacion() == $idSimulation) {
-          $listaPartidas->mergeList($simulacion->getListaPartidas());
+      foreach ($this->getListaTodosUsuarios() as $usuario) {
+        if ($usuario->getUid() != $this->getUsuarioActual()->getUid()) {
+          $listaUsuariosExceptoActual->add($usuario);
         }
       }
+
+      $this->setListaTodosUsuariosExceptoActual($listaUsuariosExceptoActual);
     }
 
-    return $listaPartidas;
+    return $this->listaTodosUsuariosExceptoActual;
   }
 
   /**
-   * @param stdClass $usuario
-   * @return ListaPartidas Lista de todas las partidas de ese usuario de todas las simulaciones cargadas en el gestor.
+   * @param ListaUsuariosSimulacion $listaTodosUsuariosExceptoActual
    */
-  public function retrieveAllPartidasByUser(stdClass $usuario)
-  {
-    $listaPartidas = new ListaPartidas();
-
-    if (array_key_exists($usuario->uid, $this->getArrayListaSimulacionesByUser())) {
-      foreach ($this->getArrayListaSimulacionesByUser()[$usuario->uid] as $simulacion) {
-        $listaPartidas->mergeList($simulacion->getListaPartidas());
-      }
-    }
-
-    return $listaPartidas;
+  private function setListaTodosUsuariosExceptoActual(ListaUsuariosSimulacion $listaTodosUsuariosExceptoActual) {
+    $this->listaTodosUsuariosExceptoActual = $listaTodosUsuariosExceptoActual;
   }
 
-  /**
-   * @return ListaPartidas Lista de todas las partidas del usuario actual de todas las simulaciones cargadas en el gestor.
-   */
-  public function retrieveAllPartidasUsuarioActual() {
-    return $this->retrieveAllPartidasByUser($this->getUsuarioActual());
-  }
-} 
+
+}

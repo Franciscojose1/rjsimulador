@@ -1,7 +1,6 @@
 <?php
 
-class Infraccion implements ServicesAdapterInterface
-{
+class Infraccion implements ServicesAdapterInterface {
   /* ********************************************************************************* */
   /*                                      PROPERTIES                                   */
   /* ********************************************************************************* */
@@ -25,11 +24,10 @@ class Infraccion implements ServicesAdapterInterface
   /* ********************************************************************************* */
   /*                                     CONSTRUCTOR                                   */
   /* ********************************************************************************* */
-  function __construct($instante, $id_infraccion)
-  {
+  function __construct($instante, $id_infraccion) {
     $this->setInstante($instante);
     $this->setIdInfraccion($id_infraccion);
-    $this->loadNombreInfraccion();
+    //$this->loadNombreInfraccion();
   }
 
   /* ********************************************************************************* */
@@ -38,8 +36,7 @@ class Infraccion implements ServicesAdapterInterface
   /**
    * @return float
    */
-  public function getInstante()
-  {
+  public function getInstante() {
     return $this->instante;
   }
 
@@ -47,11 +44,11 @@ class Infraccion implements ServicesAdapterInterface
    * @param float $instante
    * @throws InvalidArgumentException
    */
-  private function setInstante($instante)
-  {
+  private function setInstante($instante) {
     if (is_numeric($instante)) {
-      $this->instante = $instante;
-    } else {
+      $this->instante = floatval($instante);
+    }
+    else {
       throw new InvalidArgumentException("El instante de la infracción debe ser un número.");
     }
   }
@@ -59,8 +56,7 @@ class Infraccion implements ServicesAdapterInterface
   /**
    * @return int
    */
-  public function getIdInfraccion()
-  {
+  public function getIdInfraccion() {
     return $this->id_infraccion;
   }
 
@@ -68,11 +64,11 @@ class Infraccion implements ServicesAdapterInterface
    * @param int $id_infraccion
    * @throws InvalidArgumentException
    */
-  private function setIdInfraccion($id_infraccion)
-  {
+  private function setIdInfraccion($id_infraccion) {
     if (is_numeric($id_infraccion)) {
-      $this->id_infraccion = $id_infraccion;
-    } else {
+      $this->id_infraccion = intval($id_infraccion);
+    }
+    else {
       throw new InvalidArgumentException("El ID de la infracción debe ser un entero.");
     }
   }
@@ -80,8 +76,7 @@ class Infraccion implements ServicesAdapterInterface
   /**
    * @return int
    */
-  public function getIdPartida()
-  {
+  public function getIdPartida() {
     return $this->id_partida;
   }
 
@@ -89,11 +84,11 @@ class Infraccion implements ServicesAdapterInterface
    * @param int $id_partida
    * @throws InvalidArgumentException
    */
-  public function setIdPartida($id_partida)
-  {
+  public function setIdPartida($id_partida) {
     if (is_numeric($id_partida)) {
-      $this->id_partida = $id_partida;
-    } else {
+      $this->id_partida = intval($id_partida);
+    }
+    else {
       throw new InvalidArgumentException("El ID de la partida debe ser un entero.");
     }
   }
@@ -101,24 +96,26 @@ class Infraccion implements ServicesAdapterInterface
   /**
    * @return string
    */
-  public function getNombreInfraccion()
-  {
+  public function getNombreInfraccion() {
+    if (!isset($this->nombre_infraccion)) {
+      $provider = FactoryDataProvider::createDataProvider();
+      $this->setNombreInfraccion($provider->loadNombreInfraccionFromId($this->getIdInfraccion()));
+    }
+
     return $this->nombre_infraccion;
   }
 
   /**
    * @param string $nombre_infraccion
    */
-  public function setNombreInfraccion($nombre_infraccion)
-  {
+  private function setNombreInfraccion($nombre_infraccion) {
     $this->nombre_infraccion = $nombre_infraccion;
   }
 
   /**
    * @return float
    */
-  public function getPosicionX()
-  {
+  public function getPosicionX() {
     return $this->posicion_x;
   }
 
@@ -126,11 +123,11 @@ class Infraccion implements ServicesAdapterInterface
    * @param float $posicion_x
    * @throws InvalidArgumentException
    */
-  public function setPosicionX($posicion_x)
-  {
+  public function setPosicionX($posicion_x) {
     if (is_numeric($posicion_x)) {
-      $this->posicion_x = $posicion_x;
-    } else {
+      $this->posicion_x = floatval($posicion_x);
+    }
+    else {
       throw new InvalidArgumentException("La posición X debe ser un número.");
     }
   }
@@ -138,8 +135,7 @@ class Infraccion implements ServicesAdapterInterface
   /**
    * @return float
    */
-  public function getPosicionY()
-  {
+  public function getPosicionY() {
     return $this->posicion_y;
   }
 
@@ -147,11 +143,11 @@ class Infraccion implements ServicesAdapterInterface
    * @param float $posicion_y
    * @throws InvalidArgumentException
    */
-  public function setPosicionY($posicion_y)
-  {
+  public function setPosicionY($posicion_y) {
     if (is_numeric($posicion_y)) {
-      $this->posicion_y = $posicion_y;
-    } else {
+      $this->posicion_y = floatval($posicion_y);
+    }
+    else {
       throw new InvalidArgumentException("La posición Y debe ser un número.");
     }
   }
@@ -159,8 +155,7 @@ class Infraccion implements ServicesAdapterInterface
   /**
    * @return float
    */
-  public function getPosicionZ()
-  {
+  public function getPosicionZ() {
     return $this->posicion_z;
   }
 
@@ -168,11 +163,11 @@ class Infraccion implements ServicesAdapterInterface
    * @param float $posicion_z
    * @throws InvalidArgumentException
    */
-  public function setPosicionZ($posicion_z)
-  {
+  public function setPosicionZ($posicion_z) {
     if (is_numeric($posicion_z)) {
-      $this->posicion_z = $posicion_z;
-    } else {
+      $this->posicion_z = floatval($posicion_z);
+    }
+    else {
       throw new InvalidArgumentException("La posición Z debe ser un número.");
     }
   }
@@ -180,9 +175,12 @@ class Infraccion implements ServicesAdapterInterface
   /**
    * @return array $posicion Position as array keys [x], [y] y [z]
    */
-  public function getPosicion()
-  {
-    $posicion = array('x' => $this->getPosicionX(), 'y' => $this->getPosicionY(), 'z' => $this->getPosicionZ());
+  public function getPosicion() {
+    $posicion = array(
+      'x' => $this->getPosicionX(),
+      'y' => $this->getPosicionY(),
+      'z' => $this->getPosicionZ()
+    );
     return $posicion;
   }
 
@@ -190,13 +188,13 @@ class Infraccion implements ServicesAdapterInterface
    * @param array $posicion Position as array keys [x], [y] y [z]
    * @throws InvalidArgumentException
    */
-  public function setPosicion($posicion)
-  {
+  public function setPosicion($posicion) {
     if (is_array($posicion) && isset($posicion['x']) && isset($posicion['y']) && isset($posicion['z'])) {
       $this->setPosicionX($posicion['x']);
       $this->setPosicionY($posicion['y']);
       $this->setPosicionZ($posicion['z']);
-    } else {
+    }
+    else {
       throw new InvalidArgumentException("La posicion debe ser un array asociativo con x, y y z.");
     }
   }
@@ -204,49 +202,26 @@ class Infraccion implements ServicesAdapterInterface
   /**
    * @return string
    */
-  public function getObservaciones()
-  {
+  public function getObservaciones() {
     return $this->observaciones;
   }
 
   /**
    * @param string $observaciones
    */
-  public function setObservaciones($observaciones)
-  {
+  public function setObservaciones($observaciones) {
     $this->observaciones = $observaciones;
   }
 
   /* ********************************************************************************* */
   /*                                       METHODS                                     */
   /* ********************************************************************************* */
-  /*
-   * Load nombre_infraccion from id_infraccion
-   * @throws Exception
-   */
-  private function loadNombreInfraccion()
-  {
-    $query = db_select('rjsim_infracciones', 's')
-      ->fields('s', array('nombre_infraccion'))
-      ->condition('id_infraccion', $this->getIdInfraccion(), '=');
-    $resultado = $query->execute();
-
-    if ($resultado->rowCount() == 0) {
-      throw new Exception("No existe una infracción con ese ID en la tabla de almacenamiento.");
-    }
-
-    while ($record = $resultado->fetchAssoc()) {
-      $this->setNombreInfraccion($record['nombre_infraccion']);
-    }
-  }
-
   /**
    * Almacena el objeto de forma persistente.
    * @throws Exception Si ocurre un error durante el almacenamiento.
    */
-  public function save()
-  {
-    if ($this->getIdPartida() == null || $this->getIdInfraccion() == null || $this->getInstante() == null) {
+  public function save() {
+    if ($this->getIdPartida() == NULL || $this->getIdInfraccion() == NULL || $this->getInstante() == NULL) {
       throw new Exception("Los campos ID de Partida, Instante e ID de Infracción son necesarios para almacenar una nueva Infraccion");
     }
 
@@ -257,8 +232,7 @@ class Infraccion implements ServicesAdapterInterface
   /**
    * @inheritdoc
    */
-  public function convertPropertiesToArray()
-  {
+  public function convertPropertiesToArray() {
     return get_object_vars($this);
   }
 }

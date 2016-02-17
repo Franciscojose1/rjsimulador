@@ -1,28 +1,5 @@
 <?php
-/*function rj_simulador_install() {
-  $values = array(
-    array(
-      'id_tipo_pregunta' => 1,
-      'alias_tipo_pregunta' => 'respuesta-libre',
-    ),
-    array(
-      'id_tipo_pregunta' => 2,
-      'alias_tipo_pregunta' => 'respuesta-unica',
-    ),
-    array(
-      'id_tipo_pregunta' => 3,
-      'alias_tipo_pregunta' => 'respuesta-multiple',
-    ),
-  );
-  
-  $query = db_insert('ha_tipos_preguntas')->fields(array('id_tipo_pregunta', 'alias_tipo_pregunta'));
-  foreach ($values as $record) {
-    $query->values($record);
-  }
-  $query->execute();
-}*/
-function rj_simulador_install()
-{
+function rj_simulador_install() {
   db_insert('rjsim_infracciones')
     ->fields(array('nombre_infraccion'))
     ->values(array('Atropello a un peatón'))
@@ -50,8 +27,7 @@ function rj_simulador_install()
     ->execute();
 }
 
-function rj_simulador_schema()
-{
+function rj_simulador_schema() {
   $schema['rjsim_partida'] = array(
     'description' => t('Listado de partidas jugadas'),
     'fields' => array(
@@ -59,46 +35,53 @@ function rj_simulador_schema()
         'description' => 'ID de la partida',
         'type' => 'serial',
         'unsigned' => TRUE,
-        'not null' => TRUE),
+        'not null' => TRUE
+      ),
       'uid' => array(
         'description' => 'UID del usuario que hizo al partida',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'default' => 0),
+        'default' => 0
+      ),
       'fecha' => array(
         'description' => 'Timestamp de la fecha en la que se hizo la partida',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'default' => 0),
+        'default' => 0
+      ),
       'id_simulacion' => array(
         'description' => 'ID de la simulacion que se hizo en la partida',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'default' => 1),
+        'default' => 1
+      ),
       'consumo_medio' => array(
         'description' => 'Consumo medio del vehículo durante la partida',
         'type' => 'float',
         'precision' => 12,
         'scale' => 6,
         'not null' => TRUE,
-        'default' => 0),
+        'default' => 0
+      ),
       'consumo_total' => array(
         'description' => 'Consumo total del vehículo al finalizar la partida',
         'type' => 'float',
         'precision' => 12,
         'scale' => 6,
         'not null' => TRUE,
-        'default' => 0),
+        'default' => 0
+      ),
       'tiempo_total' => array(
         'description' => 'Duración total de la partida',
         'type' => 'float',
         'precision' => 12,
         'scale' => 6,
         'not null' => TRUE,
-        'default' => 0),
+        'default' => 0
+      ),
     ),
     'primary key' => array('id_partida'),
   );
@@ -109,13 +92,15 @@ function rj_simulador_schema()
         'description' => 'ID de la simulacion',
         'type' => 'serial',
         'unsigned' => TRUE,
-        'not null' => TRUE),
+        'not null' => TRUE
+      ),
       'nombre_simulacion' => array(
         'description' => 'El nombre de la simulacion',
         'type' => 'varchar',
         'length' => 250,
         'not null' => TRUE,
-        'default' => ' '),
+        'default' => ' '
+      ),
     ),
     'primary key' => array('id_simulacion'),
   );
@@ -126,13 +111,15 @@ function rj_simulador_schema()
         'description' => 'ID de la infracción',
         'type' => 'serial',
         'unsigned' => TRUE,
-        'not null' => TRUE),
+        'not null' => TRUE
+      ),
       'nombre_infraccion' => array(
         'description' => 'Nombre de la infraccion cometida',
         'type' => 'varchar',
         'length' => 250,
         'not null' => TRUE,
-        'default' => ' '),
+        'default' => ' '
+      ),
     ),
     'primary key' => array('id_infraccion'),
   );
@@ -144,47 +131,54 @@ function rj_simulador_schema()
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'default' => 1),
+        'default' => 1
+      ),
       'instante' => array(
         'description' => 'Instante de tiempo en el que se produce la infracción (en número de segundos)',
         'type' => 'float',
         'precision' => 12,
         'scale' => 6,
         'not null' => TRUE,
-        'default' => 0),
+        'default' => 0
+      ),
       'id_infraccion' => array(
         'description' => 'ID de la infracción',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'default' => 0),
+        'default' => 0
+      ),
       'posicion_x' => array(
         'description' => 'La posicion X del coche',
         'type' => 'float',
         'precision' => 12,
         'scale' => 6,
         'not null' => TRUE,
-        'default' => 0),
+        'default' => 0
+      ),
       'posicion_y' => array(
         'description' => 'La posicion Y del coche',
         'type' => 'float',
         'precision' => 12,
         'scale' => 6,
         'not null' => TRUE,
-        'default' => 0),
+        'default' => 0
+      ),
       'posicion_z' => array(
         'description' => 'La posicion Z del coche',
         'type' => 'float',
         'precision' => 12,
         'scale' => 6,
         'not null' => TRUE,
-        'default' => 0),
+        'default' => 0
+      ),
       'observaciones' => array(
         'description' => 'Observaciones sobre la infracción',
         'type' => 'varchar',
         'length' => 250,
         'not null' => FALSE,
-        'default' => ' '),
+        'default' => ' '
+      ),
     ),
     'primary key' => array('id_partida', 'instante', 'id_infraccion'),
   );
@@ -196,69 +190,79 @@ function rj_simulador_schema()
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'default' => 0),
+        'default' => 0
+      ),
       'instante' => array(
         'description' => 'Instante de tiempo en la simulación (en número de segundos)',
         'type' => 'float',
         'precision' => 12,
         'scale' => 6,
         'not null' => TRUE,
-        'default' => 0),
+        'default' => 0
+      ),
       'posicion_x' => array(
         'description' => 'La posicion X del coche',
         'type' => 'float',
         'precision' => 12,
         'scale' => 6,
         'not null' => TRUE,
-        'default' => 0),
+        'default' => 0
+      ),
       'posicion_y' => array(
         'description' => 'La posicion Y del coche',
         'type' => 'float',
         'precision' => 12,
         'scale' => 6,
         'not null' => TRUE,
-        'default' => 0),
+        'default' => 0
+      ),
       'posicion_z' => array(
         'description' => 'La posicion Z del coche',
         'type' => 'float',
         'precision' => 12,
         'scale' => 6,
         'not null' => TRUE,
-        'default' => 0),
+        'default' => 0
+      ),
       'velocidad' => array(
         'description' => 'La velocidad del coche',
         'type' => 'float',
         'precision' => 12,
         'scale' => 6,
         'not null' => TRUE,
-        'default' => 0),
+        'default' => 0
+      ),
       'rpm' => array(
         'description' => 'Las revoluciones por minuto del coche',
         'type' => 'float',
         'precision' => 12,
         'scale' => 6,
         'not null' => TRUE,
-        'default' => 0),
+        'default' => 0
+      ),
       'marcha' => array(
         'description' => 'La marcha del coche',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'default' => 1),
+        'default' => 1
+      ),
       'consumo_instantaneo' => array(
         'description' => 'El consumo instanteo del coche',
         'type' => 'float',
         'precision' => 12,
         'scale' => 6,
         'not null' => TRUE,
-        'default' => 0),
+        'default' => 0
+      ),
       'consumo_total' => array(
         'description' => 'El consumo acumulado del coche',
         'type' => 'float',
         'precision' => 12,
         'scale' => 6,
         'not null' => TRUE,
-        'default' => 0),
+        'default' => 0
+      ),
     ),
     'primary key' => array('id_partida', 'instante'),
   );

@@ -1,7 +1,6 @@
 <?php
 
-interface DataSaver
-{
+interface DataSaver {
   /**
    * Almacena una partida de forma persistente.
    * @param Partida $partida El objeto a almacenar.

@@ -1,20 +1,44 @@
 <?php
 
-interface DataProvider
-{
+interface DataProvider {
   /**
-   * Permite recuperar todos los ids y descipciones de las infracciones actuales.
-   * @return array Array indexado de la forma Id_infraccion => Descripción de la infracción.
+   * Recupera un usuario de la BBDD si tiene alguna partida.
+   * @return UsuarioSimulacion
    */
-  public function getAllIdsInfracciones();
+  public function loadSimulatorUser($uid);
+
+  /**
+   * Recupera todos los usuarios que tienen alguna partida en el simualdor.
+   * @return ListaUsuariosSimulacion Lista de los usuarios que tienen alguna partida en el simulador.
+   */
+  public function loadAllSimulatorUsers();
+
+  /**
+   * Permite recuperar todos los ids y descripciones de las infracciones actuales.
+   * @return array Array indexado de la forma Id_infraccion => descripción de la infracción.
+   */
+  public function loadAllIdsInfracciones();
+
+  /**
+   * Permite recuperar todos los ids y descripciones de las simulaciones actuales.
+   * @return array Array indexado de la forma id_simulacion => descripción de la simulación.
+   */
+  public function loadAllIdsSimulaciones();
 
   /**
    * Recupera el nombre asociado a un id de simulación.
    * @param int $id_simulacion El id de la simulación.
    * @return string Devuelve el nombre de la simulación asociado a ese ID.
-   * @throws NoSuchElementException Si no existe esa simulación.
+   * @throws Exception Si no existe esa simulación.
    */
-  public function getNombreSimulacionFromId($id_simulacion);
+  public function loadNombreSimulacionFromId($id_simulacion);
+
+  /**
+   * Devuelve la lista con todas las simulaciones de este usuario.
+   * @param UsuarioSimulacion $usuario El usuario.
+   * @return ListaSimulaciones La lista de las simulaciones para este usuario.
+   */
+  public function loadListaSimulacionesByUsuario(UsuarioSimulacion $usuario);
 
   /**
    * @param Simulacion $simulation La simulación.
@@ -25,7 +49,7 @@ interface DataProvider
   /**
    * @param int $id_partida El id de la partida.
    * @return Partida Partida con ese id instanciada con los datos almacenados de la misma.
-   * @throws NoSuchElementException Si no existe una partida con ese id.
+   * @throws Exception Si no existe una partida con ese id.
    */
   public function loadPartidaById($id_partida);
 
@@ -42,4 +66,12 @@ interface DataProvider
    * @return ListaDatosInstantaneos Lista de datos de la partida con ese id. Lista vacía si no encuentra ninguna.
    */
   public function loadListaDatosByPartida(Partida $partida);
-} 
+
+  /**
+   * Recupera el nombre de una infracción.
+   * @param int $id_infraccion El id de la infracción de la que recuperar el nombre.
+   * @return string Nombre de la infracción.
+   * @throws Exception Si no hay una infracción con ese ID.
+   */
+  public function loadNombreInfraccionFromId($id_infraccion);
+}

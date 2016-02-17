@@ -1,24 +1,21 @@
 <?php
 
-class DBDataSaver implements DataSaver
-{
+class DBDataSaver implements DataSaver {
   /* @var DBDataSaver */
   private static $saver;
 
   /**
    * Constructor privado para evitar instanciaciones externas de la clase.
    */
-  private function __construct()
-  {
+  private function __construct() {
   }
 
   /**
    * Singleton pattern
    * @return DBDataSaver Devuelve la única instancia del Saver.
    */
-  public static function getInstance()
-  {
-    if (self::$saver == null) {
+  public static function getInstance() {
+    if (self::$saver == NULL) {
       self::$saver = new DBDataSaver();
     }
     return self::$saver;
@@ -28,8 +25,7 @@ class DBDataSaver implements DataSaver
    * @inheritdoc
    */
 
-  public function savePartida(Partida $partida)
-  {
+  public function savePartida(Partida $partida) {
     // Creamos una transacción; si algo falla hacemos rollback
     $transaction = db_transaction();
     try {
@@ -47,7 +43,9 @@ class DBDataSaver implements DataSaver
       $partida->setIdPartida($idPartidaNuevo);
 
       // Solo insertamos infracciones si existen
-      if ($partida->getListaInfracciones() != null && $partida->getListaInfracciones()->count() > 0) {
+      if ($partida->getListaInfracciones() != NULL && $partida->getListaInfracciones()
+          ->count() > 0
+      ) {
         foreach ($partida->getListaInfracciones() as $infraccion) {
           $infraccion->setIdPartida($partida->getIdPartida());
           $infraccion->save();
@@ -55,7 +53,9 @@ class DBDataSaver implements DataSaver
       }
 
       // Solo insertamos datos si existen
-      if ($partida->getListaDatos() != null && $partida->getListaDatos()->count() > 0) {
+      if ($partida->getListaDatos() != NULL && $partida->getListaDatos()
+          ->count() > 0
+      ) {
         foreach ($partida->getListaDatos() as $dato) {
           $dato->setIdPartida($partida->getIdPartida());
           $dato->save();
@@ -74,12 +74,11 @@ class DBDataSaver implements DataSaver
   /**
    * @inheritdoc
    */
-  public function saveInfraccion(Infraccion $infraccion)
-  {
+  public function saveInfraccion(Infraccion $infraccion) {
     $queryInfracciones = db_insert('rjsim_infracciones_partida')
       ->fields(array(
         'id_partida' => $infraccion->getIdPartida(),
-        'instante'=> $infraccion->getInstante(),
+        'instante' => $infraccion->getInstante(),
         'id_infraccion' => $infraccion->getIdInfraccion(),
         'posicion_x' => $infraccion->getPosicionX(),
         'posicion_y' => $infraccion->getPosicionY(),
@@ -93,8 +92,7 @@ class DBDataSaver implements DataSaver
   /**
    * @inheritdoc
    */
-  public function saveDatoInstantaneo(DatoInstantaneo $dato)
-  {
+  public function saveDatoInstantaneo(DatoInstantaneo $dato) {
     $queryDatos = db_insert('rjsim_datos_partida')
       ->fields(
         array(

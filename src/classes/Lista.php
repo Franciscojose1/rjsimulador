@@ -1,13 +1,11 @@
 <?php
 
-abstract class Lista implements Iterator, Countable
-{
+abstract class Lista implements Iterator, Countable {
   private $count = 0;
   private $position = 0;
   private $items = array();
 
-  public function __construct()
-  {
+  public function __construct() {
     $this->count = 0;
     $this->position = 0;
   }
@@ -16,8 +14,7 @@ abstract class Lista implements Iterator, Countable
    * Return the current element
    * @return mixed Can return any type.
    */
-  public function current()
-  {
+  public function current() {
     return $this->items[$this->position];
   }
 
@@ -25,8 +22,7 @@ abstract class Lista implements Iterator, Countable
    * Move forward to next element
    * @return void Any returned value is ignored.
    */
-  public function next()
-  {
+  public function next() {
     ++$this->position;
   }
 
@@ -34,8 +30,7 @@ abstract class Lista implements Iterator, Countable
    * Return the key of the current element
    * @return mixed scalar on success, or null on failure.
    */
-  public function key()
-  {
+  public function key() {
     return $this->position;
   }
 
@@ -44,8 +39,7 @@ abstract class Lista implements Iterator, Countable
    * @return boolean The return value will be casted to boolean and then evaluated.
    * Returns true on success or false on failure.
    */
-  public function valid()
-  {
+  public function valid() {
     return isset($this->items[$this->position]);
   }
 
@@ -53,8 +47,7 @@ abstract class Lista implements Iterator, Countable
    * Rewind the Iterator to the first element
    * @return void Any returned value is ignored.
    */
-  public function rewind()
-  {
+  public function rewind() {
     $this->position = 0;
   }
 
@@ -63,16 +56,14 @@ abstract class Lista implements Iterator, Countable
    * @return int The custom count as an integer.
    * The return value is cast to an integer.
    */
-  public function count()
-  {
+  public function count() {
     return $this->count;
   }
 
   /**
    * @param int $newCount nuevo número de elemento de la lista
    */
-  private function setCount($newCount)
-  {
+  private function setCount($newCount) {
     $this->count = $newCount;
   }
 
@@ -82,8 +73,7 @@ abstract class Lista implements Iterator, Countable
    * @throws InvalidArgumentException Si la key pasada no es numérica
    * @throws Exception Si no existe esa clave en la lista
    */
-  public function get($numberKey)
-  {
+  public function get($numberKey) {
     if (!is_numeric($numberKey)) {
       throw new InvalidArgumentException("La clave para recuperar un elemento debe ser numérica.");
     }
@@ -99,8 +89,7 @@ abstract class Lista implements Iterator, Countable
    * @param mixed $item Item a añadir a la lista
    * @return int Número de elementos en la lista después de añadir el item.
    */
-  public function add($item)
-  {
+  public function add($item) {
     $this->items[$this->count()] = $item;
     $this->setCount($this->count() + 1);
     return $this->count();
@@ -112,8 +101,7 @@ abstract class Lista implements Iterator, Countable
    * @throws InvalidArgumentException Si la clave no es numérica
    * @throws Exception Si no existe esa clave en la lista
    */
-  public function remove($numberKey)
-  {
+  public function remove($numberKey) {
     if (!is_numeric($numberKey)) {
       throw new InvalidArgumentException("La clave para eliminar un elemento debe ser numérica.");
     }
@@ -122,7 +110,8 @@ abstract class Lista implements Iterator, Countable
       unset($this->items[$numberKey]);
       ksort($this->items);
       $this->setCount($this->count() - 1);
-    } else {
+    }
+    else {
       throw new Exception("No existe un elemento con esa clave en la lista.");
     }
 
@@ -132,8 +121,7 @@ abstract class Lista implements Iterator, Countable
   /**
    * @param Lista $lista Lista a fusionar con la actual
    */
-  public function mergeList(Lista $lista)
-  {
+  public function mergeList(Lista $lista) {
     $this->items = array_merge($this->items, $lista->items);
     ksort($this->items);
     $this->setCount($this->count() + $lista->count());
@@ -142,13 +130,11 @@ abstract class Lista implements Iterator, Countable
   /**
    * @param mixed $options Opciones para ordenar la lista.
    */
-  protected function sortList($options)
-  {
+  protected function sortList($options) {
     usort($this->items, $options);
   }
 
-  protected function filterItems(Lista $listaResultado, FilterInterface $filter)
-  {
+  protected function filterItems(Lista $listaResultado, FilterInterface $filter) {
     foreach ($this->items as $item) {
       if ($filter->filter($item)) {
         $listaResultado->add($item);
@@ -156,5 +142,14 @@ abstract class Lista implements Iterator, Countable
     }
 
     return $listaResultado;
+  }
+
+  /**
+   * Permite realizar un cálculo sobre los datos de una lista.
+   * @param CalculatedDataInterface $calculatedDataInterface Tipo de cálculo que se desea hacer sobre la lista.
+   * @return mixed Los datos procesados. Varían según el tipo de CalculatedDataInterface pasada a ala función.
+   */
+  public function calculateData(CalculatedDataInterface $calculatedDataInterface) {
+    return $calculatedDataInterface->calculate($this);
   }
 } 
