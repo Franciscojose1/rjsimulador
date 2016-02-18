@@ -3,7 +3,7 @@
 /**
  * Implementation of hook_permission().
  */
-function rj_simulador_permission() {
+function rjsimulador_permission() {
   return array(
     'crear partidas' => array(
       'title' => t('Crear nuevas partidas'),
@@ -23,12 +23,12 @@ function rj_simulador_permission() {
 /**
  * Implementation of hook_menu().
  */
-function rj_simulador_menu() {
+function rjsimulador_menu() {
   $items = array();
   $items['simulaciones'] = array(
     'title' => 'Mis datos de las simulaciones',
-    'file' => 'rj_simulador.pages.inc',
-    'page callback' => 'rj_simulador_simulaciones_page',
+    'file' => 'rjsimulador.pages.inc',
+    'page callback' => 'rjsimulador_simulaciones_page',
     'access callback' => 'check_user_access_has_saved_partidas',
     'access arguments' => array('ver info partidas'),
     'menu_name' => 'main-menu',
@@ -37,16 +37,16 @@ function rj_simulador_menu() {
   $items['simulaciones/%/partidas'] = array(
     'title' => 'Partidas de la Simulación @n_simulacion',
     'title arguments' => array('@n_simulacion' => 1),
-    'file' => 'rj_simulador.pages.inc',
-    'page callback' => 'rj_simulador_partidas_simulacion_page',
+    'file' => 'rjsimulador.pages.inc',
+    'page callback' => 'rjsimulador_partidas_simulacion_page',
     'page arguments' => array(1),
     'access arguments' => array('ver info partidas'),
     'type' => MENU_NORMAL_ITEM,
   );
   $items['simulaciones/%/partidas/%'] = array(
     'title' => 'Datos de la Partida',
-    'file' => 'rj_simulador.pages.inc',
-    'page callback' => 'rj_simulador_partida_page',
+    'file' => 'rjsimulador.pages.inc',
+    'page callback' => 'rjsimulador_partida_page',
     'page arguments' => array(3),
     'access callback' => 'check_user_access_to_partida',
     'access arguments' => array('ver info partidas', 3, 1),
@@ -54,8 +54,8 @@ function rj_simulador_menu() {
   );
   $items['admin/simulaciones_usuarios'] = array(
     'title' => 'Datos generales de las simulaciones',
-    'file' => 'rj_simulador.admin.inc',
-    'page callback' => 'rj_simulador_simulaciones_usuarios_admin_page',
+    'file' => 'rjsimulador.admin.inc',
+    'page callback' => 'rjsimulador_simulaciones_usuarios_admin_page',
     'access arguments' => array('comparar info partidas'),
     'menu_name' => 'management',
     'type' => MENU_NORMAL_ITEM,
@@ -63,8 +63,8 @@ function rj_simulador_menu() {
   $items['admin/simulaciones_usuarios/%/simulaciones'] = array(
     'title' => 'Usuario con UID @uid: Datos de las simulaciones',
     'title arguments' => array('@uid' => 2),
-    'file' => 'rj_simulador.pages.inc',
-    'page callback' => 'rj_simulador_simulaciones_page',
+    'file' => 'rjsimulador.pages.inc',
+    'page callback' => 'rjsimulador_simulaciones_page',
     'page arguments' => array(2, TRUE),
     'access arguments' => array('comparar info partidas'),
     'type' => MENU_NORMAL_ITEM,
@@ -72,8 +72,8 @@ function rj_simulador_menu() {
   $items['admin/simulaciones_usuarios/%/simulaciones/%/partidas'] = array(
     'title' => 'Usuario con UID @uid: Partidas de la Simulación @n_simulacion',
     'title arguments' => array('@uid' => 2, '@n_simulacion' => 4),
-    'file' => 'rj_simulador.pages.inc',
-    'page callback' => 'rj_simulador_partidas_simulacion_page',
+    'file' => 'rjsimulador.pages.inc',
+    'page callback' => 'rjsimulador_partidas_simulacion_page',
     'page arguments' => array(4, 2, TRUE),
     'access arguments' => array('comparar info partidas'),
     'type' => MENU_NORMAL_ITEM,
@@ -81,8 +81,8 @@ function rj_simulador_menu() {
   $items['admin/simulaciones_usuarios/%/simulaciones/%/partidas/%'] = array(
     'title' => 'Usuario @uid: Datos de la Partida',
     'title arguments' => array('@uid' => 2),
-    'file' => 'rj_simulador.pages.inc',
-    'page callback' => 'rj_simulador_partida_page',
+    'file' => 'rjsimulador.pages.inc',
+    'page callback' => 'rjsimulador_partida_page',
     'page arguments' => array(6, 2),
     'access callback' => 'check_user_access_to_partida',
     'access arguments' => array('comparar info partidas', 6, 4, 2),
@@ -104,7 +104,15 @@ function check_user_access_has_saved_partidas($permission, $uid = NULL) {
   $usuarios = $provider->loadAllSimulatorUsers();
 
   // Solo pueden ver la pantalla genérica de simulación los usuarios que tienen partidas guardadas
-  return user_access($permission) && array_key_exists($usuario->uid, $usuarios);
+  $usuarioTienePartidas = false;
+  foreach ($usuarios as $user) {
+    if ($user->getUid() == $usuario->uid) {
+      $usuarioTienePartidas = true;
+      break;
+    }
+  }
+
+  return user_access($permission) && $usuarioTienePartidas;
 }
 
 function check_user_access_to_partida($permission, $id_partida, $id_simulacion, $uid = NULL) {
@@ -124,15 +132,15 @@ function check_user_access_to_partida($permission, $id_partida, $id_simulacion, 
 /**
  *  Implements hook_services_resources().
  */
-function rj_simulador_services_resources() {
+function rjsimulador_services_resources() {
   // Include resources definitions
-  module_load_include('inc', 'rj_simulador', 'resources/rj_simulador_partida.resource');
+  module_load_include('inc', 'rjsimulador', 'resources/rjsimulador_partida.resource');
   $resources = array();
   $resources += partida_resource_definition();
   return $resources;
 }
 
-function rj_simulador_theme() {
+function rjsimulador_theme() {
   return array(
     'lista_simulaciones_partidas' => array(
       'template' => 'templates/lista-simulaciones-partidas',
@@ -157,14 +165,13 @@ function rj_simulador_theme() {
 /**
  *  Implements hook_preprocess_HOOK().
  */
-function rj_simulador_preprocess_lista_simulaciones(&$variables) {
+function rjsimulador_preprocess_lista_simulaciones(&$variables) {
 }
 
 /**
  *  Implements hook_services_resources_alter().
  */
-function rj_simulador_services_resources_alter(&$resources, &$endpoint) {
-  dpm($resources);
+function rjsimulador_services_resources_alter(&$resources, &$endpoint) {
   $resources['user']['actions']['register']['callback'] = "_user_register_custom";
 }
 

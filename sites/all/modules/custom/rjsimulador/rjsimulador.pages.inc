@@ -1,10 +1,10 @@
 <?php
-module_load_include('inc', 'rj_simulador', 'rj_simulador.forms');
+module_load_include('inc', 'rjsimulador', 'rjsimulador.forms');
 
 /* *************************************************************************** */
 /* *                        PÁGINA DE SIMULACIONES                             */
 /* *************************************************************************** */
-function rj_simulador_simulaciones_page($uid = NULL, $adminMode = FALSE) {
+function rjsimulador_simulaciones_page($uid = NULL, $adminMode = FALSE) {
   // Recuperamos el usuario original
   if (isset($uid)) {
     $user = user_uid_optional_load($uid);
@@ -78,7 +78,7 @@ function rj_simulador_simulaciones_page($uid = NULL, $adminMode = FALSE) {
 /* *************************************************************************** */
 /* *             PÁGINA DE PARTIDAS POR TIPO DE SIMULACIÓN                     */
 /* *************************************************************************** */
-function rj_simulador_partidas_simulacion_page($id_simulacion, $uid = NULL, $adminMode = FALSE) {
+function rjsimulador_partidas_simulacion_page($id_simulacion, $uid = NULL, $adminMode = FALSE) {
   // Recuperamos el usuario original
   if (isset($uid)) {
     $user = user_uid_optional_load($uid);
@@ -175,8 +175,8 @@ function rj_simulador_partidas_simulacion_page($id_simulacion, $uid = NULL, $adm
 /* *************************************************************************** */
 /* *                          PÁGINA DE PARTIDA                                */
 /* *************************************************************************** */
-function rj_simulador_partida_page($id_partida) {
-  drupal_add_js(drupal_get_path('module', 'rj_simulador') . '/js/rj_simulador.js');
+function rjsimulador_partida_page($id_partida) {
+  drupal_add_js(drupal_get_path('module', 'rjsimulador') . '/js/rjsimulador.js');
   $miPartida = Partida::loadById($id_partida);
 
   // Creamos la tabla a sacar para mostrar las partidas
