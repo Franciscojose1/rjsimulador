@@ -184,7 +184,7 @@ function _user_register_custom($account) {
   // Adds backwards compatability with regression fixed in #1083242
   $account = _services_arg_value($account, 'account');
 
-  // Loa d the required includes for saving profile information
+  // Load the required includes for saving profile information
   // with drupal_form_submit().
   module_load_include('inc', 'user', 'user.pages');
 
