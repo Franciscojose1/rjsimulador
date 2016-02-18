@@ -1,16 +1,16 @@
 <?php
 function partida_resource_definition() {
   $resources = array(
-    'rj_simulador_partida' => array(
+    'rjsimulador_partida' => array(
       'operations' => array(
         'create' => array(
           'help' => 'Crea una nueva partida junto con sus datos e infracciones',
           'file' => array(
             'type' => 'inc',
-            'module' => 'rj_simulador',
-            'name' => 'resources/rj_simulador_partida.resource'
+            'module' => 'rjsimulador',
+            'name' => 'resources/rjsimulador_partida.resource'
           ),
-          'callback' => '_rj_simulador_partida_add',
+          'callback' => '_rjsimulador_partida_add',
           'access callback' => 'user_access',
           'access arguments' => array('crear partidas'),
           'access arguments append' => FALSE,
@@ -28,10 +28,10 @@ function partida_resource_definition() {
           'help' => 'Recupera una partida',
           'file' => array(
             'type' => 'inc',
-            'module' => 'rj_simulador',
-            'name' => 'resources/rj_simulador_partida.resource'
+            'module' => 'rjsimulador',
+            'name' => 'resources/rjsimulador_partida.resource'
           ),
-          'callback' => '_rj_simulador_partida_retrieve',
+          'callback' => '_rjsimulador_partida_retrieve',
           'access callback' => 'user_access',
           'access arguments' => array('crear partidas'),
           'access arguments append' => FALSE,
@@ -51,7 +51,7 @@ function partida_resource_definition() {
   return $resources;
 }
 
-function _rj_simulador_partida_add($partida) {
+function _rjsimulador_partida_add($partida) {
   $usuario = user_uid_optional_load();
 
   try {
@@ -95,7 +95,7 @@ function _rj_simulador_partida_add($partida) {
   }
 }
 
-function _rj_simulador_partida_retrieve($id_partida) {
+function _rjsimulador_partida_retrieve($id_partida) {
   try {
     $partida = Partida::loadById($id_partida);
     return $partida->convertPropertiesToArray();

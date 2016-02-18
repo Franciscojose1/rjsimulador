@@ -1,5 +1,5 @@
 <?php
-function rj_simulador_install() {
+function rjsimulador_install() {
   db_insert('rjsim_infracciones')
     ->fields(array('nombre_infraccion'))
     ->values(array('Atropello a un peatón'))
@@ -27,7 +27,7 @@ function rj_simulador_install() {
     ->execute();
 }
 
-function rj_simulador_schema() {
+function rjsimulador_schema() {
   $schema['rjsim_partida'] = array(
     'description' => t('Listado de partidas jugadas'),
     'fields' => array(

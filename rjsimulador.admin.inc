@@ -1,10 +1,10 @@
 <?php
-module_load_include('inc', 'rj_simulador', 'rj_simulador.forms.admin');
+module_load_include('inc', 'rjsimulador', 'rjsimulador.forms.admin');
 
 /* *************************************************************************** */
 /* *                    PÁGINA DE ADMIN SIMULACIONES                           */
 /* *************************************************************************** */
-function rj_simulador_simulaciones_usuarios_admin_page() {
+function rjsimulador_simulaciones_usuarios_admin_page() {
   // Gestor de simulaciones
   try {
     $gestorSimulaciones = new GestorSimulaciones();
@@ -34,7 +34,7 @@ function rj_simulador_simulaciones_usuarios_admin_page() {
   $sort = tablesort_get_sort($headers);
 
   if (isset($order) && isset($sort)) {
-    module_load_include('inc', 'rj_simulador', 'includes/sort_functions');
+    module_load_include('inc', 'rjsimulador', 'includes/sort_functions');
     usort($usuarios, 'orderUserBy' . $order['sql'] . strtoupper($sort));
   }
 
