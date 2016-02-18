@@ -11,7 +11,7 @@ Support & Customization:
 Email: info@zymphonies.com
 
 Design by:
-------------------------------
+-------------------------------
 FreeBiezz - www.freebiezz.com
 
 Developed by:
