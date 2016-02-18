@@ -7,7 +7,7 @@
  * @param $form_state
  *   The form state.
  */
-function simulator_drupal_theme_form_system_theme_settings_alter(&$form, &$form_state) {
+function rjsimulador_theme_form_system_theme_settings_alter(&$form, &$form_state) {
 
   $form['prof_settings'] = array(
     '#type' => 'fieldset',
