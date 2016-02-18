@@ -1,0 +1,8 @@
+#footer-area .column:last-child {
+    text-align: right;
+}
+
+.form-type-select {
+     width:auto;
+     float:left;
+ }
