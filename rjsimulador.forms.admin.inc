@@ -54,7 +54,7 @@ function rjsim_datos_simulaciones_usuarios_admin_form($form, &$form_state, Gesto
   $form['actions']['select_simulacion'] = array(
     '#type' => 'select',
     '#title' => t('Select Simulation'),
-    '#options' => $provider->getAllIdsSimulaciones(),
+    '#options' => $provider->loadAllIdsSimulaciones(),
     '#default_value' => 1,
     '#description' => t('Select the simulation about you want information.'),
     '#ajax' => array(

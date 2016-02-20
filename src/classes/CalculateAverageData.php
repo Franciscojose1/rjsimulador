@@ -3,6 +3,8 @@
 class CalculateAverageData implements CalculatedDataInterface {
   const CONSUMO_MEDIO = 0;
   const TIEMPO_TOTAL = 1;
+  const VELOCIDAD = 2;
+  const RPM = 3;
 
   private $field;
 
@@ -29,6 +31,19 @@ class CalculateAverageData implements CalculatedDataInterface {
           break;
         default:
           throw new Exception("No se puede procesar el campo pasado para el tipo ListaPartidas.");
+          break;
+      }
+    }
+    else if ($lista instanceof ListaDatosInstantaneos) {
+      switch ($this->field) {
+        case self::VELOCIDAD:
+          return $this->calculateVelocidadMediaPartida($lista);
+          break;
+        case self::RPM:
+          return $this->calculateRpmMediaPartida($lista);
+          break;
+        default:
+          throw new Exception("No se puede procesar el campo pasado para el tipo ListaDatosInstantaneos.");
           break;
       }
     }
@@ -75,5 +90,45 @@ class CalculateAverageData implements CalculatedDataInterface {
     }
 
     return $resultadoTiempoTotalMedio;
+  }
+
+  /**
+   * @param ListaDatosInstantaneos $lista
+   * @return float Velocidad media de una partida.
+   */
+  private function calculateVelocidadMediaPartida(ListaDatosInstantaneos $lista) {
+    $resultadoVelocidadTotal = 0;
+
+    if ($lista->count() > 0) {
+      $velocidadTotal = 0;
+
+      foreach ($lista as $dato) {
+        $velocidadTotal += $dato->getVelocidad();
+      }
+
+      $resultadoVelocidadTotal = $velocidadTotal / $lista->count();
+    }
+
+    return $resultadoVelocidadTotal;
+  }
+
+  /**
+   * @param ListaDatosInstantaneos $lista
+   * @return float RPMs medias de una partida.
+   */
+  private function calculateRpmMediaPartida(ListaDatosInstantaneos $lista) {
+    $resultadoRpmTotal = 0;
+
+    if ($lista->count() > 0) {
+      $velocidadRpm = 0;
+
+      foreach ($lista as $dato) {
+        $velocidadRpm += $dato->getRpm();
+      }
+
+      $resultadoRpmTotal = $velocidadRpm / $lista->count();
+    }
+
+    return $resultadoRpmTotal;
   }
 }

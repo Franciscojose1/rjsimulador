@@ -11,6 +11,7 @@ files[] = src/interfaces/ServicesAdapterInterface.php
 files[] = src/interfaces/SortableInterface.php
 ; Includes - Classes
 files[] = src/classes/CalculateAverageData.php
+files[] = src/classes/CalculateTypicalDeviation.php
 files[] = src/classes/DatoInstantaneo.php
 files[] = src/classes/DBDataProvider.php
 files[] = src/classes/DBDataSaver.php
@@ -18,6 +19,7 @@ files[] = src/classes/FactoryDataProvider.php
 files[] = src/classes/FactoryDataSaver.php
 files[] = src/classes/FilterByFecha.php
 files[] = src/classes/FilterByID.php
+files[] = src/classes/FilterByMarcha.php
 files[] = src/classes/GestorSimulaciones.php
 files[] = src/classes/Infraccion.php
 files[] = src/classes/Lista.php

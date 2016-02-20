@@ -297,4 +297,32 @@ class Partida implements ServicesAdapterInterface {
 
     return $partida;
   }
+
+  /**
+   * @return mixed Devuelve la velocidad media de la partida.
+   */
+  public function getVelocidadMedia() {
+    return $this->getListaDatos()->calculateData(new CalculateAverageData(CalculateAverageData::VELOCIDAD));
+  }
+
+  /**
+   * @return mixed Devuelve la desviacion tipica de velociad de la partida.
+   */
+  public function getDesviacionTipicaVelocidad() {
+    return $this->getListaDatos()->calculateData(new CalculateTypicalDeviation(CalculateTypicalDeviation::VELOCIDAD));
+  }
+
+  /**
+   * @return mixed Devuelve la RPMs medias de la partida.
+   */
+  public function getRpmMedia() {
+    return $this->getListaDatos()->calculateData(new CalculateAverageData(CalculateAverageData::RPM));
+  }
+
+  /**
+   * @return mixed Devuelve la desviación típica de las RPMs.
+   */
+  public function getDesviacionTipicaRpm() {
+    return $this->getListaDatos()->calculateData(new CalculateTypicalDeviation(CalculateTypicalDeviation::RPM));
+  }
 }
