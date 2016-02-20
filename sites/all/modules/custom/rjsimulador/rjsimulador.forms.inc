@@ -232,11 +232,10 @@ function rjsim_simulaciones_upper_right_form($form, &$form_state, GestorSimulaci
 }
 
 function rjsim_simulaciones_main_form($form, &$form_state, GestorSimulaciones $gestorSimulaciones) {
-  $listaPartidas = $gestorSimulaciones->getUsuarioActual()
-    ->retrieveAllPartidas();
-
   $provider = FactoryDataProvider::createDataProvider();
-  $idsInfracciones = $provider->getAllIdsInfracciones();
+  $idsInfracciones = $provider->loadAllIdsInfracciones();
+
+  $listaPartidas = $gestorSimulaciones->getUsuarioActual()->retrieveAllPartidas();
 
   $listaResultados = new ListaInfracciones();
   foreach ($listaPartidas as $partida) {
@@ -276,8 +275,7 @@ function rjsim_simulaciones_main_form($form, &$form_state, GestorSimulaciones $g
 /* *************************************************************************** */
 function rjsim_partidas_simulacion_upper_left_form($form, &$form_state, GestorSimulaciones $gestorSimulaciones, $id_simulacion) {
   // Lista de partidas del usuario actual para la simulacion
-  $listaPartidasUsuario = $gestorSimulaciones->getUsuarioActual()
-    ->retrieveAllPartidasByIdSimulacion($id_simulacion);
+  $listaPartidasUsuario = $gestorSimulaciones->getUsuarioActual()->retrieveAllPartidasByIdSimulacion($id_simulacion);
   $listaPartidasUsuario->sortBy('Fecha', 'ASC');
 
   // Lista de partidas de todos los usuarios para la simulación
@@ -379,12 +377,10 @@ function rjsim_partidas_simulacion_upper_right_form($form, &$form_state, GestorS
 function rjsim_partidas_simulacion_main_form($form, &$form_state, GestorSimulaciones $gestorSimulaciones, $id_simulacion) {
   // Provider de datos
   $provider = FactoryDataProvider::createDataProvider();
+  $idsInfracciones = $provider->loadAllIdsInfracciones();
 
-  $listaPartidas = $gestorSimulaciones->getUsuarioActual()
-    ->retrieveAllPartidasByIdSimulacion($id_simulacion);
+  $listaPartidas = $gestorSimulaciones->getUsuarioActual()->retrieveAllPartidasByIdSimulacion($id_simulacion);
   $listaPartidas->sortBy('Fecha', 'DESC');
-
-  $idsInfracciones = $provider->getAllIdsInfracciones();
 
   $labelAxisX = array();
   $data = array();
