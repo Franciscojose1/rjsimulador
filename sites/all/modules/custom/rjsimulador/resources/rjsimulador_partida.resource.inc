@@ -52,15 +52,25 @@ function partida_resource_definition() {
 }
 
 function _rjsimulador_partida_add($partida) {
-  $usuario = user_uid_optional_load();
+  $provider = FactoryDataProvider::createDataProvider();
+  $usuario = $provider->loadSimulatorUser();
 
   try {
-    $newPartida = new Partida($usuario->uid, REQUEST_TIME, $partida['id_simulacion']);
+    if (!array_key_exists($partida["id_simulacion"], $provider->loadAllIdsSimulaciones())) {
+      throw new InvalidArgumentException("No existe una simulación con el ID " . $partida["id_simulacion"] . ".");
+    }
+
+    $newPartida = new Partida($usuario->getUid(), REQUEST_TIME, $partida['id_simulacion']);
     $newPartida->setConsumoMedio($partida['consumo_medio']);
     $newPartida->setConsumoTotal($partida['consumo_total']);
     $newPartida->setTiempoTotal($partida['tiempo_total']);
 
+    $arrayIdsInfracciones = $provider->loadAllIdsInfracciones();
     foreach ($partida['infracciones'] as $infraccion) {
+      if (!array_key_exists($infraccion["id_infraccion"], $arrayIdsInfracciones)) {
+        throw new InvalidArgumentException("No existe una infracción con el ID " . $infraccion["id_infraccion"] . ".");
+      }
+
       $record = new Infraccion($infraccion['instante'], $infraccion['id_infraccion']);
       $record->setPosicionX($infraccion['posicion_x']);
       $record->setPosicionY($infraccion['posicion_y']);

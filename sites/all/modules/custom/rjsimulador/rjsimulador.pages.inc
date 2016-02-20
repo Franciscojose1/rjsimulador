@@ -169,7 +169,73 @@ function rjsimulador_partida_page($id_partida) {
   drupal_add_js(drupal_get_path('module', 'rjsimulador') . '/js/rjsimulador.js');
   $miPartida = Partida::loadById($id_partida);
 
-  // Creamos la tabla a sacar para mostrar las partidas
+  // Creamos la tabla con los datos de resumen de la partida
+  $headers = array(
+    array('data' => t('Consumo medio')),
+    array('data' => t('Tiempo total')),
+    array('data' => t('Velocidad media')),
+    array('data' => t('Desviación típica velocidad')),
+    array('data' => t('RPM medias')),
+    array('data' => t('Desviación típica RPM'))
+  );
+
+  $rows = array();
+  $rows[] =
+    array(
+      'data' =>
+        array(
+          array('data' => $miPartida->getConsumoMedio()),
+          array('data' => $miPartida->getTiempoTotal()),
+          array('data' => round($miPartida->getVelocidadMedia(),2)),
+          array('data' => round($miPartida->getDesviacionTipicaVelocidad(),2)),
+          array('data' => round($miPartida->getRpmMedia(),2)),
+          array('data' => round($miPartida->getDesviacionTipicaRpm(),2)),
+        ),
+    );
+
+  $renderArrayTableDatosEstadisticos =
+    array(
+      array(
+        '#theme' => 'table',
+        '#header' => $headers,
+        '#rows' => $rows,
+        '#empty' => t('No hay datos calculados para esta partida.'),
+      ),
+    );
+
+  // Creamos la tabla con los datos de RPMs por marcha
+  $headers = array(
+    array('data' => t('Marcha 1')),
+    array('data' => t('Marcha 2')),
+    array('data' => t('Marcha 3')),
+    array('data' => t('Marcha 4')),
+    array('data' => t('Marcha 5')),
+  );
+
+  $rows = array();
+  $rows[] =
+    array(
+      'data' =>
+        array(
+          array('data' => round($miPartida->getListaDatos()->filterBy(new FilterByMarcha(array(1)))->calculateData(new CalculateAverageData(CalculateAverageData::RPM)),2)),
+          array('data' => round($miPartida->getListaDatos()->filterBy(new FilterByMarcha(array(2)))->calculateData(new CalculateAverageData(CalculateAverageData::RPM)),2)),
+          array('data' => round($miPartida->getListaDatos()->filterBy(new FilterByMarcha(array(3)))->calculateData(new CalculateAverageData(CalculateAverageData::RPM)),2)),
+          array('data' => round($miPartida->getListaDatos()->filterBy(new FilterByMarcha(array(4)))->calculateData(new CalculateAverageData(CalculateAverageData::RPM)),2)),
+          array('data' => round($miPartida->getListaDatos()->filterBy(new FilterByMarcha(array(5)))->calculateData(new CalculateAverageData(CalculateAverageData::RPM)),2)),
+        ),
+    );
+
+  $renderArrayTableRpmMarchas =
+    array(
+      array(
+        '#theme' => 'table',
+        '#header' => $headers,
+        '#rows' => $rows,
+        '#empty' => t('No hay datos calculados para esta partida.')
+      ),
+    );
+
+  // Creamos la tabla a sacar para mostrar los datos de la Partida
   // Headers array
   $headers = array(
     array('data' => t('Dato Nº')),
@@ -193,25 +259,18 @@ function rjsimulador_partida_page($id_partida) {
 
   $renderArrayTableDatos = NULL;
   if (!empty($rows)) {
-    $limit = 10;
-    $page = pager_default_initialize(count($rows), $limit, 0);
-    $offset = $limit * $page;
     $renderArrayTableDatos =
       array(
         array(
           '#theme' => 'table',
           '#header' => $headers,
-          '#rows' => array_slice($rows, $offset, $limit),
+          '#rows' => $rows,
           '#empty' => t('No hay datos para esta partida.')
-        ),
-        array(
-          '#theme' => 'pager',
-          '#element' => 0
         ),
       );
   }
 
-  // Creamos la tabla a sacar para mostrar las partidas
+  // Creamos la tabla a sacar para mostrar las infracciones de la partida
   // Headers array
   $headers = array(
     array('data' => t('Infracción Nº')),
@@ -235,20 +294,13 @@ function rjsimulador_partida_page($id_partida) {
 
   $renderArrayTableInfracciones = NULL;
   if (!empty($rows)) {
-    $limit = 10;
-    $page = pager_default_initialize(count($rows), $limit, 1);
-    $offset = $limit * $page;
     $renderArrayTableInfracciones =
       array(
         array(
           '#theme' => 'table',
           '#header' => $headers,
-          '#rows' => array_slice($rows, $offset, $limit),
-          '#empty' => t('No hay infracciones para esta partida.')
-        ),
-        array(
-          '#theme' => 'pager',
-          '#element' => 1
+          '#rows' => $rows,
+          '#empty' => t('No hay infracciones para esta partida.'),
         ),
       );
   }
@@ -268,6 +320,7 @@ function rjsimulador_partida_page($id_partida) {
 
   $renderArrayFinal = array(
     '#theme' => 'partida',
+    '#upper_content' => array($renderArrayTableDatosEstadisticos, $renderArrayTableRpmMarchas),
     '#upper_left' => $renderArrayTableDatos,
     '#upper_right' => $renderArrayTableInfracciones,
     '#main_content' => $link,

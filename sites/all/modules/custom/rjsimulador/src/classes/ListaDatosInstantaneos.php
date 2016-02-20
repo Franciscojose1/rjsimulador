@@ -43,4 +43,13 @@ class ListaDatosInstantaneos extends Lista {
   public function remove($numberKey) {
     return parent::remove($numberKey);
   }
+
+  /**
+   * @param FilterInterface $filtro
+   * @return ListaDatosInstantaneos Lista de los datos que cumplen con el filtro
+   */
+  public function filterBy(FilterInterface $filtro) {
+    $listaResultado = new ListaDatosInstantaneos();
+    return parent::filterItems($listaResultado, $filtro);
+  }
 } 

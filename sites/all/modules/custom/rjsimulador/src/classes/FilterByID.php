@@ -5,6 +5,11 @@ class FilterByID implements FilterInterface {
   private $ids;
 
   public function __construct(array $paramIDs) {
+    foreach ($paramIDs as $id) {
+      if (!is_integer($id)) {
+        throw new InvalidArgumentException("Los IDs pasados tienen que ser un número entero.");
+      }
+    }
     $this->ids = $paramIDs;
   }
 
