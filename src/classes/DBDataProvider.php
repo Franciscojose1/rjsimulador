@@ -24,14 +24,22 @@ class DBDataProvider implements DataProvider {
   /**
    * @inheritdoc
    */
-  public function loadSimulatorUser($uid) {
-    $user = user_uid_optional_load($uid);
+  public function loadSimulatorUser($uid = null) {
+    if (isset($uid)) {
+      $user = user_uid_optional_load($uid);
+    } else {
+      $user = user_uid_optional_load();
+    }
+
+    if (!$user) {
+      throw new LogicException("El usuario con el UID " . $uid . " no existe.");
+    }
+
     return new UsuarioSimulacion($user);
   }
 
   /**
-   * Recupera todos los usuarios que tienen alguna partida en el simualdor
-   * @return ListaUsuariosSimulacion Array de los usuarios que tienen alguna partida en el simulador
+   * @inheritdoc
    */
   public function loadAllSimulatorUsers() {
     $query = db_select('rjsim_partida', 'p')
@@ -42,8 +50,9 @@ class DBDataProvider implements DataProvider {
     $usersUids = $resultados->fetchCol(0);
 
     $listaUsuarios = new ListaUsuariosSimulacion();
-    foreach (user_load_multiple($usersUids) as $user) {
-      $listaUsuarios->add($user);
+    foreach ($usersUids as $uid) {
+      $usuario = $this->loadSimulatorUser($uid);
+      $listaUsuarios->add($usuario);
     }
 
     return $listaUsuarios;

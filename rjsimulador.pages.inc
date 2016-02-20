@@ -5,15 +5,10 @@ module_load_include('inc', 'rjsimulador', 'rjsimulador.forms');
 /* *                        PÁGINA DE SIMULACIONES                             */
 /* *************************************************************************** */
 function rjsimulador_simulaciones_page($uid = NULL, $adminMode = FALSE) {
-  // Recuperamos el usuario original
-  if (isset($uid)) {
-    $user = user_uid_optional_load($uid);
-  }
-  else {
-    $user = user_uid_optional_load();
-  }
-
-  $usuarioSimulacion = new UsuarioSimulacion($user);
+  // Provider de datos
+  $provider = FactoryDataProvider::createDataProvider();
+  // Recuperamos el usuario
+  $usuarioSimulacion = $provider->loadSimulatorUser($uid);
 
   try {
     $gestorSimulaciones = new GestorSimulaciones($usuarioSimulacion);
@@ -79,15 +74,10 @@ function rjsimulador_simulaciones_page($uid = NULL, $adminMode = FALSE) {
 /* *             PÁGINA DE PARTIDAS POR TIPO DE SIMULACIÓN                     */
 /* *************************************************************************** */
 function rjsimulador_partidas_simulacion_page($id_simulacion, $uid = NULL, $adminMode = FALSE) {
-  // Recuperamos el usuario original
-  if (isset($uid)) {
-    $user = user_uid_optional_load($uid);
-  }
-  else {
-    $user = user_uid_optional_load();
-  }
-
-  $usuarioSimulacion = new UsuarioSimulacion($user);
+  // Provider de datos
+  $provider = FactoryDataProvider::createDataProvider();
+  // Recuperamos el usuario
+  $usuarioSimulacion = $provider->loadSimulatorUser($uid);
 
   try {
     $gestorSimulaciones = new GestorSimulaciones($usuarioSimulacion);

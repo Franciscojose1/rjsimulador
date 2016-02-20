@@ -1,16 +1,19 @@
 <?php
 
 class Simulacion {
+  /* @var int El ID de la Simulación */
   private $id_simulacion;
+  /* @var string $nombre_simulacion */
   private $nombre_simulacion;
   /* @var UsuarioSimulacion */
   private $usuario;
+  /* @var ListaPartidas */
   private $listaPartidas;
 
-  /*
-    Constructor -> Retrieve basic data of a certain Simulacion from Database
-    @param int id_partida -> Simulacion ID
-  */
+  /**
+   * @param int $id_simulacion EL ID de la simulación.
+   * @param UsuarioSimulacion $usuario El usuario para el que gestionar los datos de la simulación.
+   */
   public function __construct($id_simulacion, UsuarioSimulacion $usuario) {
     if (!is_numeric($id_simulacion)) {
       throw new InvalidArgumentException("El id de la simulación tiene que ser un entero.");

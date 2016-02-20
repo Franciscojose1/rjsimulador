@@ -96,4 +96,46 @@ class ListaUsuariosSimulacion extends  Lista {
 
     return ($a->getUid() < $b->getUid()) ? +1 : -1;
   }
+
+  protected static function sortByNameASC(UsuarioSimulacion $a, UsuarioSimulacion $b) {
+    if ($a->getName() == $b->getName()) {
+      return 0;
+    }
+    return ($a->getName() < $b->getName()) ? -1 : 1;
+  }
+
+  protected static function sortByNameDESC(UsuarioSimulacion $a, UsuarioSimulacion $b) {
+    if ($a->getName() == $b->getName()) {
+      return 0;
+    }
+    return ($a->getName() > $b->getName()) ? -1 : 1;
+  }
+
+  protected static function sortByCreatedASC(UsuarioSimulacion $a, UsuarioSimulacion $b) {
+    if ($a->getCreationDate() == $b->getCreationDate()) {
+      return 0;
+    }
+    return ($a->getCreationDate() < $b->getCreationDate()) ? -1 : 1;
+  }
+
+  protected static function sortByCreatedDESC(UsuarioSimulacion $a, UsuarioSimulacion $b) {
+    if ($a->getCreationDate() == $b->getCreationDate()) {
+      return 0;
+    }
+    return ($a->getCreationDate() > $b->getCreationDate()) ? -1 : 1;
+  }
+
+  protected static function sortByLastAccessASC(UsuarioSimulacion $a, UsuarioSimulacion $b) {
+    if ($a->getLastAccessDate() == $b->getLastAccessDate()) {
+      return 0;
+    }
+    return ($a->getLastAccessDate() < $b->getLastAccessDate()) ? -1 : 1;
+  }
+
+  protected static function sortByLastAccessDESC(UsuarioSimulacion $a, UsuarioSimulacion $b) {
+    if ($a->getLastAccessDate() == $b->getLastAccessDate()) {
+      return 0;
+    }
+    return ($a->getLastAccessDate() > $b->getLastAccessDate()) ? -1 : 1;
+  }
 }

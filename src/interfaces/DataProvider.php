@@ -3,9 +3,11 @@
 interface DataProvider {
   /**
    * Recupera un usuario de la BBDD si tiene alguna partida.
-   * @return UsuarioSimulacion
+   * @param int|null $uid El UID del usuario a cargar. O NULL para cargar al usuario actual.
+   * @return UsuarioSimulacion Un objeto Usuario cargado.
+   * @throws LogicException Si no existe un usuario con ese UID en la BBDD.
    */
-  public function loadSimulatorUser($uid);
+  public function loadSimulatorUser($uid = null);
 
   /**
    * Recupera todos los usuarios que tienen alguna partida en el simualdor.
