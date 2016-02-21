@@ -71,8 +71,8 @@ class ListaUsuariosSimulacion extends  Lista {
       throw new Exception("El orden de un campo solo puede tener los valores ASC o DESC");
     }
 
-    if ($sortField != "Uid") {
-      throw new Exception("Los únicos campos ordenables son Uid.");
+    if ($sortField != "Uid" && $sortField != "Created" && $sortField != "Login" && $sortField != "LastAccess") {
+      throw new Exception("Los únicos campos ordenables son Uid, Created, Login y LastAccess.");
     }
 
     // Opciones para ordenar la lista. Indica que callable function tiene que ser usado para ordenar los elementos
@@ -123,6 +123,20 @@ class ListaUsuariosSimulacion extends  Lista {
       return 0;
     }
     return ($a->getCreationDate() > $b->getCreationDate()) ? -1 : 1;
+  }
+
+  protected static function sortByLoginASC(UsuarioSimulacion $a, UsuarioSimulacion $b) {
+    if ($a->getLoginDate() == $b->getLoginDate()) {
+      return 0;
+    }
+    return ($a->getLoginDate() < $b->getLoginDate()) ? -1 : 1;
+  }
+
+  protected static function sortByLoginDESC(UsuarioSimulacion $a, UsuarioSimulacion $b) {
+    if ($a->getLoginDate() == $b->getLoginDate()) {
+      return 0;
+    }
+    return ($a->getLoginDate() > $b->getLoginDate()) ? -1 : 1;
   }
 
   protected static function sortByLastAccessASC(UsuarioSimulacion $a, UsuarioSimulacion $b) {
