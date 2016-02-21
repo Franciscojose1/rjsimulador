@@ -26,9 +26,9 @@ function rjsimulador_simulaciones_page($uid = NULL, $adminMode = FALSE) {
   // Creamos la tabla a sacar para mostrar las partidas
   // Headers array
   $headers = array(
-    array('data' => t('Nº de simulación')),
-    array('data' => t('Nombre Simulación')),
-    array('data' => t('Enlaces'))
+    array('data' => t('No. of Simulation')),
+    array('data' => t('Simulation Name')),
+    array('data' => t('Links'))
   );
 
   $rows = array();
@@ -51,7 +51,7 @@ function rjsimulador_simulaciones_page($uid = NULL, $adminMode = FALSE) {
           '#theme' => 'table',
           '#header' => $headers,
           '#rows' => array_slice($rows, $offset, $limit),
-          '#empty' => t('No existen simulaciones almacenadas en el servidor.')
+          '#empty' => t('There are no stored simulations in the server.')
         ),
         array(
           '#theme' => 'pager',
@@ -89,7 +89,7 @@ function rjsimulador_partidas_simulacion_page($id_simulacion, $uid = NULL, $admi
   $listadoPartidas = $gestorSimulaciones->getUsuarioActual()->retrieveAllPartidasByIdSimulacion($id_simulacion);
 
   if ($listadoPartidas->count() == 0) {
-    $renderArray = array('#markup' => '<span>No dispones de partidas almacenadas para esta simulación.</span>');
+    $renderArray = array('#markup' => '<span>' . t('You have no stored Partidas for this Simulation.') . '</span>');
     return $renderArray;
   }
 
@@ -103,12 +103,12 @@ function rjsimulador_partidas_simulacion_page($id_simulacion, $uid = NULL, $admi
   // Creamos la tabla a sacar para mostrar las partidas
   // Headers array
   $headers = array(
-    array('data' => t('Fecha'), 'field' => 'Fecha', 'sort' => 'desc'),
-    array('data' => t('Nombre Simulación')),
-    array('data' => t('Consumo Medio')),
-    array('data' => t('Consumo Total')),
-    array('data' => t('Tiempo Total')),
-    array('data' => t('Enlaces'))
+    array('data' => t('Date'), 'field' => 'Fecha', 'sort' => 'desc'),
+    array('data' => t('Simulation Name')),
+    array('data' => t('Average Consumption')),
+    array('data' => t('Total Consumption')),
+    array('data' => t('Total Time')),
+    array('data' => t('Links'))
   );
 
   // Getting the current sort and order parameters from the url
@@ -142,7 +142,7 @@ function rjsimulador_partidas_simulacion_page($id_simulacion, $uid = NULL, $admi
           '#theme' => 'table',
           '#header' => $headers,
           '#rows' => array_slice($rows, $offset, $limit),
-          '#empty' => t('No tienes partidas almacenadas en el servidor.')
+          '#empty' => t('You have no stored Partidas for this Simulation.')
         ),
         array(
           '#theme' => 'pager',
@@ -171,12 +171,12 @@ function rjsimulador_partida_page($id_partida) {
 
   // Creamos la tabla con los datos de resumen de la partida
   $headers = array(
-    array('data' => t('Consumo medio')),
-    array('data' => t('Tiempo total')),
-    array('data' => t('Velocidad media')),
-    array('data' => t('Desviación típica velocidad')),
-    array('data' => t('RPM medias')),
-    array('data' => t('Desviación típica RPM'))
+    array('data' => t('Average Consumption')),
+    array('data' => t('Total Time')),
+    array('data' => t('Average Speed')),
+    array('data' => t('Speed Typical Deviation')),
+    array('data' => t('Average RPM')),
+    array('data' => t('RPM Typical Deviation'))
   );
 
   $rows = array();
@@ -199,17 +199,18 @@ function rjsimulador_partida_page($id_partida) {
         '#theme' => 'table',
         '#header' => $headers,
         '#rows' => $rows,
-        '#empty' => t('No hay datos calculados para esta partida.'),
+        '#empty' => t('There is no data for this Partida.'),
+        '#caption' => '<h3>' . t('General data from Partida') . '</h3>'
       ),
     );
 
   // Creamos la tabla con los datos de RPMs por marcha
   $headers = array(
-    array('data' => t('Marcha 1')),
-    array('data' => t('Marcha 2')),
-    array('data' => t('Marcha 3')),
-    array('data' => t('Marcha 4')),
-    array('data' => t('Marcha 5')),
+    array('data' => t('Gear 1')),
+    array('data' => t('Gear 2')),
+    array('data' => t('Gear 3')),
+    array('data' => t('Gear 4')),
+    array('data' => t('Gear 5')),
   );
 
   $rows = array();
@@ -231,15 +232,16 @@ function rjsimulador_partida_page($id_partida) {
         '#theme' => 'table',
         '#header' => $headers,
         '#rows' => $rows,
-        '#empty' => t('No hay datos calculados para esta partida.')
+        '#empty' => t('There is no data for this Partida.'),
+        '#caption' => '<h3>' . t('Average RPMs by gear') . '</h3>'
       ),
     );
 
   // Creamos la tabla a sacar para mostrar los datos de la Partida
   // Headers array
   $headers = array(
-    array('data' => t('Dato Nº')),
-    array('data' => t('Instante')),
+    array('data' => t('Data Number')),
+    array('data' => t('Instant')),
   );
 
   $rows = array();
@@ -265,7 +267,7 @@ function rjsimulador_partida_page($id_partida) {
           '#theme' => 'table',
           '#header' => $headers,
           '#rows' => $rows,
-          '#empty' => t('No hay datos para esta partida.')
+          '#empty' => t('There is no data for this Partida.')
         ),
       );
   }
@@ -273,8 +275,8 @@ function rjsimulador_partida_page($id_partida) {
   // Creamos la tabla a sacar para mostrar las infracciones de la partida
   // Headers array
   $headers = array(
-    array('data' => t('Infracción Nº')),
-    array('data' => t('Instante')),
+    array('data' => t('Infraction Number')),
+    array('data' => t('Instant')),
   );
 
   $rows = array();
@@ -300,14 +302,14 @@ function rjsimulador_partida_page($id_partida) {
           '#theme' => 'table',
           '#header' => $headers,
           '#rows' => $rows,
-          '#empty' => t('No hay infracciones para esta partida.'),
+          '#empty' => t('There is no data for this Partida.')
         ),
       );
   }
 
   $link = array(
     '#type' => 'link',
-    '#title' => 'Go Back',
+    '#title' => t('Go Back'),
     '#href' => 'simulaciones/' . $miPartida->getIdSimulacion() . '/partidas',
     '#options' => array(
       'attributes' => array(

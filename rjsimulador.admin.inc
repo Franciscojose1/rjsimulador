@@ -22,7 +22,7 @@ function rjsimulador_simulaciones_usuarios_admin_page() {
     array('data' => t('User Name'), 'field' => 'Name'),
     array('data' => t('Email')),
     array('data' => t('Created'), 'field' => 'Created'),
-    array('data' => t('Last Login'), 'field' => 'LastLogin'),
+    array('data' => t('Last Login'), 'field' => 'Login'),
     array('data' => t('Last Access'), 'field' => 'LastAccess'),
     array('data' => t('Links'))
   );
@@ -34,8 +34,7 @@ function rjsimulador_simulaciones_usuarios_admin_page() {
   $sort = tablesort_get_sort($headers);
 
   if (isset($order) && isset($sort)) {
-    module_load_include('inc', 'rjsimulador', 'includes/sort_functions');
-    usort($usuarios, 'orderUserBy' . $order['sql'] . strtoupper($sort));
+    $listaUsuarios->sortBy($order['sql'], strtoupper($sort));
   }
 
   $rows = array();
