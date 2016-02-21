@@ -13,7 +13,6 @@ function rjsimulador_simulaciones_usuarios_admin_page() {
     return $renderArray;
   }
 
-  $renderFormArray = drupal_get_form('rjsim_datos_simulaciones_usuarios_admin_form', $gestorSimulaciones);
 
   // Creamos la tabla a sacar para mostrar las partidas
   // Headers array
@@ -74,9 +73,11 @@ function rjsimulador_simulaciones_usuarios_admin_page() {
       ),
     );
 
+  $renderFormArray = drupal_get_form('rjsim_datos_simulaciones_usuarios_admin_form', $gestorSimulaciones);
+
   $renderArrayFinal = array(
     '#theme' => 'lista_simulaciones_partidas',
-    '#main_content' => array($renderFormArray, $renderArrayTableSimulaciones),
+    '#main_content' => array($renderArrayTableSimulaciones, $renderFormArray),
   );
 
   return $renderArrayFinal;
