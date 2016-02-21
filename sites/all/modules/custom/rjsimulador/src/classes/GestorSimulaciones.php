@@ -5,9 +5,6 @@ class GestorSimulaciones {
   private $usuarioActual;
   /* @var ListaUsuariosSimulacion $listaTodosUsuarios Todos los usuarios que tienen partidas almacenadas de las Simulaciones. */
   private $listaTodosUsuarios;
-  /* @var ListaUsuariosSimulacion $listaTodosUsuariosExceptoActual Todos los usuarios salvo el actual que tienen partidas
-   * almacenadas de las Simulaciones. */
-  private $listaTodosUsuariosExceptoActual;
   /* @var array $arraySimulaciones Array de la forma $id=>$nombre_simulacion */
   private $arraySimulaciones;
 
@@ -94,9 +91,7 @@ class GestorSimulaciones {
   public function getListaTodosUsuariosExceptoActual() {
     if (!isset($this->usuarioActual)) {
       return $this->getListaTodosUsuarios();
-    }
-
-    if (!isset($this->listaTodosUsuariosExceptoActual)) {
+    } else {
       $listaUsuariosExceptoActual = new ListaUsuariosSimulacion();
 
       foreach ($this->getListaTodosUsuarios() as $usuario) {
@@ -105,18 +100,7 @@ class GestorSimulaciones {
         }
       }
 
-      $this->setListaTodosUsuariosExceptoActual($listaUsuariosExceptoActual);
+      return $listaUsuariosExceptoActual;
     }
-
-    return $this->listaTodosUsuariosExceptoActual;
   }
-
-  /**
-   * @param ListaUsuariosSimulacion $listaTodosUsuariosExceptoActual
-   */
-  private function setListaTodosUsuariosExceptoActual(ListaUsuariosSimulacion $listaTodosUsuariosExceptoActual) {
-    $this->listaTodosUsuariosExceptoActual = $listaTodosUsuariosExceptoActual;
-  }
-
-
 }
