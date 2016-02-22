@@ -11,10 +11,16 @@ function rjsim_datos_simulaciones_usuarios_admin_form($form, &$form_state, Gesto
   $tipoDatoCalcular = isset($form_state['values']['select_data']) ? $form_state['values']['select_data'] : CalculateAverageData::CONSUMO_MEDIO;
 
   if ($tipoDatoCalcular == CalculateAverageData::CONSUMO_MEDIO) {
-    $tituloGrafico = t("Consumo medio de los usuarios para la Simulación ") . $idSimulacion;
+    $tituloGrafico = t("Average consumption of all users for Simulation ") . $idSimulacion;
+  }
+  else if ($tipoDatoCalcular == CalculateAverageData::TIEMPO_TOTAL) {
+    $tituloGrafico = t("Average Partida time length of all users for Simulation ") . $idSimulacion;
+  }
+  else if ($tipoDatoCalcular == CalculateAverageData::VELOCIDAD) {
+    $tituloGrafico = t("Average speed by Partida of all users for Simulation ") . $idSimulacion;
   }
   else {
-    $tituloGrafico = t("Duración media por partida de los usuarios para la Simulación ") . $idSimulacion;
+    $tituloGrafico = t("Average RPMs by Partida of all users for Simulation ") . $idSimulacion;
   }
 
   // Eje X
@@ -24,7 +30,7 @@ function rjsim_datos_simulaciones_usuarios_admin_form($form, &$form_state, Gesto
     '#type' => 'chart',
     '#chart_type' => 'column',
     '#chart_library' => 'highcharts',
-    '#title' => $tituloGrafico,
+    '#title' => check_plain($tituloGrafico),
     '#prefix' => '<div id="div-chart-datos-medios">',
     '#suffix' => '</div>',
     'xaxis' =>
@@ -36,8 +42,8 @@ function rjsim_datos_simulaciones_usuarios_admin_form($form, &$form_state, Gesto
 
   foreach ($gestorSimulaciones->getListaTodosUsuarios() as $usuario) {
     // Datos medios por simulación
-    $dataUsuario = $usuario->retrieveAllPartidasByIdSimulacion($idSimulacion)
-        ->calculateData(new CalculateAverageData($tipoDatoCalcular));
+    $dataUsuario = round($usuario->retrieveAllPartidasByIdSimulacion($idSimulacion)
+        ->calculateData(new CalculateAverageData($tipoDatoCalcular)), 2);
 
     $form['chart_datos_medios']['usuario_' . $usuario->getUid()] =
       array(
@@ -68,8 +74,10 @@ function rjsim_datos_simulaciones_usuarios_admin_form($form, &$form_state, Gesto
     '#title' => t('Select data to show'),
     '#options' =>
       array(
-        CalculateAverageData::CONSUMO_MEDIO => t('Consumo medio'),
-        CalculateAverageData::TIEMPO_TOTAL => t('Tiempo medio'),
+        CalculateAverageData::CONSUMO_MEDIO => t('Average consumption'),
+        CalculateAverageData::TIEMPO_TOTAL => t('Average time'),
+        CalculateAverageData::VELOCIDAD => t('Average speed'),
+        CalculateAverageData::RPM => t('Average RPMs')
       ),
     '#default_value' => CalculateAverageData::CONSUMO_MEDIO,
     '#description' => t('Select the simulation about you want information.'),
