@@ -23,10 +23,23 @@ function rjsim_datos_simulaciones_usuarios_admin_form($form, &$form_state, Gesto
     $tituloGrafico = t("Average RPMs by Partida of all users for Simulation ") . $idSimulacion;
   }
 
+  $form['data_analysis']  = array(
+    '#type' => 'vertical_tabs',
+  );
+
+  // This is the field fieldset.
+  $form['general_data_analysis'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('General data analysis'),
+    '#collapsible' => TRUE,
+    '#description' => t('General data analysis for all users.'),
+    '#group' => 'data_analysis'
+  );
+
   // Eje X
   $labelAxisX[] = t("Users");
 
-  $form['chart_datos_medios'] = array(
+  $form['general_data_analysis']['chart_datos_medios'] = array(
     '#type' => 'chart',
     '#chart_type' => 'column',
     '#chart_library' => 'highcharts',
@@ -45,7 +58,7 @@ function rjsim_datos_simulaciones_usuarios_admin_form($form, &$form_state, Gesto
     $dataUsuario = round($usuario->retrieveAllPartidasByIdSimulacion($idSimulacion)
         ->calculateData(new CalculateAverageData($tipoDatoCalcular)), 2);
 
-    $form['chart_datos_medios']['usuario_' . $usuario->getUid()] =
+    $form['general_data_analysis']['chart_datos_medios']['usuario_' . $usuario->getUid()] =
       array(
         '#type' => 'chart_data',
         '#title' => t('User ') . $usuario->getName(),
@@ -53,11 +66,11 @@ function rjsim_datos_simulaciones_usuarios_admin_form($form, &$form_state, Gesto
       );
   }
 
-  $form['actions'] = array(
+  $form['general_data_analysis']['actions'] = array(
     '#type' => 'actions',
   );
 
-  $form['actions']['select_simulacion'] = array(
+  $form['general_data_analysis']['actions']['select_simulacion'] = array(
     '#type' => 'select',
     '#title' => t('Select Simulation'),
     '#options' => $provider->loadAllIdsSimulaciones(),
@@ -69,7 +82,7 @@ function rjsim_datos_simulaciones_usuarios_admin_form($form, &$form_state, Gesto
     ),
   );
 
-  $form['actions']['select_data'] = array(
+  $form['general_data_analysis']['actions']['select_data'] = array(
     '#type' => 'select',
     '#title' => t('Select data to show'),
     '#options' =>
@@ -87,9 +100,33 @@ function rjsim_datos_simulaciones_usuarios_admin_form($form, &$form_state, Gesto
     ),
   );
 
+  $form['data_analysis_by_user'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Data analysis by user'),
+    '#collapsible' => TRUE,
+    '#description' => t('Data analysis by user.'),
+    '#group' => 'data_analysis'
+  );
+
+  $form['general_infractions_analysis'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('General infraction analysis'),
+    '#collapsible' => TRUE,
+    '#description' => t('General infractions analysis for all users.'),
+    '#group' => 'data_analysis'
+  );
+
+  $form['data_infractions_by_user'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Data analysis by user'),
+    '#collapsible' => TRUE,
+    '#description' => t('Data infractions by user.'),
+    '#group' => 'data_analysis'
+  );
+
   return $form;
 }
 
 function ajax_chart_datos_medios_callback($form, &$form_state) {
-  return $form['chart_datos_medios'];
+  return $form['general_data_analysis']['chart_datos_medios'];
 }
