@@ -176,12 +176,12 @@ function generate_form_data_group_analysis(&$form_state, GestorSimulaciones $ges
     $tituloGrafico = t("Average RPMs by Partida of all users for Simulation ") . $idSimulacion;
   }
 
-  $form['data_analysis_by_group']['actions'] = array(
+  $form['actions'] = array(
     '#type' => 'actions',
     '#weight' => -50,
   );
 
-  $form['data_analysis_by_group']['actions']['select_simulacion'] = array(
+  $form['actions']['select_simulacion'] = array(
     '#type' => 'select',
     '#title' => t('Select Simulation'),
     '#options' => $provider->loadAllIdsSimulaciones(),
@@ -193,7 +193,7 @@ function generate_form_data_group_analysis(&$form_state, GestorSimulaciones $ges
     ),
   );
 
-  $form['data_analysis_by_group']['actions']['select_data'] = array(
+  $form['actions']['select_data'] = array(
     '#type' => 'select',
     '#title' => t('Select data to show'),
     '#options' =>
@@ -214,7 +214,7 @@ function generate_form_data_group_analysis(&$form_state, GestorSimulaciones $ges
   // Eje X
   $labelAxisX[] = t("Groups of users");
 
-  $form['data_analysis_by_group']['chart_datos_medios_group'] = array(
+  $form['chart_datos_medios_group'] = array(
     '#type' => 'chart',
     '#chart_type' => 'column',
     '#chart_library' => 'highcharts',
@@ -234,7 +234,7 @@ function generate_form_data_group_analysis(&$form_state, GestorSimulaciones $ges
     $dataUsuario = round($usuario->retrieveAllPartidasByIdSimulacion($idSimulacion)
       ->calculateData(new CalculateAverageData($tipoDatoCalcular)), 2);
 
-    $form['data_analysis_by_group']['chart_datos_medios_group']['data_group_' . $usuario->getUid()] =
+    $form['chart_datos_medios_group']['data_group_' . $usuario->getUid()] =
       array(
         '#type' => 'chart_data',
         '#title' => t('User ') . $usuario->getName(),
@@ -243,17 +243,17 @@ function generate_form_data_group_analysis(&$form_state, GestorSimulaciones $ges
   }
 
   // This is the field fieldset.
-  $form['data_analysis_by_group']['groups'] = array(
+  $form['groups'] = array(
     '#type' => 'fieldset',
     '#title' => t('Group'),
     '#collapsible' => TRUE,
     '#description' => t('Filter group'),
   );
-  $form['data_analysis_by_group']['groups']['check_age'] = array(
+  $form['groups']['check_age'] = array(
     '#type' => 'checkbox',
     '#title' => t('Filter by age.'),
   );
-  $form['data_analysis_by_group']['groups']['age']  = array(
+  $form['groups']['age']  = array(
     '#type' => 'fieldset',
     '#states' => array(
       // Only show this field when the 'toggle_me' checkbox is enabled.
@@ -262,14 +262,14 @@ function generate_form_data_group_analysis(&$form_state, GestorSimulaciones $ges
       ),
     ),
   );
-  $form['data_analysis_by_group']['groups']['age']['age_from'] = array(
+  $form['groups']['age']['age_from'] = array(
     '#type' => 'textfield',
     '#field_prefix' => t('From'),
     '#size' => 3,
     '#maxlength' => 3,
     '#required' => TRUE,
   );
-  $form['data_analysis_by_group']['groups']['age']['age_to'] = array(
+  $form['groups']['age']['age_to'] = array(
     '#type' => 'textfield',
     '#field_prefix' => t('to'),
     '#field_suffix' => t(' years'),
