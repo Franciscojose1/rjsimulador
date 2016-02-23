@@ -6,7 +6,54 @@ function rjsim_datos_simulaciones_usuarios_admin_form($form, &$form_state, Gesto
   // Recuperamos el provider
   $provider = FactoryDataProvider::createDataProvider();
 
-  // Recuperamos el idSimulacion por el que filtrar la gráfica
+  $form['data_analysis']  = array(
+    '#type' => 'vertical_tabs',
+  );
+  
+  // This is the field fieldset.
+  $form['general_data_analysis'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('General data analysis'),
+    '#collapsible' => TRUE,
+    '#description' => t('General data analysis for all users.'),
+    '#group' => 'data_analysis'
+  );
+  
+  array_general_data_analysis($form, $form_state, $gestorSimulaciones, $provider);
+  
+  $form['data_analysis_by_user'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Data analysis by user'),
+    '#collapsible' => TRUE,
+    '#description' => t('Data analysis by user.'),
+    '#group' => 'data_analysis'
+  );
+
+  $form['general_infractions_analysis'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('General infraction analysis'),
+    '#collapsible' => TRUE,
+    '#description' => t('General infractions analysis for all users.'),
+    '#group' => 'data_analysis'
+  );
+
+  $form['data_infractions_by_user'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Data analysis by user'),
+    '#collapsible' => TRUE,
+    '#description' => t('Data infractions by user.'),
+    '#group' => 'data_analysis'
+  );
+
+  return $form;
+}
+
+function ajax_chart_datos_medios_callback($form, &$form_state) {
+  return $form['general_data_analysis']['chart_datos_medios'];
+}
+
+function array_general_data_analysis (&$form, &$form_state, GestorSimulaciones $gestorSimulaciones, DataProvider $provider) {
+   // Recuperamos el idSimulacion por el que filtrar la gráfica
   $idSimulacion = isset($form_state['values']['select_simulacion']) ? $form_state['values']['select_simulacion'] : 1;
   $tipoDatoCalcular = isset($form_state['values']['select_data']) ? $form_state['values']['select_data'] : CalculateAverageData::CONSUMO_MEDIO;
 
@@ -22,19 +69,6 @@ function rjsim_datos_simulaciones_usuarios_admin_form($form, &$form_state, Gesto
   else {
     $tituloGrafico = t("Average RPMs by Partida of all users for Simulation ") . $idSimulacion;
   }
-
-  $form['data_analysis']  = array(
-    '#type' => 'vertical_tabs',
-  );
-
-  // This is the field fieldset.
-  $form['general_data_analysis'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('General data analysis'),
-    '#collapsible' => TRUE,
-    '#description' => t('General data analysis for all users.'),
-    '#group' => 'data_analysis'
-  );
 
   // Eje X
   $labelAxisX[] = t("Users");
@@ -99,34 +133,4 @@ function rjsim_datos_simulaciones_usuarios_admin_form($form, &$form_state, Gesto
       'wrapper' => 'div-chart-datos-medios',
     ),
   );
-
-  $form['data_analysis_by_user'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Data analysis by user'),
-    '#collapsible' => TRUE,
-    '#description' => t('Data analysis by user.'),
-    '#group' => 'data_analysis'
-  );
-
-  $form['general_infractions_analysis'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('General infraction analysis'),
-    '#collapsible' => TRUE,
-    '#description' => t('General infractions analysis for all users.'),
-    '#group' => 'data_analysis'
-  );
-
-  $form['data_infractions_by_user'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Data analysis by user'),
-    '#collapsible' => TRUE,
-    '#description' => t('Data infractions by user.'),
-    '#group' => 'data_analysis'
-  );
-
-  return $form;
-}
-
-function ajax_chart_datos_medios_callback($form, &$form_state) {
-  return $form['general_data_analysis']['chart_datos_medios'];
 }
