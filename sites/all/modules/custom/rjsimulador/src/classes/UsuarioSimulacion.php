@@ -99,7 +99,7 @@ class UsuarioSimulacion {
   }
 
   public function isUsualVideogamePlayer() {
-    return $this->getUser()->field_usual_videgame_player['und'][0]['value'] == 1;
+    return $this->getUser()->field_usual_videogame_player['und'][0]['value'] == 1;
   }
 
   /**
