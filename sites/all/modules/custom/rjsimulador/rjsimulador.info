@@ -21,6 +21,7 @@ files[] = src/classes/FilterByEquality.php
 files[] = src/classes/FilterByFecha.php
 files[] = src/classes/FilterByInterval.php
 files[] = src/classes/GestorSimulaciones.php
+files[] = src/classes/Grupos.php
 files[] = src/classes/Infraccion.php
 files[] = src/classes/Lista.php
 files[] = src/classes/ListaDatosInstantaneos.php

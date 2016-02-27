@@ -87,11 +87,7 @@ class FilterByEquality implements FilterInterface {
 
   private function filterUsuarioByFieldUsualPlayer(UsuarioSimulacion $item) {
     foreach ($this->data as $usualPlayer) {
-      if ($usualPlayer == 1 && $item->isUsualVideogamePlayer()) {
-        return TRUE;
-      }
-
-      if ($usualPlayer == 0 && !$item->isUsualVideogamePlayer()) {
+      if ($usualPlayer == $item->isUsualVideogamePlayer()) {
         return TRUE;
       }
     }
