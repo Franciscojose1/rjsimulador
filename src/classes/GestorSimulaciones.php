@@ -7,6 +7,8 @@ class GestorSimulaciones {
   private $listaTodosUsuarios;
   /* @var array $arraySimulaciones Array de la forma $id=>$nombre_simulacion */
   private $arraySimulaciones;
+  /* @var array $arrayUsuariosUidName Array de todos los usuarios de la forma $uid=>$name */
+  private $arrayUsuariosUidName;
 
   /**
    * @param UsuarioSimulacion $usuarioActual El usuario actual.
@@ -83,6 +85,20 @@ class GestorSimulaciones {
    */
   private function setListaTodosUsuarios(ListaUsuariosSimulacion $listaTodosUsuarios) {
     $this->listaTodosUsuarios = $listaTodosUsuarios;
+  }
+
+  /**
+   * @return array
+   */
+  public function getArrayUsuariosUidName() {
+    if (!isset($this->arrayUsuariosUidName)) {
+      // Recuperamos el array de la lista de todos los usuarios
+      foreach ($this->getListaTodosUsuarios() as $usuario) {
+        $this->arrayUsuariosUidName[$usuario->getUid()] = $usuario->getName();
+      }
+    }
+
+    return $this->arrayUsuariosUidName;
   }
 
   /**

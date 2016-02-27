@@ -80,6 +80,10 @@ class UsuarioSimulacion {
     return $asDate ? (new DateTime())->setTimestamp($this->getUser()->access) : $this->getUser()->access;
   }
 
+  /**
+   * Devuelve la edad del usuario en función de su fecha de nacimiento.
+   * @return int La edad del usuario.
+   */
   public function getAge() {
     $birthdate = (new DateTime())->setTimestamp($this->getUser()->field_birthdate['und'][0]['value']);
     $now = new DateTime();
@@ -87,6 +91,10 @@ class UsuarioSimulacion {
     return $interval->y;
   }
 
+  /**
+   * Devuelve los años de experiencia de conducción del usuario.
+   * @return int Los años de experiencia de conducción del usuario.
+   */
   public function getDrivingExperience() {
     $dateDrivingLicense = (new DateTime())->setTimestamp($this->getUser()->field_driving_experience['und'][0]['value']);
     $now = new DateTime();
@@ -94,12 +102,85 @@ class UsuarioSimulacion {
     return $interval->y;
   }
 
+  /**
+   * Devuelve la media de kilómetros anuales que realiza el usuario.
+   * @return mixed La media de km. anuales.
+   */
   public function getAverageAnnualMileage() {
     return $this->getUser()->field_average_annual_mileage['und'][0]['value'];
   }
 
-  public function isUsualVideogamePlayer() {
-    return $this->getUser()->field_usual_videogame_player['und'][0]['value'] == 1;
+  /**
+   * Devuelve si el usuario juega habitualmente a los videojuegos.
+   * @param bool $asBoolean Si se pone a TRUE se devuelve el resultado como un booleano en lugar de con 1 y 0.
+   * @return bool|int Devuelve 1 si el usuario es un jugador habitual o 0 en caso contrario.
+   */
+  public function isUsualVideogamePlayer($asBoolean = false) {
+    if ($asBoolean) {
+      return $this->getUser()->field_usual_videogame_player['und'][0]['value'] == 1;
+    } else {
+      return $this->getUser()->field_usual_videogame_player['und'][0]['value'];
+    }
+  }
+
+  /**
+   * Devuelve el array de datos para el filtro por intervalos del grupo de edad al que pertenece el usuario.
+   * @param bool $asText Si está a TRUE se devuelve el grupo como una cadena en lugar de como un array.
+   * @return array|string Datos del grupo de edad del usuario como array o cadena.
+   * @throws \Exception
+   */
+  public function getGrupoEdad($asText = false) {
+    foreach(Grupos::$GruposEdad as $idGrupo => $arrayDatos) {
+      if ($this->getAge() >= $arrayDatos['desde'] && $this->getAge() < $arrayDatos['hasta']) {
+        if ($asText) {
+          return t("age from " . $arrayDatos['desde'] . " to " . $arrayDatos['hasta'] . " years");
+        } else {
+          return $arrayDatos;
+        }
+      }
+    }
+
+    throw new Exception("El usuario debe estar dentro de un grupo de edad obligatoriamente. Revise los datos de la clase Grupos.");
+  }
+
+  /**
+   * Devuelve el array de datos para el filtro por intervalos del grupo de experiencia conductora al que pertenece el usuario.
+   * @param bool $asText Si está a TRUE se devuelve el grupo como una cadena en lugar de como un array.
+   * @return array|string Datos del grupo de experiencia del usuario como array o cadena.
+   * @throws \Exception
+   */
+  public function getGrupoExperiencia($asText = false) {
+    foreach(Grupos::$GruposExperiencia as $idGrupo => $arrayDatos) {
+      if ($this->getDrivingExperience() >= $arrayDatos['desde'] && $this->getDrivingExperience() < $arrayDatos['hasta']) {
+        if ($asText) {
+          return t("driving experience from " . $arrayDatos['desde'] . " to " . $arrayDatos['hasta'] . " years");
+        } else {
+          return $arrayDatos;
+        }
+      }
+    }
+
+    throw new Exception("El usuario debe estar dentro de un grupo de experiencia conductora obligatoriamente. Revise los datos de la clase Grupos.");
+  }
+
+  /**
+   * Devuelve el array de datos para el filtro por intervalos del grupo de kilometraje medio anual al que pertenece el usuario.
+   * @param bool $asText Si está a TRUE se devuelve el grupo como una cadena en lugar de como un array.
+   * @return array|string Datos del grupo de kilometraje medio anual del usuario como array o cadena.
+   * @throws \Exception
+   */
+  public function getGrupoKilometrajeMedioAnual($asText = false) {
+    foreach(Grupos::$GruposKilometrajeMedioAnual as $idGrupo => $arrayDatos) {
+      if ($this->getAverageAnnualMileage() >= $arrayDatos['desde'] && $this->getAverageAnnualMileage() < $arrayDatos['hasta']) {
+        if ($asText) {
+          return t("average annual mileage from " . $arrayDatos['desde'] . " to " . $arrayDatos['hasta'] . " years");
+        } else {
+          return $arrayDatos;
+        }
+      }
+    }
+
+    throw new Exception("El usuario debe estar dentro de un grupo de kilometraje anual medio obligatoriamente. Revise los datos de la clase Grupos.");
   }
 
   /**
