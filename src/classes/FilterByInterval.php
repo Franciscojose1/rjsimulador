@@ -11,12 +11,12 @@ class FilterByInterval implements FilterInterface {
 
   private $hasta;
 
-  public function __construct(array $paramInterval, $paramFilter) {
-    if (!isset($paramInterval['desde']) || !isset($paramInterval['hasta']) || !isset($paramFilter)) {
+  public function __construct(array $paramInterval, $paramField) {
+    if (!isset($paramInterval['desde']) || !isset($paramInterval['hasta']) || !isset($paramField)) {
       throw new InvalidArgumentException("Son necesarios los parámetros desde, hasta y el tipo de intervalo.");
     }
 
-    $this->field = $paramFilter;
+    $this->field = $paramField;
     $this->desde = $paramInterval['desde'];
     $this->hasta = $paramInterval['hasta'];
   }

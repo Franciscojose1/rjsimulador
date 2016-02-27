@@ -308,31 +308,29 @@ function generate_form_data_group_analysis(&$form_state, GestorSimulaciones $ges
     $form['data_group_container']['data_group_groups'][$index] = generate_group_array('data_group', $index);
 
     $listaUsuarios = $gestorSimulaciones->getListaTodosUsuarios();
-
-    dpm($form_state);
     if (empty(form_get_errors())) {
-      if (isset($form_state['data_group_groups'][$index])) {
-        if ($form_state['data_group_groups'][$index]['data_group_check_age'] == 1) {
-          $from = $form_state['data_group_groups'][$index]['data_group_age']['from'];
-          $to = $form_state['data_group_groups'][$index]['data_group_age']['to'];
+      if (isset($form_state['values']['data_group_groups'][$index])) {
+        if ($form_state['values']['data_group_groups'][$index]['data_group_check_age'] == 1) {
+          $from = $form_state['values']['data_group_groups'][$index]['data_group_age']['from'];
+          $to = $form_state['values']['data_group_groups'][$index]['data_group_age']['to'];
           $listaUsuarios = $listaUsuarios->filterBy(new FilterByInterval(array("desde" => $from, "hasta" => $to), FilterByInterval::AGE));
         }
 
-        if ($form_state['data_group_groups'][$index]['data_group_check_driving_experience'] == 1) {
-          $from = $form_state['data_group_groups'][$index]['data_group_driving_experience']['from'];
-          $to = $form_state['data_group_groups'][$index]['data_group_driving_experience']['to'];
+        if ($form_state['values']['data_group_groups'][$index]['data_group_check_driving_experience'] == 1) {
+          $from = $form_state['values']['data_group_groups'][$index]['data_group_driving_experience']['from'];
+          $to = $form_state['values']['data_group_groups'][$index]['data_group_driving_experience']['to'];
           $listaUsuarios = $listaUsuarios->filterBy(new FilterByInterval(array("desde" => $from, "hasta" => $to), FilterByInterval::DRIVING_EXPERIENCE));
         }
 
-        if ($form_state['data_group_groups'][$index]['data_group_check_average_annual_mileage'] == 1) {
-          $from = $form_state['data_group_groups'][$index]['data_group_average_annual_mileage']['from'];
-          $to = $form_state['data_group_groups'][$index]['data_group_average_annual_mileage']['to'];
+        if ($form_state['values']['data_group_groups'][$index]['data_group_check_average_annual_mileage'] == 1) {
+          $from = $form_state['values']['data_group_groups'][$index]['data_group_average_annual_mileage']['from'];
+          $to = $form_state['values']['data_group_groups'][$index]['data_group_average_annual_mileage']['to'];
           $listaUsuarios = $listaUsuarios->filterBy(new FilterByInterval(array("desde" => $from, "hasta" => $to), FilterByInterval::AVERAGE_ANNUAL_MILEAGE));
         }
 
-        if ($form_state['data_group_groups'][$index]['data_group_check_usual_videogame_player'] == 1) {
-          $radios = $form_state['data_group_groups'][$index]['data_group_check_usual_videogame_player']['radios'];
-          $listaUsuarios = $listaUsuarios->filterBy(new FilterByInterval(array("desde" => $from, "hasta" => $to), FilterByInterval::AGE));
+        if ($form_state['values']['data_group_groups'][$index]['data_group_check_usual_videogame_player'] == 1) {
+          $radios = $form_state['values']['data_group_groups'][$index]['data_group_usual_videogame_player']['radios'];
+          $listaUsuarios = $listaUsuarios->filterBy(new FilterByEquality(array($radios), FilterByEquality::USUARIO_USUAL_PLAYER));
         }
       }
     }
