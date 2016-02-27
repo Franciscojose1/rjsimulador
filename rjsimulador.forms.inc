@@ -240,10 +240,9 @@ function rjsim_simulaciones_main_form($form, &$form_state, GestorSimulaciones $g
   /* **************************************************************** */
   /* *        Gráfico porcentaje de infracciones totales            * */
   /* **************************************************************** */
-  $provider = FactoryDataProvider::createDataProvider();
-  $idsInfracciones = $provider->loadAllIdsInfracciones();
-
   $listaPartidas = $gestorSimulaciones->getUsuarioActual()->retrieveAllPartidas();
+
+  $idsInfracciones = $gestorSimulaciones->getArrayInfracciones();
 
   $listaResultados = new ListaInfracciones();
   foreach ($listaPartidas as $partida) {
@@ -396,12 +395,10 @@ function rjsim_partidas_simulacion_main_form($form, &$form_state, GestorSimulaci
   /* ************************************************************************************ */
   /* *               Gráfico infracciones en las últimas partidas                       * */
   /* ************************************************************************************ */
-  // Provider de datos
-  $provider = FactoryDataProvider::createDataProvider();
-  $idsInfracciones = $provider->loadAllIdsInfracciones();
-
   $listaPartidas = $gestorSimulaciones->getUsuarioActual()->retrieveAllPartidasByIdSimulacion($id_simulacion);
   $listaPartidas->sortBy('Fecha', 'DESC');
+
+  $idsInfracciones = $gestorSimulaciones->getArrayInfracciones();
 
   $labelAxisX = array();
   $data = array();

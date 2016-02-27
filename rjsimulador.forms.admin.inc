@@ -50,6 +50,8 @@ function rjsim_datos_simulaciones_usuarios_admin_form($form, &$form_state, Gesto
     '#group' => 'data_analysis'
   );
 
+  $form['infractions_general_analysis'] += generate_form_infractions_general_analysis($form_state, $gestorSimulaciones, $provider);
+
   $form['infractions_group_analysis'] = array(
     '#type' => 'fieldset',
     '#title' => t('Infraction analysis by group'),
@@ -266,7 +268,7 @@ function generate_form_data_group_analysis(&$form_state, GestorSimulaciones $ges
 
   // Número de grupos
   $numeroMinimoGrupos = 1;
-  $numeroMaximoGrupos = 10;
+  $numeroMaximoGrupos = 6;
   $form_state['data_group_number_groups'] = isset($form_state['data_group_number_groups']) ?
     $form_state['data_group_number_groups'] : $numeroMinimoGrupos;
 
@@ -394,8 +396,8 @@ function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gest
   $uidUser = isset($form_state['values']['data_user_select_user']) ?
     $form_state['values']['data_user_select_user'] : key($gestorSimulaciones->getArrayUsuariosUidName());
   // Recuperamos el idSimulacion por el que filtrar la gráfica
-  $idSimulacion = isset($form_state['values']['data_user_select_simulacion']) ?
-    $form_state['values']['data_user_select_simulacion'] : key($gestorSimulaciones->getArraySimulaciones());
+  $idSimulacion = isset($form_state['values']['data_user_select_simulation']) ?
+    $form_state['values']['data_user_select_simulation'] : key($gestorSimulaciones->getArraySimulaciones());
   // Recuperamos el tipo de dato que vamos a calcular
   $tipoDatoCalcular = isset($form_state['values']['data_user_select_data']) ?
     $form_state['values']['data_user_select_data'] : CalculateAverageData::CONSUMO_MEDIO;
@@ -407,18 +409,31 @@ function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gest
   // Genreamos el nombre par el título del gráfico
   if ($tipoDatoCalcular == CalculateAverageData::CONSUMO_MEDIO) {
     $tituloGrafico = t("Average consumption of user @userName for Simulation @idSimulacion",
-      array('@userName' => $usuarioActual->getName(), '@idSimulacion' => $idSimulacion));
+      array(
+        '@userName' => $usuarioActual->getName(),
+        '@idSimulacion' => $idSimulacion
+      ));
   }
   elseif ($tipoDatoCalcular == CalculateAverageData::TIEMPO_TOTAL) {
     $tituloGrafico = t("Average Partida time length of user @userName for Simulation @idSimulacion",
-      array('@userName' => $usuarioActual->getName(), '@idSimulacion' => $idSimulacion));
+      array(
+        '@userName' => $usuarioActual->getName(),
+        '@idSimulacion' => $idSimulacion
+      ));
   }
   elseif ($tipoDatoCalcular == CalculateAverageData::VELOCIDAD) {
     $tituloGrafico = t("Average speed by Partida of user @userName for Simulation @idSimulacion",
-      array('@userName' => $usuarioActual->getName(), '@idSimulacion' => $idSimulacion));
-  } else {
+      array(
+        '@userName' => $usuarioActual->getName(),
+        '@idSimulacion' => $idSimulacion
+      ));
+  }
+  else {
     $tituloGrafico = t("Average RPMs by Partida of user @userName for Simulation @idSimulacion",
-      array('@userName' => $usuarioActual->getName(), '@idSimulacion' => $idSimulacion));
+      array(
+        '@userName' => $usuarioActual->getName(),
+        '@idSimulacion' => $idSimulacion
+      ));
   }
 
   // Etiqueta del Eje X
@@ -484,7 +499,7 @@ function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gest
   $form['data_user_container']['data_user_chart']['data_user_same_age_group'] =
     array(
       '#type' => 'chart_data',
-      '#title' => t('Group of users with @user_group', array('@user_group' => $usuarioActual->getGrupoEdad(TRUE))),
+      '#title' => t('Group of users which @user_group', array('@user_group' => $usuarioActual->getGrupoEdad(TRUE))),
       '#data' => array($dataRestoUsuarioMismoGrupoEdad),
     );
 
@@ -497,7 +512,7 @@ function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gest
   $form['data_user_container']['data_user_chart']['data_user_same_driving_experience_group'] =
     array(
       '#type' => 'chart_data',
-      '#title' => t('Group of users with @user_group', array('@user_group' => $usuarioActual->getGrupoExperiencia(TRUE))),
+      '#title' => t('Group of users which @user_group', array('@user_group' => $usuarioActual->getGrupoExperiencia(TRUE))),
       '#data' => array($dataRestoUsuarioMismoGrupoExperiencia),
     );
 
@@ -524,7 +539,7 @@ function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gest
   $form['data_user_container']['data_user_chart']['data_user_same_average_annual_mileage_group'] =
     array(
       '#type' => 'chart_data',
-      '#title' => t('Group of users with @user_group usual players of games',
+      '#title' => t('Group of users which @user_group usual players of games',
         array('@user_group' => $usuarioActual->isUsualVideogamePlayer(TRUE) ? t("are") : t("are not"))),
       '#data' => array($dataRestoUsuarioMismoTipoJugador),
     );
@@ -539,7 +554,7 @@ function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gest
     '#type' => 'select',
     '#title' => t('Select User'),
     '#options' => $gestorSimulaciones->getArrayUsuariosUidName(),
-    '#default_value' => $uidUser,
+    '#default_value' => key($gestorSimulaciones->getArrayUsuariosUidName()),
     '#description' => t('Select the simulation about you want information.'),
     '#ajax' => array(
       'callback' => 'ajax_generate_form_data_user_analysis_callback',
@@ -547,11 +562,11 @@ function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gest
     ),
   );
 
-  $form['data_user_container']['data_user_actions']['data_user_select_simulacion'] = array(
+  $form['data_user_container']['data_user_actions']['data_user_select_simulation'] = array(
     '#type' => 'select',
     '#title' => t('Select Simulation'),
     '#options' => $gestorSimulaciones->getArraySimulaciones(),
-    '#default_value' => $idSimulacion,
+    '#default_value' => key($gestorSimulaciones->getArraySimulaciones()),
     '#description' => t('Select the simulation about you want information.'),
     '#ajax' => array(
       'callback' => 'ajax_generate_form_data_user_analysis_callback',
@@ -569,7 +584,7 @@ function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gest
         CalculateAverageData::VELOCIDAD => t('Average speed'),
         CalculateAverageData::RPM => t('Average RPMs')
       ),
-    '#default_value' => $tipoDatoCalcular,
+    '#default_value' => CalculateAverageData::CONSUMO_MEDIO,
     '#description' => t('Select the simulation about you want information.'),
     '#ajax' => array(
       'callback' => 'ajax_generate_form_data_user_analysis_callback',
@@ -593,7 +608,7 @@ function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gest
 
   // Número de grupos
   $numeroMinimoGrupos = 0;
-  $numeroMaximoGrupos = 4;
+  $numeroMaximoGrupos = 2;
   $form_state['data_user_number_groups'] = isset($form_state['data_user_number_groups']) ?
     $form_state['data_user_number_groups'] : $numeroMinimoGrupos;
 
@@ -707,6 +722,94 @@ function generate_form_data_user_analysis_validate($form, &$form_state) {
 
 function ajax_generate_form_data_user_analysis_callback($form, &$form_state) {
   return $form['data_user_analysis']['data_user_container'];
+}
+
+/* ******************************************************************************* */
+/* *                 Análisis de infracciones generales                          * */
+/* ******************************************************************************* */
+function generate_form_infractions_general_analysis(&$form_state, GestorSimulaciones $gestorSimulaciones, DataProvider $provider) {
+  // Recuperamos el idSimulacion por el que filtrar la gráfica
+  $idSimulacion = isset($form_state['values']['infractions_general_select_simulation']) ?
+    $form_state['values']['infractions_general_select_simulation'] : key($gestorSimulaciones->getArraySimulaciones());
+  // Recuperamos el tipo de infracción por el que filtrar
+  $tipoInfraccion = isset($form_state['values']['infractions_general_select_type']) ?
+    $form_state['values']['infractions_general_select_type'] : key($gestorSimulaciones->getArrayInfracciones());
+
+  // Generamos el título del gráfico
+  $tituloGrafico = t("Average number of infractions by Partida for Simulation @idSimulacion", array('@idSimulacion' => $idSimulacion));
+
+  // Etiqueta del Eje X
+  $labelAxisX[] = t("Users");
+
+  // Generamos el gráfico
+  $form['infractions_general_chart'] = array(
+    '#type' => 'chart',
+    '#chart_type' => 'column',
+    '#chart_library' => 'highcharts',
+    '#title' => $tituloGrafico,
+    '#prefix' => '<div id="div-infractions-general-chart">',
+    '#suffix' => '</div>',
+    'xaxis' =>
+      array(
+        '#type' => 'chart_xaxis',
+        '#labels' => $labelAxisX,
+      ),
+  );
+
+  // Recuperamos el cálculo del dato para todos los usuarios que tienen partidas en el simulador
+  foreach ($gestorSimulaciones->getListaTodosUsuarios() as $usuario) {
+    // Datos medios por simulación
+    $listaInfracciones = new ListaInfracciones();
+    $listaPartidasUsuario = $usuario->retrieveAllPartidasByIdSimulacion($idSimulacion);
+    foreach ($listaPartidasUsuario as $partida) {
+      $listaInfracciones->mergeList($partida->getListaInfracciones());
+    }
+
+    $listaInfracciones = $listaInfracciones->filterBy(new FilterByEquality(array($tipoInfraccion), FilterByEquality::INFRACCION_ID));
+    $dataUsuario = round($listaInfracciones->count()/$listaPartidasUsuario->count(), 2);
+
+    $form['infractions_general_chart']['infractions_general_user_' . $usuario->getUid()] =
+      array(
+        '#type' => 'chart_data',
+        '#title' => t('User @userName', array('@userName' => $usuario->getUid())),
+        '#data' => array($dataUsuario),
+      );
+  }
+
+  /* ACCIONES DEL FORMULARIO */
+  $form['infractions_general_actions'] = array(
+    '#type' => 'actions',
+  );
+
+  $form['infractions_general_actions']['infractions_general_select_simulation'] = array(
+    '#type' => 'select',
+    '#title' => t('Select Simulation'),
+    '#options' => $gestorSimulaciones->getArraySimulaciones(),
+    '#default_value' => key($gestorSimulaciones->getArraySimulaciones()),
+    '#description' => t('Select the simulation about you want information.'),
+    '#ajax' => array(
+      'callback' => 'ajax_generate_form_infractions_general_analysis_callback',
+      'wrapper' => 'div-infractions-general-chart',
+    ),
+  );
+
+  $form['infractions_general_actions']['infractions_general_select_type'] = array(
+    '#type' => 'select',
+    '#title' => t('Select infraction to show'),
+    '#options' => $gestorSimulaciones->getArrayInfracciones(),
+    '#default_value' => key($gestorSimulaciones->getArrayInfracciones()),
+    '#description' => t('Select the simulation about you want information.'),
+    '#ajax' => array(
+      'callback' => 'ajax_generate_form_infractions_general_analysis_callback',
+      'wrapper' => 'div-infractions-general-chart',
+    ),
+  );
+
+  return $form;
+}
+
+function ajax_generate_form_infractions_general_analysis_callback($form, &$form_state) {
+  return $form['infractions_general_analysis']['infractions_general_chart'];
 }
 
 /* ******************************************************************************* */
@@ -878,14 +981,13 @@ function validate_group_fields(&$form_state, $prefix) {
     if ($group[$prefix . '_check_' . $field] == 1) {
       $from = trim($group[$prefix . '_' . $field]['from']);
       $to = trim($group[$prefix . '_' . $field]['to']);
-      if ($from == "" || (int) $from != $from || $to == "" || (int) $to != $to) {
-
-        if ($from == "" || (int) $from != $from) {
+      if ($from == "" || ((int) $from) != $from || $to == "" || ((int) $to) != $to) {
+        if ($from == "" || ((int) $from) != $from) {
           form_set_error($prefix . '_groups][' . $index . '][' . $prefix . '_' . $field . '][from',
             t('Age from field must be an integer.'));
         }
 
-        if ($to == "" || (int) $to != $to) {
+        if ($to == "" || ((int) $to) != $to) {
           form_set_error($prefix . '_groups][' . $index . '][' . $prefix . '_' . $field . '][to',
             t('Age to field must be an integer.'));
         }
@@ -912,7 +1014,6 @@ function validate_group_fields(&$form_state, $prefix) {
       $from = trim($group[$prefix . '_' . $field]['from']);
       $to = trim($group[$prefix . '_' . $field]['to']);
       if ($from == "" || (int) $from != $from || $to == "" || (int) $to != $to) {
-
         if ($from == "" || (int) $from != $from) {
           form_set_error($prefix . '_groups][' . $index . '][' . $prefix . '_' . $field . '][from',
             t('Driving experience from field must be an integer.'));
