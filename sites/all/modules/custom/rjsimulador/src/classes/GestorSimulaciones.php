@@ -7,6 +7,8 @@ class GestorSimulaciones {
   private $listaTodosUsuarios;
   /* @var array $arraySimulaciones Array de la forma $id=>$nombre_simulacion */
   private $arraySimulaciones;
+  /* @var array $arrayInfracciones Array de la forma $id=>$nombre_infraccion */
+  private $arrayInfracciones;
   /* @var array $arrayUsuariosUidName Array de todos los usuarios de la forma $uid=>$name */
   private $arrayUsuariosUidName;
 
@@ -19,6 +21,9 @@ class GestorSimulaciones {
 
     // Recuperamos los ids de las simulaciones existentes
     $this->setArraySimulaciones($provider->loadAllIdsSimulaciones());
+
+    // Recuperamos los ids de las infracciones existentes
+    $this->setArrayInfracciones($provider->loadAllIdsInfracciones());
 
     // Recuperamos todos los usuarios con partidas
     $listaDeTodosLosUsuarios = $provider->loadAllSimulatorUsers();
@@ -47,6 +52,20 @@ class GestorSimulaciones {
    */
   private function setArraySimulaciones(array $arraySimulaciones) {
     $this->arraySimulaciones = $arraySimulaciones;
+  }
+
+  /**
+   * @return array
+   */
+  public function getArrayInfracciones() {
+    return $this->arrayInfracciones;
+  }
+
+  /**
+   * @param array $arrayInfracciones
+   */
+  public function setArrayInfracciones(array $arrayInfracciones) {
+    $this->arrayInfracciones = $arrayInfracciones;
   }
 
   /**
