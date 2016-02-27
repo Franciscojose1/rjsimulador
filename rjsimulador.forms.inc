@@ -254,7 +254,7 @@ function rjsim_simulaciones_main_form($form, &$form_state, GestorSimulaciones $g
   $data = array();
   foreach ($idsInfracciones as $id => $nombre_infraccion) {
     $labels[] = check_plain($nombre_infraccion);
-    $data[] = $listaResultados->filterBy(new FilterByID(array($id)))->count();
+    $data[] = $listaResultados->filterBy(new FilterByEquality(array($id), FilterByEquality::INFRACCION_ID))->count();
   }
 
   $form['chart_infracciones'] = array(
@@ -408,7 +408,7 @@ function rjsim_partidas_simulacion_main_form($form, &$form_state, GestorSimulaci
   foreach (new LimitIterator($listaPartidas, 0, 10) as $partida) {
     foreach ($idsInfracciones as $id => $nombre_infraccion) {
       $data[$id][] = $partida->getListaInfracciones()
-        ->filterBy(new FilterByID(array($id)))
+        ->filterBy(new FilterByEquality(array($id), FilterByEquality::INFRACCION_ID))
         ->count();
     }
 

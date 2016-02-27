@@ -31,28 +31,32 @@ class CalculateAverageData implements CalculatedDataInterface {
           break;
         case self::VELOCIDAD:
           return $this->calculateVelocidadMediaListaPartidas($lista);
+          break;
         case self::RPM:
           return $this->calculateRpmsMediasListaPartidas($lista);
+          break;
         default:
           throw new Exception("No se puede procesar el campo pasado para el tipo ListaPartidas.");
           break;
       }
     }
-    else if ($lista instanceof ListaDatosInstantaneos) {
-      switch ($this->field) {
-        case self::VELOCIDAD:
-          return $this->calculateVelocidadMediaPartida($lista);
-          break;
-        case self::RPM:
-          return $this->calculateRpmsMediasPartida($lista);
-          break;
-        default:
-          throw new Exception("No se puede procesar el campo pasado para el tipo ListaDatosInstantaneos.");
-          break;
-      }
-    }
     else {
-      throw new Exception("La lista pasada no es de un tipo soportado");
+      if ($lista instanceof ListaDatosInstantaneos) {
+        switch ($this->field) {
+          case self::VELOCIDAD:
+            return $this->calculateVelocidadMediaPartida($lista);
+            break;
+          case self::RPM:
+            return $this->calculateRpmsMediasPartida($lista);
+            break;
+          default:
+            throw new Exception("No se puede procesar el campo pasado para el tipo ListaDatosInstantaneos.");
+            break;
+        }
+      }
+      else {
+        throw new Exception("La lista pasada no es de un tipo soportado");
+      }
     }
   }
 
