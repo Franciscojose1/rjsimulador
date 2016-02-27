@@ -39,7 +39,7 @@ class ListaUsuariosDataRetriever {
   /**
    * @param array $arraySimulaciones
    */
-  public function setArraySimulaciones(array $arraySimulaciones) {
+  private function setArraySimulaciones(array $arraySimulaciones) {
     $this->arraySimulaciones = $arraySimulaciones;
   }
 
