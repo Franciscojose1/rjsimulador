@@ -60,7 +60,7 @@ class UsuarioSimulacion {
    * @param bool $asDate Si queremos la fecha como Timestamp o como un objeto DateTime.
    * @return DateTime|int La fecha de creación como DateTime o como Timestamp.
    */
-  public function getCreationDate($asDate = false) {
+  public function getCreationDate($asDate = FALSE) {
     return $asDate ? (new DateTime())->setTimestamp($this->getUser()->created) : $this->getUser()->created;
   }
 
@@ -68,7 +68,7 @@ class UsuarioSimulacion {
    * @param bool $asDate Si queremos la fecha como Timestamp o como un objeto DateTime.
    * @return DateTime|int La fecha de login como DateTime o como Timestamp.
    */
-  public function getLoginDate($asDate = false) {
+  public function getLoginDate($asDate = FALSE) {
     return $asDate ? (new DateTime())->setTimestamp($this->getUser()->login) : $this->getUser()->login;
   }
 
@@ -76,8 +76,30 @@ class UsuarioSimulacion {
    * @param bool $asDate Si queremos la fecha como Timestamp o como un objeto DateTime.
    * @return DateTime|int La fecha de útlimo acceso como DateTime o como Timestamp.
    */
-  public function getLastAccessDate($asDate = false) {
+  public function getLastAccessDate($asDate = FALSE) {
     return $asDate ? (new DateTime())->setTimestamp($this->getUser()->access) : $this->getUser()->access;
+  }
+
+  public function getAge() {
+    $birthdate = (new DateTime())->setTimestamp($this->getUser()->field_birthdate['und'][0]['value']);
+    $now = new DateTime();
+    $interval = $now->diff($birthdate);
+    return $interval->y;
+  }
+
+  public function getDrivingExperience() {
+    $dateDrivingLicense = (new DateTime())->setTimestamp($this->getUser()->field_driving_experience['und'][0]['value']);
+    $now = new DateTime();
+    $interval = $now->diff($dateDrivingLicense);
+    return $interval->y;
+  }
+
+  public function getAverageAnnualMileage() {
+    return $this->getUser()->field_average_annual_mileage['und'][0]['value'];
+  }
+
+  public function isUsualVideogamePlayer() {
+    return $this->getUser()->field_usual_videgame_player['und'][0]['value'] == 1;
   }
 
   /**
