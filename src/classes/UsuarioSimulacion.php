@@ -3,7 +3,7 @@
 class UsuarioSimulacion {
   /* @var stdClass $user La entidad usuario */
   private $user;
-  /* @var ListaSimulaciones $listaSimulaciones */
+  /* @var ListaSimulaciones $listaSimulaciones Lista de simulaciones del usuario */
   private $listaSimulaciones;
 
   public function __construct(stdClass $user) {
@@ -29,14 +29,14 @@ class UsuarioSimulacion {
    */
   public function getListaSimulaciones() {
     if (!isset($this->listaSimulaciones)) {
-      $provider = FactoryDataProvider::createDataProvider();
+      $provider = FactoryDataManager::createDataProvider();
       $this->listaSimulaciones = $provider->loadListaSimulacionesByUsuario($this);
     }
     return $this->listaSimulaciones;
   }
 
   /**
-   * @return int El UID del usuario
+   * @return int El UID del usuario.
    */
   public function getUid() {
     return $this->getUser()->uid;
@@ -104,7 +104,7 @@ class UsuarioSimulacion {
 
   /**
    * Devuelve la media de kilómetros anuales que realiza el usuario.
-   * @return mixed La media de km. anuales.
+   * @return int La media de km. anuales.
    */
   public function getAverageAnnualMileage() {
     return $this->getUser()->field_average_annual_mileage['und'][0]['value'];

@@ -6,7 +6,7 @@ module_load_include('inc', 'rjsimulador', 'rjsimulador.forms');
 /* *************************************************************************** */
 function rjsimulador_simulaciones_page($uid = NULL, $adminMode = FALSE) {
   // Provider de datos
-  $provider = FactoryDataProvider::createDataProvider();
+  $provider = FactoryDataManager::createDataProvider();
   // Recuperamos el usuario
   $usuarioSimulacion = $provider->loadSimulatorUser($uid);
 
@@ -75,7 +75,7 @@ function rjsimulador_simulaciones_page($uid = NULL, $adminMode = FALSE) {
 /* *************************************************************************** */
 function rjsimulador_partidas_simulacion_page($id_simulacion, $uid = NULL, $adminMode = FALSE) {
   // Provider de datos
-  $provider = FactoryDataProvider::createDataProvider();
+  $provider = FactoryDataManager::createDataProvider();
   // Recuperamos el usuario
   $usuarioSimulacion = $provider->loadSimulatorUser($uid);
 
@@ -218,11 +218,16 @@ function rjsimulador_partida_page($id_partida) {
     array(
       'data' =>
         array(
-          array('data' => round($miPartida->getListaDatos()->filterBy(new FilterByMarcha(array(1)))->calculateData(new CalculateAverageData(CalculateAverageData::RPM)),2)),
-          array('data' => round($miPartida->getListaDatos()->filterBy(new FilterByMarcha(array(2)))->calculateData(new CalculateAverageData(CalculateAverageData::RPM)),2)),
-          array('data' => round($miPartida->getListaDatos()->filterBy(new FilterByMarcha(array(3)))->calculateData(new CalculateAverageData(CalculateAverageData::RPM)),2)),
-          array('data' => round($miPartida->getListaDatos()->filterBy(new FilterByMarcha(array(4)))->calculateData(new CalculateAverageData(CalculateAverageData::RPM)),2)),
-          array('data' => round($miPartida->getListaDatos()->filterBy(new FilterByMarcha(array(5)))->calculateData(new CalculateAverageData(CalculateAverageData::RPM)),2)),
+          array('data' => round($miPartida->getListaDatos()->filterBy(new FilterByEquality(array(1),
+            FilterByEquality::DATO_MARCHA))->calculateData(new CalculateAverageData(CalculateAverageData::RPM)),2)),
+          array('data' => round($miPartida->getListaDatos()->filterBy(new FilterByEquality(array(2),
+            FilterByEquality::DATO_MARCHA))->calculateData(new CalculateAverageData(CalculateAverageData::RPM)),2)),
+          array('data' => round($miPartida->getListaDatos()->filterBy(new FilterByEquality(array(3),
+            FilterByEquality::DATO_MARCHA))->calculateData(new CalculateAverageData(CalculateAverageData::RPM)),2)),
+          array('data' => round($miPartida->getListaDatos()->filterBy(new FilterByEquality(array(4),
+            FilterByEquality::DATO_MARCHA))->calculateData(new CalculateAverageData(CalculateAverageData::RPM)),2)),
+          array('data' => round($miPartida->getListaDatos()->filterBy(new FilterByEquality(array(5),
+            FilterByEquality::DATO_MARCHA))->calculateData(new CalculateAverageData(CalculateAverageData::RPM)),2)),
         ),
     );
 

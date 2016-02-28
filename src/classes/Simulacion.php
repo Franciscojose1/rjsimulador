@@ -1,18 +1,20 @@
 <?php
 
 class Simulacion {
-  /* @var int El ID de la Simulación */
+  /* @var int $id_simulacion El ID de la Simulación */
   private $id_simulacion;
   /* @var string $nombre_simulacion */
   private $nombre_simulacion;
-  /* @var UsuarioSimulacion */
+  /* @var UsuarioSimulacion $usuario */
   private $usuario;
-  /* @var ListaPartidas */
+  /* @var ListaPartidas $listaPartidas */
   private $listaPartidas;
 
   /**
-   * @param int $id_simulacion EL ID de la simulación.
-   * @param UsuarioSimulacion $usuario El usuario para el que gestionar los datos de la simulación.
+   * Simulacion constructor.
+   * @param int $id_simulacion
+   * @param \UsuarioSimulacion $usuario
+   * @throws InvalidArgumentException Si los datos del constructor son erróneos.
    */
   public function __construct($id_simulacion, UsuarioSimulacion $usuario) {
     if (!is_numeric($id_simulacion)) {
@@ -42,10 +44,11 @@ class Simulacion {
 
   /**
    * @return string
+   * @throws \Exception Posible error recuperando el nombre de la simulación.
    */
   public function getNombreSimulacion() {
     if(!isset($this->nombre_simulacion)) {
-      $provider = FactoryDataProvider::createDataProvider();
+      $provider = FactoryDataManager::createDataProvider();
       $this->setNombreSimulacion($provider->loadNombreSimulacionFromID($this->getIdSimulacion()));
     }
 
@@ -74,11 +77,12 @@ class Simulacion {
   }
 
   /**
-   * @return ListaPartidas
+   * @return \ListaPartidas
+   * @throws \Exception Error recuperando la lista de partidas.
    */
   public function getListaPartidas() {
     if (!isset($this->listaPartidas)) {
-      $provider = FactoryDataProvider::createDataProvider();
+      $provider = FactoryDataManager::createDataProvider();
       $this->listaPartidas = $provider->loadListaPartidasBySimulation($this);
     }
 

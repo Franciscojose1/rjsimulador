@@ -24,50 +24,34 @@ class DBDataSaver implements DataSaver {
   /**
    * @inheritdoc
    */
-
   public function savePartida(Partida $partida) {
-    // Creamos una transacción; si algo falla hacemos rollback
-    $transaction = db_transaction();
-    try {
-      $idPartidaNuevo = db_insert('rjsim_partida')
-        ->fields(array(
-          'uid' => $partida->getUid(),
-          'fecha' => $partida->getFecha(),
-          'id_simulacion' => $partida->getIdSimulacion(),
-          'consumo_medio' => $partida->getConsumoMedio(),
-          'consumo_total' => $partida->getConsumoTotal(),
-          'tiempo_total' => $partida->getTiempoTotal()
-        ))
-        ->execute();
+    $idPartidaNuevo = db_insert('rjsim_partida')
+      ->fields(array(
+        'uid' => $partida->getUid(),
+        'fecha' => $partida->getFecha(),
+        'id_simulacion' => $partida->getIdSimulacion(),
+        'consumo_medio' => $partida->getConsumoMedio(),
+        'consumo_total' => $partida->getConsumoTotal(),
+        'tiempo_total' => $partida->getTiempoTotal()
+      ))
+      ->execute();
 
-      $partida->setIdPartida($idPartidaNuevo);
+    $partida->setIdPartida($idPartidaNuevo);
 
-      // Solo insertamos infracciones si existen
-      if ($partida->getListaInfracciones() != NULL && $partida->getListaInfracciones()
-          ->count() > 0
-      ) {
-        foreach ($partida->getListaInfracciones() as $infraccion) {
-          $infraccion->setIdPartida($partida->getIdPartida());
-          $infraccion->save();
-        }
+    // Solo insertamos infracciones si existen
+    if ($partida->getListaInfracciones() != NULL && $partida->getListaInfracciones()->count() > 0) {
+      foreach ($partida->getListaInfracciones() as $infraccion) {
+        $infraccion->setIdPartida($partida->getIdPartida());
+        $infraccion->save();
       }
+    }
 
-      // Solo insertamos datos si existen
-      if ($partida->getListaDatos() != NULL && $partida->getListaDatos()
-          ->count() > 0
-      ) {
-        foreach ($partida->getListaDatos() as $dato) {
-          $dato->setIdPartida($partida->getIdPartida());
-          $dato->save();
-        }
+    // Solo insertamos datos si existen
+    if ($partida->getListaDatos() != NULL && $partida->getListaDatos()->count() > 0) {
+      foreach ($partida->getListaDatos() as $dato) {
+        $dato->setIdPartida($partida->getIdPartida());
+        $dato->save();
       }
-
-      // Hacemos commit deseteando la variable $transaction
-      unset($transaction);
-
-    } catch (Exception $e) {
-      $transaction->rollback();
-      throw $e;
     }
   }
 

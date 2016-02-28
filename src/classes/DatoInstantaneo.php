@@ -270,15 +270,29 @@ class DatoInstantaneo implements ServicesAdapterInterface {
   /*                                     METHODS                                       */
   /* ********************************************************************************* */
   /**
-   * @throws Exception
+   * Almacena un DatoInstantaneo de forma persistente.
+   * @throws Exception Si ocurre un error durante el almacenamiento.
    */
   public function save() {
     if ($this->getIdPartida() == NULL || $this->getInstante() == NULL) {
       throw new Exception("Los campos ID de Partida e Instante son necesarios para almacenar un nuevo Dato.");
     }
 
-    $saver = FactoryDataSaver::createDataSaver();
+    $saver = FactoryDataManager::createDataSaver();
     $saver->saveDatoInstantaneo($this);
+  }
+
+  /**
+   * Elimina la DatoInstantaneo de forma persistente.
+   * @throws \Exception Cuando ocurre un error durante el borrado.
+   */
+  public function remove() {
+    if ($this->getIdPartida() == NULL || $this->getInstante() == NULL) {
+      throw new Exception("Un Dato debe tener un ID de Partida asociada y un Instante de tiempo para poder ser borrado.");
+    }
+
+    $deleter = FactoryDataManager::createDataRemover();
+    $deleter->removeDatoInstantaneo($this);
   }
 
   /**

@@ -9,19 +9,19 @@ class ListaDatosInstantaneos extends Lista {
   }
 
   /**
-   * @param int $numberKey Clave del elemento a recuperar
-   * @return DatoInstantaneo Devuelve el item de la lista en esa posición
-   * @throws InvalidArgumentException Si la key pasada no es numérica
-   * @throws Exception Si no existe esa clave en la lista
+   * @param int $numberKey Clave del elemento a recuperar.
+   * @return DatoInstantaneo Devuelve el item de la lista en esa posición.
+   * @throws InvalidArgumentException Si la key pasada no es numérica.
+   * @throws Exception Si no existe esa clave en la lista.
    */
   public function get($numberKey) {
     return parent::get($numberKey);
   }
 
   /**
-   * @param DatoInstantaneo $item Elemento a introducir en la lista
-   * @return int Número de elementos en la lista después de añadir el dato
-   * @throws InvalidArgumentException Si el item pasado no es de tipo DatoInstantaneo
+   * @param DatoInstantaneo $item Elemento a introducir en la lista.
+   * @return int Número de elementos en la lista después de añadir el dato.
+   * @throws InvalidArgumentException Si el item pasado no es de tipo DatoInstantaneo.
    */
   public function add($item) {
     if ($item instanceof DatoInstantaneo) {
@@ -35,7 +35,7 @@ class ListaDatosInstantaneos extends Lista {
   }
 
   /**
-   * @param int $numberKey Clave del elemento al eliminar
+   * @param int $numberKey Clave del elemento al eliminar.
    * @return int Número de elementos en la lista después de eliminar el dato.
    * @throws InvalidArgumentException Si la clave no es numérica.
    * @throws Exception Si no existe esa clave en la lista.
@@ -46,7 +46,7 @@ class ListaDatosInstantaneos extends Lista {
 
   /**
    * @param FilterInterface $filtro
-   * @return ListaDatosInstantaneos Lista de los datos que cumplen con el filtro
+   * @return ListaDatosInstantaneos Lista de los datos que cumplen con el filtro.
    */
   public function filterBy(FilterInterface $filtro) {
     $listaResultado = new ListaDatosInstantaneos();

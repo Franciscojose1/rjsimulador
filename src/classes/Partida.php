@@ -28,6 +28,12 @@ class Partida implements ServicesAdapterInterface {
   /* ********************************************************************************* */
   /*                                     CONSTRUCTOR                                   */
   /* ********************************************************************************* */
+  /**
+   * Partida constructor.
+   * @param int $uid
+   * @param int $fecha La fecha en formato UNIX.
+   * @param $id_simulacion
+   */
   function __construct($uid, $fecha, $id_simulacion) {
     $this->setUid($uid);
     $this->setFecha($fecha);
@@ -43,7 +49,7 @@ class Partida implements ServicesAdapterInterface {
    */
   public function getListaDatos() {
     if (!isset($this->listaDatos)) {
-      $provider = FactoryDataProvider::createDataProvider();
+      $provider = FactoryDataManager::createDataProvider();
       $this->listaDatos = $provider->loadListaDatosByPartida($this);
     }
     return $this->listaDatos;
@@ -121,7 +127,7 @@ class Partida implements ServicesAdapterInterface {
    */
   public function getListaInfracciones() {
     if (!isset($this->listaInfracciones)) {
-      $provider = FactoryDataProvider::createDataProvider();
+      $provider = FactoryDataManager::createDataProvider();
       $this->listaInfracciones = $provider->loadListaInfraccionesByPartida($this);
     }
     return $this->listaInfracciones;
@@ -192,7 +198,7 @@ class Partida implements ServicesAdapterInterface {
    */
   public function getNombreSimulacion() {
     if (!isset($this->nombre_simulacion)) {
-      $provider = FactoryDataProvider::createDataProvider();
+      $provider = FactoryDataManager::createDataProvider();
       $this->setNombreSimulacion($provider->loadNombreSimulacionFromID($this->getIdSimulacion()));
     }
 
@@ -252,17 +258,30 @@ class Partida implements ServicesAdapterInterface {
     return $url;
   }
 
-  /*
+  /**
    * Guarda la partida en almacenamiento persistente.
-   * @throws Exception Cuando ocurre un error durante el almacenamiento.
+   * @throws \Exception Cuando ocurre un error durante el almacenamiento.
    */
   public function save() {
     if ($this->getUid() == NULL || $this->getFecha() == NULL || $this->getIdSimulacion() == NULL) {
       throw new Exception("Los campos UID, Fecha e ID de Simulación son necesarios para insertar una nueva partida");
     }
 
-    $saver = FactoryDataSaver::createDataSaver();
+    $saver = FactoryDataManager::createDataSaver();
     $saver->savePartida($this);
+  }
+
+  /**
+   * Elimina la partida de forma persistente.
+   * @throws \Exception Cuando ocurre un error durante el borrado.
+   */
+  public function remove() {
+    if ($this->getIdPartida() == NULL) {
+      throw new Exception("Una partida debe tener un ID para poder ser borrada.");
+    }
+
+    $deleter = FactoryDataManager::createDataRemover();
+    $deleter->removePartida($this);
   }
 
   /**
@@ -273,7 +292,7 @@ class Partida implements ServicesAdapterInterface {
    */
   public static function loadById($id_partida) {
     if (is_numeric($id_partida)) {
-      $provider = FactoryDataProvider::createDataProvider();
+      $provider = FactoryDataManager::createDataProvider();
       return $provider->loadPartidaById($id_partida);
     }
     else {

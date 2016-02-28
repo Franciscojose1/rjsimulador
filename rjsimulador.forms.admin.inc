@@ -4,7 +4,7 @@
 /* *************************************************************************** */
 function rjsim_datos_simulaciones_usuarios_admin_form($form, &$form_state, GestorSimulaciones $gestorSimulaciones) {
   // Recuperamos el provider
-  $provider = FactoryDataProvider::createDataProvider();
+  $provider = FactoryDataManager::createDataProvider();
 
   // Creamos el formulario como tabs verticales
   $form['data_analysis'] = array(
