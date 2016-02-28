@@ -52,7 +52,7 @@ function partida_resource_definition() {
 }
 
 function _rjsimulador_partida_add($partida) {
-  $provider = FactoryDataProvider::createDataProvider();
+  $provider = FactoryDataManager::createDataProvider();
   $usuario = $provider->loadSimulatorUser();
 
   try {

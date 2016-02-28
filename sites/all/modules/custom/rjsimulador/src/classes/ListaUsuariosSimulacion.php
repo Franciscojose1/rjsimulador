@@ -1,6 +1,6 @@
 <?php
 
-class ListaUsuariosSimulacion extends  Lista {
+class ListaUsuariosSimulacion extends  Lista implements SortableInterface {
   /**
    * @return UsuarioSimulacion
    */
@@ -9,19 +9,19 @@ class ListaUsuariosSimulacion extends  Lista {
   }
 
   /**
-   * @param int $numberKey Clave del elemento a recuperar
-   * @return UsuarioSimulacion Devuelve el item de la lista en esa posición
-   * @throws InvalidArgumentException Si la key pasada no es numérica
-   * @throws Exception Si no existe esa clave en la lista
+   * @param int $numberKey Clave del elemento a recuperar.
+   * @return UsuarioSimulacion Devuelve el item de la lista en esa posición.
+   * @throws InvalidArgumentException Si la key pasada no es numérica.
+   * @throws Exception Si no existe esa clave en la lista.
    */
   public function get($numberKey) {
     return parent::get($numberKey);
   }
 
   /**
-   * @param UsuarioSimulacion $item Elemento a introducir en la lista
-   * @return int Número de elementos en la lista después de añadir el usuario
-   * @throws InvalidArgumentException Si el item pasado no es de tipo UsuarioSimulacion
+   * @param UsuarioSimulacion $item Elemento a introducir en la lista.
+   * @return int Número de elementos en la lista después de añadir el usuario.
+   * @throws InvalidArgumentException Si el item pasado no es de tipo UsuarioSimulacion.
    */
   public function add($item) {
     if ($item instanceof UsuarioSimulacion) {
@@ -35,7 +35,7 @@ class ListaUsuariosSimulacion extends  Lista {
   }
 
   /**
-   * @param int $numberKey Clave del elemento al eliminar
+   * @param int $numberKey Clave del elemento al eliminar.
    * @return int Número de elementos en la lista después de eliminar el usuario.
    * @throws InvalidArgumentException Si la clave no es numérica.
    * @throws Exception Si no existe esa clave en la lista.
@@ -45,7 +45,7 @@ class ListaUsuariosSimulacion extends  Lista {
   }
 
   /**
-   * @param ListaUsuariosSimulacion $lista Lista a mezclar con la actual
+   * @param ListaUsuariosSimulacion $lista Lista a mezclar con la actual.
    */
   public function mergeList(Lista $lista) {
     if ($lista instanceof ListaUsuariosSimulacion) {
@@ -65,6 +65,9 @@ class ListaUsuariosSimulacion extends  Lista {
     return parent::filterItems($listaResultado, $filtro);
   }
 
+  /**
+   * @inheritdoc
+   */
   public function sortBy($sortField, $sort) {
     $upperOrder = strtoupper($sort);
     if ($upperOrder != "ASC" && $upperOrder != "DESC") {

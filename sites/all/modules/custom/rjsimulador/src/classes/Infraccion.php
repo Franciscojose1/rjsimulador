@@ -24,10 +24,14 @@ class Infraccion implements ServicesAdapterInterface {
   /* ********************************************************************************* */
   /*                                     CONSTRUCTOR                                   */
   /* ********************************************************************************* */
+  /**
+   * Infraccion constructor.
+   * @param $instante
+   * @param $id_infraccion
+   */
   function __construct($instante, $id_infraccion) {
     $this->setInstante($instante);
     $this->setIdInfraccion($id_infraccion);
-    //$this->loadNombreInfraccion();
   }
 
   /* ********************************************************************************* */
@@ -98,7 +102,7 @@ class Infraccion implements ServicesAdapterInterface {
    */
   public function getNombreInfraccion() {
     if (!isset($this->nombre_infraccion)) {
-      $provider = FactoryDataProvider::createDataProvider();
+      $provider = FactoryDataManager::createDataProvider();
       $this->setNombreInfraccion($provider->loadNombreInfraccionFromId($this->getIdInfraccion()));
     }
 
@@ -225,8 +229,21 @@ class Infraccion implements ServicesAdapterInterface {
       throw new Exception("Los campos ID de Partida, Instante e ID de Infracción son necesarios para almacenar una nueva Infraccion");
     }
 
-    $saver = FactoryDataSaver::createDataSaver();
+    $saver = FactoryDataManager::createDataSaver();
     $saver->saveInfraccion($this);
+  }
+
+  /**
+   * Elimina la Infraccion de forma persistente.
+   * @throws \Exception Cuando ocurre un error durante el borrado.
+   */
+  public function remove() {
+    if ($this->getIdPartida() == NULL || $this->getInstante() == NULL || $this->getIdInfraccion()) {
+      throw new Exception("Una Infraccion debe tener un ID, un Instante y un ID de Partida asociada para poder ser borrada.");
+    }
+
+    $deleter = FactoryDataManager::createDataRemover();
+    $deleter->removeInfraccion($this);
   }
 
   /**

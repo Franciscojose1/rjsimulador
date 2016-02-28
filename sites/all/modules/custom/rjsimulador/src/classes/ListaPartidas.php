@@ -9,19 +9,19 @@ class ListaPartidas extends Lista implements SortableInterface {
   }
 
   /**
-   * @param int $numberKey Clave del elemento a recuperar
-   * @return Partida Devuelve el item de la lista en esa posición
-   * @throws InvalidArgumentException Si la key pasada no es numérica
-   * @throws Exception Si no existe esa clave en la lista
+   * @param int $numberKey Clave del elemento a recuperar.
+   * @return Partida Devuelve el item de la lista en esa posición.
+   * @throws InvalidArgumentException Si la key pasada no es numérica.
+   * @throws Exception Si no existe esa clave en la lista.
    */
   public function get($numberKey) {
     return parent::get($numberKey);
   }
 
   /**
-   * @param Partida $item Elemento a introducir en la lista
-   * @return int Número de elementos en la lista después de añadir la partida
-   * @throws InvalidArgumentException Si el item pasado no es de tipo Partida
+   * @param Partida $item Elemento a introducir en la lista.
+   * @return int Número de elementos en la lista después de añadir la partida.
+   * @throws InvalidArgumentException Si el item pasado no es de tipo Partida.
    */
   public function add($item) {
     if ($item instanceof Partida) {
@@ -35,7 +35,7 @@ class ListaPartidas extends Lista implements SortableInterface {
   }
 
   /**
-   * @param int $numberKey Clave del elemento al eliminar
+   * @param int $numberKey Clave del elemento al eliminar.
    * @return int Número de elementos en la lista después de eliminar la partida.
    * @throws InvalidArgumentException Si la clave no es numérica.
    * @throws Exception Si no existe esa clave en la lista.
@@ -45,7 +45,7 @@ class ListaPartidas extends Lista implements SortableInterface {
   }
 
   /**
-   * @param ListaPartidas $lista Lista a mezclar con la actual
+   * @param ListaPartidas $lista Lista a mezclar con la actual.
    */
   public function mergeList(Lista $lista) {
     if ($lista instanceof ListaPartidas) {
@@ -58,13 +58,16 @@ class ListaPartidas extends Lista implements SortableInterface {
 
   /**
    * @param FilterInterface $filtro
-   * @return ListaPartidas Lista de partidas que cumple con el filtro
+   * @return ListaPartidas Lista de partidas que cumple con el filtro.
    */
   public function filterBy(FilterInterface $filtro) {
     $listaResultado = new ListaPartidas();
     return parent::filterItems($listaResultado, $filtro);
   }
 
+  /**
+   * @inheritdoc
+   */
   public function sortBy($sortField, $sort) {
     $upperOrder = strtoupper($sort);
     if ($upperOrder != "ASC" && $upperOrder != "DESC") {

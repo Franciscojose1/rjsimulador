@@ -17,7 +17,7 @@ class GestorSimulaciones {
    * @throws LogicException Si no existen usuarios en la BBD.
    */
   public function __construct(UsuarioSimulacion $usuarioActual = NULL) {
-    $provider = FactoryDataProvider::createDataProvider();
+    $provider = FactoryDataManager::createDataProvider();
 
     // Recuperamos los ids de las simulaciones existentes
     $this->setArraySimulaciones($provider->loadAllIdsSimulaciones());
@@ -87,7 +87,8 @@ class GestorSimulaciones {
   public function setUsuarioActual(UsuarioSimulacion $usuarioActual) {
     if ($usuarioActual->countPartidas() > 0) {
       $this->usuarioActual = $usuarioActual;
-    } else {
+    }
+    else {
       throw new LogicException("No existen partidas guardadas en la BBDD.");
     }
   }
@@ -126,7 +127,8 @@ class GestorSimulaciones {
   public function getListaTodosUsuariosExceptoActual() {
     if (!isset($this->usuarioActual)) {
       return $this->getListaTodosUsuarios();
-    } else {
+    }
+    else {
       $listaUsuariosExceptoActual = new ListaUsuariosSimulacion();
 
       foreach ($this->getListaTodosUsuarios() as $usuario) {

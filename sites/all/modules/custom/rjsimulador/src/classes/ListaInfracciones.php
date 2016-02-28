@@ -9,19 +9,19 @@ class ListaInfracciones extends Lista {
   }
 
   /**
-   * @param int $numberKey Clave del elemento a recuperar
-   * @return Infraccion Devuelve el item de la lista en esa posición
-   * @throws InvalidArgumentException Si la key pasada no es numérica
-   * @throws Exception Si no existe esa clave en la lista
+   * @param int $numberKey Clave del elemento a recuperar.
+   * @return Infraccion Devuelve el item de la lista en esa posición.
+   * @throws InvalidArgumentException Si la key pasada no es numérica.
+   * @throws Exception Si no existe esa clave en la lista.
    */
   public function get($numberKey) {
     return parent::get($numberKey);
   }
 
   /**
-   * @param Infraccion $item Elemento a introducir en la lista
-   * @return int Número de elementos en la lista después de añadir la infracción
-   * @throws InvalidArgumentException Si el item pasado no es de tipo Infracción
+   * @param Infraccion $item Elemento a introducir en la lista.
+   * @return int Número de elementos en la lista después de añadir la infracción.
+   * @throws InvalidArgumentException Si el item pasado no es de tipo Infracción.
    */
   public function add($item) {
     if ($item instanceof Infraccion) {
@@ -35,7 +35,7 @@ class ListaInfracciones extends Lista {
   }
 
   /**
-   * @param int $numberKey Clave del elemento al eliminar
+   * @param int $numberKey Clave del elemento al eliminar.
    * @return int Número de elementos en la lista después de eliminar la infracción.
    * @throws InvalidArgumentException Si la clave no es numérica.
    * @throws Exception Si no existe esa clave en la lista.
@@ -46,6 +46,7 @@ class ListaInfracciones extends Lista {
 
   /**
    * @param ListaInfracciones $lista Lista a mezclar con la actual.
+   * @throws InvalidArgumentException Si el tipo pasado no es aceptado.
    */
   public function mergeList(Lista $lista) {
     if ($lista instanceof ListaInfracciones) {

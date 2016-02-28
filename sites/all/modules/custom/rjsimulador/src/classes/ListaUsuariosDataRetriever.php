@@ -1,6 +1,5 @@
 <?php
 
-
 class ListaUsuariosDataRetriever {
 
   /* @var ListaUsuariosSimulacion Una lista de usuarios de la que recuperar datos */
@@ -9,7 +8,7 @@ class ListaUsuariosDataRetriever {
   private $arraySimulaciones;
 
   public function __construct(ListaUsuariosSimulacion $lista) {
-    $provider = FactoryDataProvider::createDataProvider();
+    $provider = FactoryDataManager::createDataProvider();
     // Recuperamos los ids de las simulaciones existentes
     $this->setArraySimulaciones($provider->loadAllIdsSimulaciones());
     $this->listaUsuarios = $lista;
@@ -108,12 +107,14 @@ class ListaUsuariosDataRetriever {
    */
   public function getAverageInfraccionesByPartida($idInfraccion, $idSimulation) {
     // Recuperamos total de partidas de una simulacion
-    $totalPartidasSimulacion = $this->retrieveAllPartidasByIdSimulacion($idSimulation)->count();
+    $totalPartidasSimulacion = $this->retrieveAllPartidasByIdSimulacion($idSimulation)
+      ->count();
     // Recuperamos total de infracciones de un ciertto tipo por simulacion
-    $totalInfraccionesSimulacion = $this->retrieveAllInfraccionesByTypeAndIdSimulacion($idInfraccion, $idSimulation)->count();
+    $totalInfraccionesSimulacion = $this->retrieveAllInfraccionesByTypeAndIdSimulacion($idInfraccion, $idSimulation)
+      ->count();
 
     // Si el total de partidas es 0 devolvemos 0 evitando la división
-    $mediaInfraccionesPorPartida = $totalPartidasSimulacion > 0 ? $totalInfraccionesSimulacion/$totalPartidasSimulacion : 0;
+    $mediaInfraccionesPorPartida = $totalPartidasSimulacion > 0 ? $totalInfraccionesSimulacion / $totalPartidasSimulacion : 0;
 
     return $mediaInfraccionesPorPartida;
   }

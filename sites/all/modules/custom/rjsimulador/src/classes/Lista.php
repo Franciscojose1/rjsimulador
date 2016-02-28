@@ -11,7 +11,7 @@ abstract class Lista implements Iterator, Countable {
   }
 
   /**
-   * Return the current element
+   * Return the current element.
    * @return mixed Can return any type.
    */
   public function current() {
@@ -19,7 +19,7 @@ abstract class Lista implements Iterator, Countable {
   }
 
   /**
-   * Move forward to next element
+   * Move forward to next element.
    * @return void Any returned value is ignored.
    */
   public function next() {
@@ -27,7 +27,7 @@ abstract class Lista implements Iterator, Countable {
   }
 
   /**
-   * Return the key of the current element
+   * Return the key of the current element.
    * @return mixed scalar on success, or null on failure.
    */
   public function key() {
@@ -35,7 +35,7 @@ abstract class Lista implements Iterator, Countable {
   }
 
   /**
-   * Checks if current position is valid
+   * Checks if current position is valid.
    * @return boolean The return value will be casted to boolean and then evaluated.
    * Returns true on success or false on failure.
    */
@@ -44,7 +44,7 @@ abstract class Lista implements Iterator, Countable {
   }
 
   /**
-   * Rewind the Iterator to the first element
+   * Rewind the Iterator to the first element.
    * @return void Any returned value is ignored.
    */
   public function rewind() {
@@ -52,7 +52,7 @@ abstract class Lista implements Iterator, Countable {
   }
 
   /**
-   * Count elements of an object
+   * Count elements of an object.
    * @return int The custom count as an integer.
    * The return value is cast to an integer.
    */
@@ -61,17 +61,17 @@ abstract class Lista implements Iterator, Countable {
   }
 
   /**
-   * @param int $newCount nuevo número de elemento de la lista
+   * @param int $newCount nuevo número de elemento de la lista.
    */
   private function setCount($newCount) {
     $this->count = $newCount;
   }
 
   /**
-   * @param int $numberKey Clave del elemento a recuperar
-   * @return mixed Devuelve el item de la lista en esa posición
-   * @throws InvalidArgumentException Si la key pasada no es numérica
-   * @throws Exception Si no existe esa clave en la lista
+   * @param int $numberKey Clave del elemento a recuperar.
+   * @return mixed Devuelve el item de la lista en esa posición.
+   * @throws InvalidArgumentException Si la key pasada no es numérica.
+   * @throws Exception Si no existe esa clave en la lista.
    */
   public function get($numberKey) {
     if (!is_numeric($numberKey)) {
@@ -86,7 +86,7 @@ abstract class Lista implements Iterator, Countable {
   }
 
   /**
-   * @param mixed $item Item a añadir a la lista
+   * @param mixed $item Item a añadir a la lista.
    * @return int Número de elementos en la lista después de añadir el item.
    */
   public function add($item) {
@@ -96,10 +96,10 @@ abstract class Lista implements Iterator, Countable {
   }
 
   /**
-   * @param int $numberKey Clave del elemento al eliminar
+   * @param int $numberKey Clave del elemento al eliminar.
    * @return int Número de elementos en la lista después de eliminar el item.
-   * @throws InvalidArgumentException Si la clave no es numérica
-   * @throws Exception Si no existe esa clave en la lista
+   * @throws InvalidArgumentException Si la clave no es numérica.
+   * @throws Exception Si no existe esa clave en la lista.
    */
   public function remove($numberKey) {
     if (!is_numeric($numberKey)) {
@@ -119,7 +119,7 @@ abstract class Lista implements Iterator, Countable {
   }
 
   /**
-   * @param Lista $lista Lista a fusionar con la actual
+   * @param Lista $lista Lista a fusionar con la actual.
    */
   public function mergeList(Lista $lista) {
     $this->items = array_merge($this->items, $lista->items);
