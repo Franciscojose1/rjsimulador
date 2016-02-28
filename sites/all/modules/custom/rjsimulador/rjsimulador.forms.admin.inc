@@ -88,16 +88,20 @@ function generate_form_data_general_analysis(&$form_state, GestorSimulaciones $g
 
   // Generamos el título del gráfico
   if ($tipoDatoCalcular == CalculateAverageData::CONSUMO_MEDIO) {
-    $tituloGrafico = t("Average consumption of all users for Simulation @idSimulacion", array('@idSimulacion' => $idSimulacion));
+    $tituloGrafico = t("Average consumption of all users<br>@simulacion",
+      array('@simulacion' => $gestorSimulaciones->getArraySimulaciones()[$idSimulacion]));
   }
   elseif ($tipoDatoCalcular == CalculateAverageData::TIEMPO_TOTAL) {
-    $tituloGrafico = t("Average Partida time length of all users for Simulation @idSimulacion", array('@idSimulacion' => $idSimulacion));
+    $tituloGrafico = t("Average Partida time length of all users<br>@simulacion",
+      array('@simulacion' => $gestorSimulaciones->getArraySimulaciones()[$idSimulacion]));
   }
   elseif ($tipoDatoCalcular == CalculateAverageData::VELOCIDAD) {
-    $tituloGrafico = t("Average speed by Partida of all users for Simulation @idSimulacion", array('@idSimulacion' => $idSimulacion));
+    $tituloGrafico = t("Average speed by Partida of all users<br>@simulacion",
+      array('@simulacion' => $gestorSimulaciones->getArraySimulaciones()[$idSimulacion]));
   }
   else {
-    $tituloGrafico = t("Average RPMs by Partida of all users for Simulation @idSimulacion", array('@idSimulacion' => $idSimulacion));
+    $tituloGrafico = t("Average RPMs by Partida of all users<br>@simulacion",
+      array('@simulacion' => $gestorSimulaciones->getArraySimulaciones()[$idSimulacion]));
   }
 
   // Etiqueta del Eje X
@@ -127,7 +131,10 @@ function generate_form_data_general_analysis(&$form_state, GestorSimulaciones $g
     $form['data_general_chart']['data_general_user_' . $usuario->getUid()] =
       array(
         '#type' => 'chart_data',
-        '#title' => t('User @userName', array('@userName' => $usuario->getUid())),
+        '#title' => t('User @userName (UID:@userUID)', array(
+          '@userName' => $usuario->getName(),
+          '@userUID' => $usuario->getUid()
+        )),
         '#data' => array($dataUsuario),
       );
   }
@@ -143,10 +150,6 @@ function generate_form_data_general_analysis(&$form_state, GestorSimulaciones $g
     '#options' => $gestorSimulaciones->getArraySimulaciones(),
     '#default_value' => key($gestorSimulaciones->getArraySimulaciones()),
     '#description' => t('Select the simulation about you want information.'),
-    '#ajax' => array(
-      'callback' => 'ajax_generate_form_data_general_analysis_callback',
-      'wrapper' => 'div-data-general-chart',
-    ),
   );
 
   $form['data_general_actions']['data_general_select_type'] = array(
@@ -160,7 +163,13 @@ function generate_form_data_general_analysis(&$form_state, GestorSimulaciones $g
         CalculateAverageData::RPM => t('Average RPMs')
       ),
     '#default_value' => CalculateAverageData::CONSUMO_MEDIO,
-    '#description' => t('Select the simulation about you want information.'),
+    '#description' => t('Select the data to show.'),
+  );
+
+  $form['data_general_actions']['data_general_filter_button'] = array(
+    '#type' => 'button',
+    '#value' => t('Filter graph'),
+    '#name' => 'data_general_filter_button',
     '#ajax' => array(
       'callback' => 'ajax_generate_form_data_general_analysis_callback',
       'wrapper' => 'div-data-general-chart',
@@ -179,25 +188,28 @@ function ajax_generate_form_data_general_analysis_callback($form, &$form_state) 
 /* ******************************************************************************* */
 function generate_form_data_group_analysis(&$form_state, GestorSimulaciones $gestorSimulaciones, DataProvider $provider) {
   // Recuperamos el idSimulacion por el que filtrar la gráfica
-  $idSimulacion = isset($form_state['values']['data_group_select_simulacion']) ?
-    $form_state['values']['data_group_select_simulacion'] : key($gestorSimulaciones->getArraySimulaciones());
+  $idSimulacion = isset($form_state['values']['data_group_select_simulation']) ?
+    $form_state['values']['data_group_select_simulation'] : key($gestorSimulaciones->getArraySimulaciones());
   // Recuperamos el dato a calcular
-  $tipoDatoCalcular = isset($form_state['values']['data_group_select_data']) ?
-    $form_state['values']['data_group_select_data'] : CalculateAverageData::CONSUMO_MEDIO;
+  $tipoDatoCalcular = isset($form_state['values']['data_group_select_type']) ?
+    $form_state['values']['data_group_select_type'] : CalculateAverageData::CONSUMO_MEDIO;
 
   // Generamos el título del gráfico
   if ($tipoDatoCalcular == CalculateAverageData::CONSUMO_MEDIO) {
-    $tituloGrafico = t("Average consumption of users groups for Simulation @idSimulacion", array('@idSimulacion' => $idSimulacion));
+    $tituloGrafico = t("Average consumption of users groups<br>@simulacion",
+      array('@simulacion' => $gestorSimulaciones->getArraySimulaciones()[$idSimulacion]));
   }
   elseif ($tipoDatoCalcular == CalculateAverageData::TIEMPO_TOTAL) {
-    $tituloGrafico = t("Average Partida time length of users groups for Simulation ") . $idSimulacion;
+    $tituloGrafico = t("Average Partida time length of users groups<br>@simulacion",
+      array('@simulacion' => $gestorSimulaciones->getArraySimulaciones()[$idSimulacion]));
   }
   elseif ($tipoDatoCalcular == CalculateAverageData::VELOCIDAD) {
-    $tituloGrafico = t("Average speed by Partida of users groups for Simulation ") . $idSimulacion;
+    $tituloGrafico = t("Average speed by Partida of users groups<br>@simulacion",
+      array('@simulacion' => $gestorSimulaciones->getArraySimulaciones()[$idSimulacion]));
   }
   else {
-    $tituloGrafico = t("Average RPMs by Partida of users groups for Simulation ") . $idSimulacion;
-
+    $tituloGrafico = t("Average RPMs by Partida of users groups<br>@simulacion",
+      array('@simulacion' => $gestorSimulaciones->getArraySimulaciones()[$idSimulacion]));
   }
 
   // Etiquet Eje X
@@ -226,19 +238,15 @@ function generate_form_data_group_analysis(&$form_state, GestorSimulaciones $ges
     '#weight' => 25,
   );
 
-  $form['data_group_container']['data_group_actions']['data_group_select_simulacion'] = array(
+  $form['data_group_container']['data_group_actions']['data_group_select_simulation'] = array(
     '#type' => 'select',
     '#title' => t('Select Simulation'),
     '#options' => $gestorSimulaciones->getArraySimulaciones(),
     '#default_value' => key($gestorSimulaciones->getArraySimulaciones()),
     '#description' => t('Select the simulation about you want information.'),
-    '#ajax' => array(
-      'callback' => 'ajax_generate_form_data_group_analysis_callback',
-      'wrapper' => 'div-data-group',
-    ),
   );
 
-  $form['data_group_container']['data_group_actions']['data_group_select_data'] = array(
+  $form['data_group_container']['data_group_actions']['data_group_select_type'] = array(
     '#type' => 'select',
     '#title' => t('Select data to show'),
     '#options' =>
@@ -249,20 +257,13 @@ function generate_form_data_group_analysis(&$form_state, GestorSimulaciones $ges
         CalculateAverageData::RPM => t('Average RPMs')
       ),
     '#default_value' => CalculateAverageData::CONSUMO_MEDIO,
-    '#description' => t('Select the simulation about you want information.'),
-    '#ajax' => array(
-      'callback' => 'ajax_generate_form_data_group_analysis_callback',
-      'wrapper' => 'div-data-group',
-    ),
+    '#description' => t('Select the data to show.'),
   );
 
   $form['data_group_container']['data_group_actions']['data_group_filter_button'] = array(
     '#type' => 'button',
-    '#value' => t('Filter'),
+    '#value' => t('Filter graph'),
     '#name' => 'data_group_filter_button',
-    '#limit_validation_errors' => array(
-      array('data_group_groups'),
-    ),
     '#validate' => array('generate_form_data_group_analysis_validate'),
     '#ajax' => array(
       'callback' => 'ajax_generate_form_data_group_analysis_callback',
@@ -290,7 +291,7 @@ function generate_form_data_group_analysis(&$form_state, GestorSimulaciones $ges
       '#type' => 'button',
       '#value' => t('Add new group'),
       '#name' => 'data_group_add_group_button',
-      '#limit_validation_errors' => array(),
+      '#validate' => array('generate_form_data_group_analysis_validate'),
       '#ajax' => array(
         'callback' => 'ajax_generate_form_data_group_analysis_callback',
         'wrapper' => 'div-data-group',
@@ -303,7 +304,7 @@ function generate_form_data_group_analysis(&$form_state, GestorSimulaciones $ges
       '#type' => 'button',
       '#value' => t('Delete last group'),
       '#name' => 'data_group_delete_group_button',
-      '#limit_validation_errors' => array(),
+      '#validate' => array('generate_form_data_group_analysis_validate'),
       '#ajax' => array(
         'callback' => 'ajax_generate_form_data_group_analysis_callback',
         'wrapper' => 'div-data-group',
@@ -328,6 +329,7 @@ function generate_form_data_group_analysis(&$form_state, GestorSimulaciones $ges
     // Listado de todos los usuarios
     $listaUsuarios = $gestorSimulaciones->getListaTodosUsuarios();
     // Solo filtramos si no hay errores
+    $titulos = array();
     if (empty(form_get_errors())) {
       if (isset($form_state['values']['data_group_groups'][$index])) {
         if ($form_state['values']['data_group_groups'][$index]['data_group_check_age'] == 1) {
@@ -337,6 +339,11 @@ function generate_form_data_group_analysis(&$form_state, GestorSimulaciones $ges
             "desde" => $from,
             "hasta" => $to
           ), FilterByInterval::AGE));
+
+          $titulos[] = t('age from @from to @to years', array(
+            '@from' => $from,
+            '@to' => $to
+          ));
         }
 
         if ($form_state['values']['data_group_groups'][$index]['data_group_check_driving_experience'] == 1) {
@@ -346,6 +353,11 @@ function generate_form_data_group_analysis(&$form_state, GestorSimulaciones $ges
             "desde" => $from,
             "hasta" => $to
           ), FilterByInterval::DRIVING_EXPERIENCE));
+
+          $titulos[] = t('driving experience from @from to @to years', array(
+            '@from' => $from,
+            '@to' => $to
+          ));
         }
 
         if ($form_state['values']['data_group_groups'][$index]['data_group_check_average_annual_mileage'] == 1) {
@@ -355,11 +367,18 @@ function generate_form_data_group_analysis(&$form_state, GestorSimulaciones $ges
             "desde" => $from,
             "hasta" => $to
           ), FilterByInterval::AVERAGE_ANNUAL_MILEAGE));
+
+          $titulos[] = t('average annual mileage from @from to @to kms.', array(
+            '@from' => $from,
+            '@to' => $to
+          ));
         }
 
         if ($form_state['values']['data_group_groups'][$index]['data_group_check_usual_videogame_player'] == 1) {
           $radios = $form_state['values']['data_group_groups'][$index]['data_group_usual_videogame_player']['radios'];
           $listaUsuarios = $listaUsuarios->filterBy(new FilterByEquality(array($radios), FilterByEquality::USUARIO_USUAL_PLAYER));
+
+          $titulos[] = t('@mensaje usual videogame player', array('@mensaje' => $radios == 1 ? t("are") : t("are not")));
         }
       }
     }
@@ -371,10 +390,18 @@ function generate_form_data_group_analysis(&$form_state, GestorSimulaciones $ges
     $dataGroup = round($retriever->retrieveAllPartidasByIdSimulacion($idSimulacion)
       ->calculateData(new CalculateAverageData($tipoDatoCalcular)), 2);
 
+    // Generamos el título del grupo según los filtros
+    $tituloSustitucion = count($titulos) > 0 ? 'Group @index. Conditions:' : 'Group @index.';
+    $arraySustitucion = array('@index' => $index);
+    for ($i = 0; $i < count($titulos); $i++) {
+      $tituloSustitucion .= '<br>@' . $i;
+      $arraySustitucion += array('@' . $i => $titulos[$i]);
+    }
+
     $form['data_group_container']['data_group_chart']['data_group_' . $index] =
       array(
         '#type' => 'chart_data',
-        '#title' => t('Group @index', array('@index' => $index)),
+        '#title' => t($tituloSustitucion, $arraySustitucion),
         '#data' => array($dataGroup),
       );
   }
@@ -403,8 +430,8 @@ function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gest
   $idSimulacion = isset($form_state['values']['data_user_select_simulation']) ?
     $form_state['values']['data_user_select_simulation'] : key($gestorSimulaciones->getArraySimulaciones());
   // Recuperamos el tipo de dato que vamos a calcular
-  $tipoDatoCalcular = isset($form_state['values']['data_user_select_data']) ?
-    $form_state['values']['data_user_select_data'] : CalculateAverageData::CONSUMO_MEDIO;
+  $tipoDatoCalcular = isset($form_state['values']['data_user_select_type']) ?
+    $form_state['values']['data_user_select_type'] : CalculateAverageData::CONSUMO_MEDIO;
 
   /* DATOS OBLIGATORIOS PARA EL ANÁLISIS DE DATOS POR USUARIO */
   // Seleccionamos el usuario para el que realizar la comparación
@@ -412,36 +439,36 @@ function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gest
 
   // Genreamos el nombre par el título del gráfico
   if ($tipoDatoCalcular == CalculateAverageData::CONSUMO_MEDIO) {
-    $tituloGrafico = t("Average consumption of user @userName for Simulation @idSimulacion",
+    $tituloGrafico = t("Average consumption of user @userName<br>simulacion",
       array(
         '@userName' => $usuarioActual->getName(),
-        '@idSimulacion' => $idSimulacion
+        '@simulacion' => $gestorSimulaciones->getArraySimulaciones()[$idSimulacion]
       ));
   }
   elseif ($tipoDatoCalcular == CalculateAverageData::TIEMPO_TOTAL) {
-    $tituloGrafico = t("Average Partida time length of user @userName for Simulation @idSimulacion",
+    $tituloGrafico = t("Average Partida time length of user @userName<br>@simulacion",
       array(
         '@userName' => $usuarioActual->getName(),
-        '@idSimulacion' => $idSimulacion
+        '@simulacion' => $gestorSimulaciones->getArraySimulaciones()[$idSimulacion]
       ));
   }
   elseif ($tipoDatoCalcular == CalculateAverageData::VELOCIDAD) {
-    $tituloGrafico = t("Average speed by Partida of user @userName for Simulation @idSimulacion",
+    $tituloGrafico = t("Average speed by Partida of user @userName<br>@simulacion",
       array(
         '@userName' => $usuarioActual->getName(),
-        '@idSimulacion' => $idSimulacion
+        '@simulacion' => $gestorSimulaciones->getArraySimulaciones()[$idSimulacion]
       ));
   }
   else {
-    $tituloGrafico = t("Average RPMs by Partida of user @userName for Simulation @idSimulacion",
+    $tituloGrafico = t("Average RPMs by Partida of user @userName<br>@simulacion",
       array(
         '@userName' => $usuarioActual->getName(),
-        '@idSimulacion' => $idSimulacion
+        '@simulacion' => $gestorSimulaciones->getArraySimulaciones()[$idSimulacion]
       ));
   }
 
   // Etiqueta del Eje X
-  $labelAxisX[] = t("User and groups");
+  $labelAxisX[] = t("User and realted groups");
 
   /* **************************************************************************** */
   /* *              Generamos el formulario y la gráfica                        * */
@@ -474,7 +501,10 @@ function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gest
   $form['data_user_container']['data_user_chart']['data_user_actual'] =
     array(
       '#type' => 'chart_data',
-      '#title' => t('User @name', array('@name' => $usuarioActual->getName())),
+      '#title' => t('User @userName (UID:@userUID)', array(
+        '@userName' => $usuarioActual->getName(),
+        '@userUID' => $usuarioActual->getUid()
+      )),
       '#data' => array($dataUser),
     );
 
@@ -503,7 +533,7 @@ function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gest
   $form['data_user_container']['data_user_chart']['data_user_same_age_group'] =
     array(
       '#type' => 'chart_data',
-      '#title' => t('Group of users which @user_group', array('@user_group' => $usuarioActual->getGrupoEdad(TRUE))),
+      '#title' => t('Group of users which @userGroup', array('@userGroup' => $usuarioActual->getGrupoEdad(TRUE))),
       '#data' => array($dataRestoUsuarioMismoGrupoEdad),
     );
 
@@ -516,7 +546,7 @@ function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gest
   $form['data_user_container']['data_user_chart']['data_user_same_driving_experience_group'] =
     array(
       '#type' => 'chart_data',
-      '#title' => t('Group of users which @user_group', array('@user_group' => $usuarioActual->getGrupoExperiencia(TRUE))),
+      '#title' => t('Group of users which @userGroup', array('@userGroup' => $usuarioActual->getGrupoExperiencia(TRUE))),
       '#data' => array($dataRestoUsuarioMismoGrupoExperiencia),
     );
 
@@ -529,13 +559,13 @@ function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gest
   $form['data_user_container']['data_user_chart']['data_user_same_average_annual_mileage_group'] =
     array(
       '#type' => 'chart_data',
-      '#title' => t('Group of users with @user_group', array('@user_group' => $usuarioActual->getGrupoKilometrajeMedioAnual(true))),
+      '#title' => t('Group of users with @userGroup', array('@userGroup' => $usuarioActual->getGrupoKilometrajeMedioAnual(true))),
       '#data' => array($dataRestoUsuarioMismoGrupoKilometraje),
     );*/
 
   // Recuperamos los datos del grupo del resto de usuarios que está en es del mismo tipo de jugador habitual que el usuario analizado
-  $listaRestoUsuariosMismoTipoJugador = $listaRestoUsuarios->filterBy(new FilterByEquality(array($usuarioActual->isUsualVideogamePlayer()),
-    FilterByEquality::USUARIO_USUAL_PLAYER));
+  $listaRestoUsuariosMismoTipoJugador = $listaRestoUsuarios
+    ->filterBy(new FilterByEquality(array($usuarioActual->isUsualVideogamePlayer()), FilterByEquality::USUARIO_USUAL_PLAYER));
   $retriever->setListaUsuarios($listaRestoUsuariosMismoTipoJugador);
   $dataRestoUsuarioMismoTipoJugador = round($retriever->retrieveAllPartidasByIdSimulacion($idSimulacion)
     ->calculateData(new CalculateAverageData($tipoDatoCalcular)), 2);
@@ -543,8 +573,8 @@ function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gest
   $form['data_user_container']['data_user_chart']['data_user_same_average_annual_mileage_group'] =
     array(
       '#type' => 'chart_data',
-      '#title' => t('Group of users which @user_group usual players of games',
-        array('@user_group' => $usuarioActual->isUsualVideogamePlayer(TRUE) ? t("are") : t("are not"))),
+      '#title' => t('Group of users which @userGroup usual players of games',
+        array('@userGroup' => $usuarioActual->isUsualVideogamePlayer(TRUE) ? t("are") : t("are not"))),
       '#data' => array($dataRestoUsuarioMismoTipoJugador),
     );
 
@@ -560,10 +590,6 @@ function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gest
     '#options' => $gestorSimulaciones->getArrayUsuariosUidName(),
     '#default_value' => key($gestorSimulaciones->getArrayUsuariosUidName()),
     '#description' => t('Select the simulation about you want information.'),
-    '#ajax' => array(
-      'callback' => 'ajax_generate_form_data_user_analysis_callback',
-      'wrapper' => 'div-data-user',
-    ),
   );
 
   $form['data_user_container']['data_user_actions']['data_user_select_simulation'] = array(
@@ -572,13 +598,9 @@ function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gest
     '#options' => $gestorSimulaciones->getArraySimulaciones(),
     '#default_value' => key($gestorSimulaciones->getArraySimulaciones()),
     '#description' => t('Select the simulation about you want information.'),
-    '#ajax' => array(
-      'callback' => 'ajax_generate_form_data_user_analysis_callback',
-      'wrapper' => 'div-data-user',
-    ),
   );
 
-  $form['data_user_container']['data_user_actions']['data_user_select_data'] = array(
+  $form['data_user_container']['data_user_actions']['data_user_select_type'] = array(
     '#type' => 'select',
     '#title' => t('Select data to show'),
     '#options' =>
@@ -590,19 +612,12 @@ function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gest
       ),
     '#default_value' => CalculateAverageData::CONSUMO_MEDIO,
     '#description' => t('Select the simulation about you want information.'),
-    '#ajax' => array(
-      'callback' => 'ajax_generate_form_data_user_analysis_callback',
-      'wrapper' => 'div-data-user',
-    ),
   );
 
   $form['data_user_container']['data_user_actions']['data_user_filter_button'] = array(
     '#type' => 'button',
-    '#value' => t('Filter'),
+    '#value' => t('Filter graph'),
     '#name' => 'data_user_filter_button',
-    '#limit_validation_errors' => array(
-      array('data_user_groups'),
-    ),
     '#validate' => array('generate_form_data_user_analysis_validate'),
     '#ajax' => array(
       'callback' => 'ajax_generate_form_data_user_analysis_callback',
@@ -630,7 +645,7 @@ function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gest
       '#type' => 'button',
       '#value' => t('Add new group'),
       '#name' => 'data_user_add_group_button',
-      '#limit_validation_errors' => array(),
+      '#validate' => array('generate_form_data_user_analysis_validate'),
       '#ajax' => array(
         'callback' => 'ajax_generate_form_data_user_analysis_callback',
         'wrapper' => 'div-data-user',
@@ -643,7 +658,7 @@ function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gest
       '#type' => 'button',
       '#value' => t('Delete last group'),
       '#name' => 'data_user_delete_group_button',
-      '#limit_validation_errors' => array(),
+      '#validate' => array('generate_form_data_user_analysis_validate'),
       '#ajax' => array(
         'callback' => 'ajax_generate_form_data_user_analysis_callback',
         'wrapper' => 'div-data-user',
@@ -657,15 +672,17 @@ function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gest
     '#title' => t('Groups'),
     '#collapsible' => TRUE,
     '#collapsed' => $form_state['data_user_number_groups'] < 1,
-    '#description' => t('All groups'),
+    '#description' => t('All groups showed.'),
     '#tree' => TRUE,
     '#weight' => '50'
   );
 
   for ($index = 1; $index <= $form_state['data_user_number_groups']; $index++) {
     $form['data_user_container']['data_user_groups'][$index] = generate_group_array('data_user', $index);
-
+    // Lista de todos los usuarios salvo el actual
     $listaUsuarios = $gestorSimulaciones->getListaTodosUsuariosExceptoActual();
+    // Solo filtramos si no hay errores
+    $titulos = array();
     if (empty(form_get_errors())) {
       if (isset($form_state['values']['data_user_groups'][$index])) {
         if ($form_state['values']['data_user_groups'][$index]['data_user_check_age'] == 1) {
@@ -675,6 +692,11 @@ function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gest
             "desde" => $from,
             "hasta" => $to
           ), FilterByInterval::AGE));
+
+          $titulos[] = t('age from @from to @to years', array(
+            '@from' => $from,
+            '@to' => $to
+          ));
         }
 
         if ($form_state['values']['data_user_groups'][$index]['data_user_check_driving_experience'] == 1) {
@@ -684,6 +706,11 @@ function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gest
             "desde" => $from,
             "hasta" => $to
           ), FilterByInterval::DRIVING_EXPERIENCE));
+
+          $titulos[] = t('driving experience from @from to @to years', array(
+            '@from' => $from,
+            '@to' => $to
+          ));
         }
 
         if ($form_state['values']['data_user_groups'][$index]['data_user_check_average_annual_mileage'] == 1) {
@@ -693,11 +720,18 @@ function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gest
             "desde" => $from,
             "hasta" => $to
           ), FilterByInterval::AVERAGE_ANNUAL_MILEAGE));
+
+          $titulos[] = t('average annual mileage from @from to @to kms.', array(
+            '@from' => $from,
+            '@to' => $to
+          ));
         }
 
         if ($form_state['values']['data_user_groups'][$index]['data_user_check_usual_videogame_player'] == 1) {
           $radios = $form_state['values']['data_user_groups'][$index]['data_user_usual_videogame_player']['radios'];
           $listaUsuarios = $listaUsuarios->filterBy(new FilterByEquality(array($radios), FilterByEquality::USUARIO_USUAL_PLAYER));
+
+          $titulos[] = t('@mensaje usual videogame player', array('@mensaje' => $radios == 1 ? t("are") : t("are not")));
         }
       }
     }
@@ -708,10 +742,18 @@ function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gest
     $dataGroup = round($retriever->retrieveAllPartidasByIdSimulacion($idSimulacion)
       ->calculateData(new CalculateAverageData($tipoDatoCalcular)), 2);
 
+    // Generamos el título del grupo según los filtros
+    $tituloSustitucion = count($titulos) > 0 ? 'Group @index. Conditions:' : 'Group @index.';
+    $arraySustitucion = array('@index' => $index);
+    for ($i = 0; $i < count($titulos); $i++) {
+      $tituloSustitucion .= '<br>@' . $i;
+      $arraySustitucion += array('@' . $i => $titulos[$i]);
+    }
+
     $form['data_user_container']['data_user_chart']['data_user_' . $index] =
       array(
         '#type' => 'chart_data',
-        '#title' => t('Group @index', array('@index' => $index)),
+        '#title' => t($tituloSustitucion, $arraySustitucion),
         '#data' => array($dataGroup),
       );
   }
@@ -740,7 +782,11 @@ function generate_form_infractions_general_analysis(&$form_state, GestorSimulaci
     $form_state['values']['infractions_general_select_type'] : key($gestorSimulaciones->getArrayInfracciones());
 
   // Generamos el título del gráfico
-  $tituloGrafico = t("Average number of infractions by Partida and user for Simulation @idSimulacion", array('@idSimulacion' => $idSimulacion));
+  $tituloGrafico = t("Average number of infraction '@infraccion' by Partida and user<br>@simulacion",
+    array(
+      '@infraccion' => $gestorSimulaciones->getArrayInfracciones()[$tipoInfraccion],
+      '@simulacion' => $gestorSimulaciones->getArraySimulaciones()[$idSimulacion]
+    ));
 
   // Etiqueta del Eje X
   $labelAxisX[] = t("Users");
@@ -768,7 +814,10 @@ function generate_form_infractions_general_analysis(&$form_state, GestorSimulaci
     $form['infractions_general_chart']['infractions_general_user_' . $usuario->getUid()] =
       array(
         '#type' => 'chart_data',
-        '#title' => t('User @userName', array('@userName' => $usuario->getUid())),
+        '#title' => t('User @userName (UID:@userUID)', array(
+          '@userName' => $usuario->getName(),
+          '@userUID' => $usuario->getUid()
+        )),
         '#data' => array($dataUsuario),
       );
   }
@@ -784,10 +833,6 @@ function generate_form_infractions_general_analysis(&$form_state, GestorSimulaci
     '#options' => $gestorSimulaciones->getArraySimulaciones(),
     '#default_value' => key($gestorSimulaciones->getArraySimulaciones()),
     '#description' => t('Select the simulation about you want information.'),
-    '#ajax' => array(
-      'callback' => 'ajax_generate_form_infractions_general_analysis_callback',
-      'wrapper' => 'div-infractions-general-chart',
-    ),
   );
 
   $form['infractions_general_actions']['infractions_general_select_type'] = array(
@@ -796,6 +841,12 @@ function generate_form_infractions_general_analysis(&$form_state, GestorSimulaci
     '#options' => $gestorSimulaciones->getArrayInfracciones(),
     '#default_value' => key($gestorSimulaciones->getArrayInfracciones()),
     '#description' => t('Select the simulation about you want information.'),
+  );
+
+  $form['infractions_general_actions']['infractions_general_filter_button'] = array(
+    '#type' => 'button',
+    '#value' => t('Filter graph'),
+    '#name' => 'infractions_general_filter_button',
     '#ajax' => array(
       'callback' => 'ajax_generate_form_infractions_general_analysis_callback',
       'wrapper' => 'div-infractions-general-chart',
@@ -821,8 +872,11 @@ function generate_form_infractions_group_analysis(&$form_state, GestorSimulacion
     $form_state['values']['infractions_group_select_type'] : key($gestorSimulaciones->getArrayInfracciones());
 
   // Generamos el título del gráfico
-  $tituloGrafico = t("Average number of infractions by Partida and group for Simulation @idSimulacion",
-    array('@idSimulacion' => $idSimulacion));
+  $tituloGrafico = t("Average number of infractions '@infraccion' by Partida and group<br>@simulacion",
+    array(
+      '@infraccion' => $gestorSimulaciones->getArrayInfracciones()[$tipoInfraccion],
+      '@simulacion' => $gestorSimulaciones->getArraySimulaciones()[$idSimulacion]
+    ));
 
   // Etiquet Eje X
   $labelAxisX[] = t("Groups of users");
@@ -856,10 +910,6 @@ function generate_form_infractions_group_analysis(&$form_state, GestorSimulacion
     '#options' => $gestorSimulaciones->getArraySimulaciones(),
     '#default_value' => key($gestorSimulaciones->getArraySimulaciones()),
     '#description' => t('Select the simulation about you want information.'),
-    '#ajax' => array(
-      'callback' => 'ajax_generate_form_infractions_group_analysis_callback',
-      'wrapper' => 'div-infractions-group',
-    ),
   );
 
   $form['infractions_group_container']['infractions_group_actions']['infractions_group_select_type'] = array(
@@ -868,19 +918,12 @@ function generate_form_infractions_group_analysis(&$form_state, GestorSimulacion
     '#options' => $gestorSimulaciones->getArrayInfracciones(),
     '#default_value' => key($gestorSimulaciones->getArrayInfracciones()),
     '#description' => t('Select the simulation about you want information.'),
-    '#ajax' => array(
-      'callback' => 'ajax_generate_form_infractions_group_analysis_callback',
-      'wrapper' => 'div-infractions-group',
-    ),
   );
 
   $form['infractions_group_container']['infractions_group_actions']['infractions_group_filter_button'] = array(
     '#type' => 'button',
-    '#value' => t('Filter'),
+    '#value' => t('Filter graph'),
     '#name' => 'infractions_group_filter_button',
-    '#limit_validation_errors' => array(
-      array('infractions_group_groups'),
-    ),
     '#validate' => array('generate_form_infractions_group_analysis_validate'),
     '#ajax' => array(
       'callback' => 'ajax_generate_form_infractions_group_analysis_callback',
@@ -908,7 +951,7 @@ function generate_form_infractions_group_analysis(&$form_state, GestorSimulacion
       '#type' => 'button',
       '#value' => t('Add new group'),
       '#name' => 'infractions_group_add_group_button',
-      '#limit_validation_errors' => array(),
+      '#validate' => array('generate_form_infractions_group_analysis_validate'),
       '#ajax' => array(
         'callback' => 'ajax_generate_form_infractions_group_analysis_callback',
         'wrapper' => 'div-infractions-group',
@@ -921,7 +964,7 @@ function generate_form_infractions_group_analysis(&$form_state, GestorSimulacion
       '#type' => 'button',
       '#value' => t('Delete last group'),
       '#name' => 'infractions_group_delete_group_button',
-      '#limit_validation_errors' => array(),
+      '#validate' => array('generate_form_infractions_group_analysis_validate'),
       '#ajax' => array(
         'callback' => 'ajax_generate_form_infractions_group_analysis_callback',
         'wrapper' => 'div-infractions-group',
@@ -946,6 +989,7 @@ function generate_form_infractions_group_analysis(&$form_state, GestorSimulacion
     // Listado de todos los usuarios
     $listaUsuarios = $gestorSimulaciones->getListaTodosUsuarios();
     // Solo filtramos si no hay errores
+    $titulos = array();
     if (empty(form_get_errors())) {
       if (isset($form_state['values']['infractions_group_groups'][$index])) {
         if ($form_state['values']['infractions_group_groups'][$index]['infractions_group_check_age'] == 1) {
@@ -955,6 +999,11 @@ function generate_form_infractions_group_analysis(&$form_state, GestorSimulacion
             "desde" => $from,
             "hasta" => $to
           ), FilterByInterval::AGE));
+
+          $titulos[] = t('age from @from to @to years', array(
+            '@from' => $from,
+            '@to' => $to
+          ));
         }
 
         if ($form_state['values']['infractions_group_groups'][$index]['infractions_group_check_driving_experience'] == 1) {
@@ -964,6 +1013,11 @@ function generate_form_infractions_group_analysis(&$form_state, GestorSimulacion
             "desde" => $from,
             "hasta" => $to
           ), FilterByInterval::DRIVING_EXPERIENCE));
+
+          $titulos[] = t('driving experience from @from to @to years', array(
+            '@from' => $from,
+            '@to' => $to
+          ));
         }
 
         if ($form_state['values']['infractions_group_groups'][$index]['infractions_group_check_average_annual_mileage'] == 1) {
@@ -973,11 +1027,18 @@ function generate_form_infractions_group_analysis(&$form_state, GestorSimulacion
             "desde" => $from,
             "hasta" => $to
           ), FilterByInterval::AVERAGE_ANNUAL_MILEAGE));
+
+          $titulos[] = t('average annual mileage from @from to @to years', array(
+            '@from' => $from,
+            '@to' => $to
+          ));
         }
 
         if ($form_state['values']['infractions_group_groups'][$index]['infractions_group_check_usual_videogame_player'] == 1) {
           $radios = $form_state['values']['infractions_group_groups'][$index]['infractions_group_usual_videogame_player']['radios'];
           $listaUsuarios = $listaUsuarios->filterBy(new FilterByEquality(array($radios), FilterByEquality::USUARIO_USUAL_PLAYER));
+
+          $titulos[] = t('@mensaje usual videogame player', array('@mensaje' => $radios == 1 ? t("are") : t("are not")));
         }
       }
     }
@@ -988,10 +1049,18 @@ function generate_form_infractions_group_analysis(&$form_state, GestorSimulacion
     // Media del número de infracciones cometidas por simulación del grupo filtrado
     $dataGroup = round($retriever->getAverageInfraccionesByPartida($tipoInfraccion, $idSimulacion), 2);
 
+    // Generamos el título del grupo según los filtros
+    $tituloSustitucion = count($titulos) > 0 ? 'Group @index. Conditions:' : 'Group @index.';
+    $arraySustitucion = array('@index' => $index);
+    for ($i = 0; $i < count($titulos); $i++) {
+      $tituloSustitucion .= '<br>@' . $i;
+      $arraySustitucion += array('@' . $i => $titulos[$i]);
+    }
+
     $form['infractions_group_container']['infractions_group_chart']['infractions_group_' . $index] =
       array(
         '#type' => 'chart_data',
-        '#title' => t('Group @index', array('@index' => $index)),
+        '#title' => t($tituloSustitucion, $arraySustitucion),
         '#data' => array($dataGroup),
       );
   }
@@ -1020,18 +1089,19 @@ function generate_form_infractions_user_analysis(&$form_state, GestorSimulacione
   $idSimulacion = isset($form_state['values']['infractions_user_select_simulation']) ?
     $form_state['values']['infractions_user_select_simulation'] : key($gestorSimulaciones->getArraySimulaciones());
   // Recuperamos el dato a calcular
-  $tipoInfraccion = isset($form_state['values']['infractions_group_select_type']) ?
-    $form_state['values']['infractions_group_select_type'] : key($gestorSimulaciones->getArrayInfracciones());
+  $tipoInfraccion = isset($form_state['values']['infractions_user_select_type']) ?
+    $form_state['values']['infractions_user_select_type'] : key($gestorSimulaciones->getArrayInfracciones());
 
   /* DATOS OBLIGATORIOS PARA EL ANÁLISIS DE DATOS POR USUARIO */
   // Seleccionamos el usuario para el que realizar la comparación
   $usuarioActual = $provider->loadSimulatorUser($uidUser);
 
-  // Genreamos el nombre par el título del gráfico
-  $tituloGrafico = t("Average consumption of user @userName for Simulation @idSimulacion",
+  // Generamos el título del gráfico
+  $tituloGrafico = t("Average number of infractions '@infraccion' by Partida from user @userName<br>@simulacion",
     array(
       '@userName' => $usuarioActual->getName(),
-      '@idSimulacion' => $idSimulacion
+      '@infraccion' => $gestorSimulaciones->getArrayInfracciones()[$tipoInfraccion],
+      '@simulacion' => $gestorSimulaciones->getArraySimulaciones()[$idSimulacion]
     ));
 
   // Etiqueta del Eje X
@@ -1094,7 +1164,7 @@ function generate_form_infractions_user_analysis(&$form_state, GestorSimulacione
   $form['infractions_user_container']['infractions_user_chart']['infractions_user_same_age_group'] =
     array(
       '#type' => 'chart_data',
-      '#title' => t('Group of users which @user_group', array('@user_group' => $usuarioActual->getGrupoEdad(TRUE))),
+      '#title' => t('Group of users which @user_group', array('@user_group' => $usuarioActual->getGrupoEdad(true))),
       '#data' => array($dataRestoUsuarioMismoGrupoEdad),
     );
 
@@ -1106,7 +1176,7 @@ function generate_form_infractions_user_analysis(&$form_state, GestorSimulacione
   $form['infractions_user_container']['infractions_user_chart']['infractions_user_same_driving_experience_group'] =
     array(
       '#type' => 'chart_data',
-      '#title' => t('Group of users which @user_group', array('@user_group' => $usuarioActual->getGrupoExperiencia(TRUE))),
+      '#title' => t('Group of users which @user_group', array('@user_group' => $usuarioActual->getGrupoExperiencia(true))),
       '#data' => array($dataRestoUsuarioMismoGrupoExperiencia),
     );
 
@@ -1149,10 +1219,6 @@ function generate_form_infractions_user_analysis(&$form_state, GestorSimulacione
     '#options' => $gestorSimulaciones->getArrayUsuariosUidName(),
     '#default_value' => key($gestorSimulaciones->getArrayUsuariosUidName()),
     '#description' => t('Select the simulation about you want information.'),
-    '#ajax' => array(
-      'callback' => 'ajax_generate_form_infractions_user_analysis_callback',
-      'wrapper' => 'div-infractions-user',
-    ),
   );
 
   $form['infractions_user_container']['infractions_user_actions']['infractions_user_select_simulation'] = array(
@@ -1161,10 +1227,6 @@ function generate_form_infractions_user_analysis(&$form_state, GestorSimulacione
     '#options' => $gestorSimulaciones->getArraySimulaciones(),
     '#default_value' => key($gestorSimulaciones->getArraySimulaciones()),
     '#description' => t('Select the simulation about you want information.'),
-    '#ajax' => array(
-      'callback' => 'ajax_generate_form_infractions_user_analysis_callback',
-      'wrapper' => 'div-infractions-user',
-    ),
   );
 
   $form['infractions_user_container']['infractions_user_actions']['infractions_user_select_type'] = array(
@@ -1173,19 +1235,12 @@ function generate_form_infractions_user_analysis(&$form_state, GestorSimulacione
     '#options' => $gestorSimulaciones->getArrayInfracciones(),
     '#default_value' => key($gestorSimulaciones->getArrayInfracciones()),
     '#description' => t('Select the simulation about you want information.'),
-    '#ajax' => array(
-      'callback' => 'ajax_generate_form_infractions_user_analysis_callback',
-      'wrapper' => 'div-infractions-user',
-    ),
   );
 
   $form['infractions_user_container']['infractions_user_actions']['infractions_user_filter_button'] = array(
     '#type' => 'button',
     '#value' => t('Filter'),
     '#name' => 'infractions_user_filter_button',
-    '#limit_validation_errors' => array(
-      array('infractions_user_groups'),
-    ),
     '#validate' => array('generate_form_infractions_user_analysis_validate'),
     '#ajax' => array(
       'callback' => 'ajax_generate_form_infractions_user_analysis_callback',
@@ -1213,7 +1268,6 @@ function generate_form_infractions_user_analysis(&$form_state, GestorSimulacione
       '#type' => 'button',
       '#value' => t('Add new group'),
       '#name' => 'infractions_user_add_group_button',
-      '#limit_validation_errors' => array(),
       '#ajax' => array(
         'callback' => 'ajax_generate_form_infractions_user_analysis_callback',
         'wrapper' => 'div-infractions-user',
@@ -1226,7 +1280,6 @@ function generate_form_infractions_user_analysis(&$form_state, GestorSimulacione
       '#type' => 'button',
       '#value' => t('Delete last group'),
       '#name' => 'infractions_user_delete_group_button',
-      '#limit_validation_errors' => array(),
       '#ajax' => array(
         'callback' => 'ajax_generate_form_infractions_user_analysis_callback',
         'wrapper' => 'div-infractions-user',
@@ -1247,8 +1300,10 @@ function generate_form_infractions_user_analysis(&$form_state, GestorSimulacione
 
   for ($index = 1; $index <= $form_state['infractions_user_number_groups']; $index++) {
     $form['infractions_user_container']['infractions_user_groups'][$index] = generate_group_array('infractions_user', $index);
-
+    // Lista de todos los usuarios excepto el actual
     $listaUsuarios = $gestorSimulaciones->getListaTodosUsuariosExceptoActual();
+    // Regeneramos los grupos si no hay errores
+    $titulos = array();
     if (empty(form_get_errors())) {
       if (isset($form_state['values']['infractions_user_groups'][$index])) {
         if ($form_state['values']['infractions_user_groups'][$index]['infractions_user_check_age'] == 1) {
@@ -1258,6 +1313,11 @@ function generate_form_infractions_user_analysis(&$form_state, GestorSimulacione
             "desde" => $from,
             "hasta" => $to
           ), FilterByInterval::AGE));
+
+          $titulos[] = t('age from @from to @to years', array(
+            '@from' => $from,
+            '@to' => $to
+          ));
         }
 
         if ($form_state['values']['infractions_user_groups'][$index]['infractions_user_check_driving_experience'] == 1) {
@@ -1267,6 +1327,11 @@ function generate_form_infractions_user_analysis(&$form_state, GestorSimulacione
             "desde" => $from,
             "hasta" => $to
           ), FilterByInterval::DRIVING_EXPERIENCE));
+
+          $titulos[] = t('driving experience from @from to @to years', array(
+            '@from' => $from,
+            '@to' => $to
+          ));
         }
 
         if ($form_state['values']['infractions_user_groups'][$index]['infractions_user_check_average_annual_mileage'] == 1) {
@@ -1276,11 +1341,18 @@ function generate_form_infractions_user_analysis(&$form_state, GestorSimulacione
             "desde" => $from,
             "hasta" => $to
           ), FilterByInterval::AVERAGE_ANNUAL_MILEAGE));
+
+          $titulos[] = t('average annual mileage from @from to @to kms.', array(
+            '@from' => $from,
+            '@to' => $to
+          ));
         }
 
         if ($form_state['values']['infractions_user_groups'][$index]['infractions_user_check_usual_videogame_player'] == 1) {
           $radios = $form_state['values']['infractions_user_groups'][$index]['infractions_user_usual_videogame_player']['radios'];
           $listaUsuarios = $listaUsuarios->filterBy(new FilterByEquality(array($radios), FilterByEquality::USUARIO_USUAL_PLAYER));
+
+          $titulos[] = t('@mensaje usual videogame player', array('@mensaje' => $radios == 1 ? t("are") : t("are not")));
         }
       }
     }
@@ -1290,10 +1362,18 @@ function generate_form_infractions_user_analysis(&$form_state, GestorSimulacione
     // Datos medios por simulación
     $dataGroup = round($retriever->getAverageInfraccionesByPartida($tipoInfraccion, $idSimulacion), 2);
 
+    // Generamos el título del grupo según los filtros
+    $tituloSustitucion = count($titulos) > 0 ? 'Group @index. Conditions:' : 'Group @index.';
+    $arraySustitucion = array('@index' => $index);
+    for ($i = 0; $i < count($titulos); $i++) {
+      $tituloSustitucion .= '<br>@' . $i;
+      $arraySustitucion += array('@' . $i => $titulos[$i]);
+    }
+
     $form['infractions_user_container']['infractions_user_chart']['infractions_user_' . $index] =
       array(
         '#type' => 'chart_data',
-        '#title' => t('Group @index', array('@index' => $index)),
+        '#title' => t($tituloSustitucion, $arraySustitucion),
         '#data' => array($dataGroup),
       );
   }
