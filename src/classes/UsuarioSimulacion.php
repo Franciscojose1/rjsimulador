@@ -115,10 +115,11 @@ class UsuarioSimulacion {
    * @param bool $asBoolean Si se pone a TRUE se devuelve el resultado como un booleano en lugar de con 1 y 0.
    * @return bool|int Devuelve 1 si el usuario es un jugador habitual o 0 en caso contrario.
    */
-  public function isUsualVideogamePlayer($asBoolean = false) {
+  public function isUsualVideogamePlayer($asBoolean = FALSE) {
     if ($asBoolean) {
       return $this->getUser()->field_usual_videogame_player['und'][0]['value'] == 1;
-    } else {
+    }
+    else {
       return $this->getUser()->field_usual_videogame_player['und'][0]['value'];
     }
   }
@@ -129,12 +130,13 @@ class UsuarioSimulacion {
    * @return array|string Datos del grupo de edad del usuario como array o cadena.
    * @throws \Exception
    */
-  public function getGrupoEdad($asText = false) {
-    foreach(Grupos::$GruposEdad as $idGrupo => $arrayDatos) {
+  public function getGrupoEdad($asText = FALSE) {
+    foreach (Grupos::$GruposEdad as $idGrupo => $arrayDatos) {
       if ($this->getAge() >= $arrayDatos['desde'] && $this->getAge() < $arrayDatos['hasta']) {
         if ($asText) {
           return t("age from " . $arrayDatos['desde'] . " to " . $arrayDatos['hasta'] . " years");
-        } else {
+        }
+        else {
           return $arrayDatos;
         }
       }
@@ -149,12 +151,13 @@ class UsuarioSimulacion {
    * @return array|string Datos del grupo de experiencia del usuario como array o cadena.
    * @throws \Exception
    */
-  public function getGrupoExperiencia($asText = false) {
-    foreach(Grupos::$GruposExperiencia as $idGrupo => $arrayDatos) {
+  public function getGrupoExperiencia($asText = FALSE) {
+    foreach (Grupos::$GruposExperiencia as $idGrupo => $arrayDatos) {
       if ($this->getDrivingExperience() >= $arrayDatos['desde'] && $this->getDrivingExperience() < $arrayDatos['hasta']) {
         if ($asText) {
           return t("driving experience from " . $arrayDatos['desde'] . " to " . $arrayDatos['hasta'] . " years");
-        } else {
+        }
+        else {
           return $arrayDatos;
         }
       }
@@ -169,12 +172,13 @@ class UsuarioSimulacion {
    * @return array|string Datos del grupo de kilometraje medio anual del usuario como array o cadena.
    * @throws \Exception
    */
-  public function getGrupoKilometrajeMedioAnual($asText = false) {
-    foreach(Grupos::$GruposKilometrajeMedioAnual as $idGrupo => $arrayDatos) {
+  public function getGrupoKilometrajeMedioAnual($asText = FALSE) {
+    foreach (Grupos::$GruposKilometrajeMedioAnual as $idGrupo => $arrayDatos) {
       if ($this->getAverageAnnualMileage() >= $arrayDatos['desde'] && $this->getAverageAnnualMileage() < $arrayDatos['hasta']) {
         if ($asText) {
           return t("average annual mileage from " . $arrayDatos['desde'] . " to " . $arrayDatos['hasta'] . " years");
-        } else {
+        }
+        else {
           return $arrayDatos;
         }
       }
@@ -213,6 +217,52 @@ class UsuarioSimulacion {
     }
 
     return $listaPartidas;
+  }
+
+  /**
+   * Devuelve todas las infracciones de todas las partidas del usuario una simulación en concreto.
+   * @param int $idSimulacion ID de la Simulación para la que recuperar las infracciones.
+   * @return \ListaInfracciones Lista de infracciones para la simulación pasada.
+   */
+  public function retrieveAllInfraccionesByIdSimulacion($idSimulacion) {
+    $listaInfracciones = new ListaInfracciones();
+    // Recuperamos todas las infracciones de una simulación en concreto
+    foreach ($this->retrieveAllPartidasByIdSimulacion($idSimulacion) as $partida) {
+      $listaInfracciones->mergeList($partida->getListaInfracciones());
+    }
+
+    return $listaInfracciones;
+  }
+
+  /**
+   * Devuelve todas las infracciones de un cierto tipo de todas las partidas del usuario para la simulación pasada.
+   * @param int $idInfraccion El ID de la infracción a recuperar.
+   * @param int $idSimulacion ID de la simulación para la que recuperar las infracciones.
+   * @return \ListaInfracciones Lista de infracciones del tipo pasado para la simulación.
+   */
+  public function retrieveAllInfraccionesByTypeAndIdSimulacion($idInfraccion, $idSimulacion) {
+    $listaInfracciones = $this->retrieveAllInfraccionesByIdSimulacion($idSimulacion);
+    $arrayIdsInfracciones = array($idInfraccion);
+    // Devolvemos la lista de infracciones filtradas por el IdInfraccion
+    return $listaInfracciones->filterBy(new FilterByEquality($arrayIdsInfracciones, FilterByEquality::INFRACCION_ID));
+  }
+
+  /**
+   * Devuelve la media de infracciones de un cierto tipo cometidas por partida del usuario para la simulación pasada.
+   * @param int $idInfraccion El ID de la infracción.
+   * @param int $idSimulation El ID dela simulación.
+   * @return float|int Media de infracciones por partida.
+   */
+  public function getAverageInfraccionesByPartida($idInfraccion, $idSimulation) {
+    // Recuperamos total de partidas de una simulacion
+    $totalPartidasSimulacion = $this->retrieveAllPartidasByIdSimulacion($idSimulation)->count();
+    // Recuperamos total de infracciones de un ciertto tipo por simulacion
+    $totalInfraccionesSimulacion = $this->retrieveAllInfraccionesByTypeAndIdSimulacion($idInfraccion, $idSimulation)->count();
+
+    // Si el total de partidas es 0 devolvemos 0 evitando la división
+    $mediaInfraccionesPorPartida = $totalPartidasSimulacion > 0 ? $totalInfraccionesSimulacion/$totalPartidasSimulacion : 0;
+
+    return $mediaInfraccionesPorPartida;
   }
 
   /**
