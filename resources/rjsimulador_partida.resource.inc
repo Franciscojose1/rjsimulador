@@ -93,6 +93,8 @@ function _rjsimulador_partida_add($partida) {
     $transaction = db_transaction();
     try {
       $newPartida->save();
+      // Hacemos commit deseteando la variable.
+      unset($transaction);
     } catch (Exception $e) {
       $transaction->rollback();
       throw $e;
@@ -100,7 +102,7 @@ function _rjsimulador_partida_add($partida) {
 
     return array("message" => "Partida creada correctamente");
   } catch (Exception $e) {
-    watchdog_exception('Error insertando nueva partida.', $e);
+    watchdog_exception('rjsimulador', $e, 'Error inserting new Partida.');
     return services_error('Error al insertar la partida en la BBDD.', 406, array("error" => "Error al guardar la partida: " . $e->getMessage()));
   }
 }
@@ -110,7 +112,7 @@ function _rjsimulador_partida_retrieve($id_partida) {
     $partida = Partida::loadById($id_partida);
     return $partida->convertPropertiesToArray();
   } catch (Exception $e) {
-    watchdog_exception('Recuperando partida.', $e);
+    watchdog_exception('rjsimulador', $e, 'Error retrieving Partida.');
     return services_error('Error recuperando partida.', 406, array("error" => 'Error al recuperar la partida: ' . $e->getMessage()));
   }
 }
