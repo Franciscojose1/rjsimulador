@@ -462,7 +462,7 @@ function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gest
 
   // Genreamos el nombre par el título del gráfico
   if ($tipoDatoCalcular == CalculateAverageData::CONSUMO_MEDIO) {
-    $tituloGrafico = t("Average consumption of user @userName<br>simulacion",
+    $tituloGrafico = t("Average consumption of user @userName<br>@simulacion",
       array(
         '@userName' => $usuarioActual->getName(),
         '@simulacion' => $gestorSimulaciones->getArraySimulaciones()[$idSimulacion]
