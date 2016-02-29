@@ -2,9 +2,14 @@
 /* *************************************************************************** */
 /* *                     FORMULARIO POR SIMULACIÓN                             */
 /* *************************************************************************** */
-function rjsim_datos_simulaciones_usuarios_admin_form($form, &$form_state, GestorSimulaciones $gestorSimulaciones) {
-  // Recuperamos el provider
-  $provider = FactoryDataManager::createDataProvider();
+function rjsimulador_admin_form_data_analysis($form, &$form_state) {
+  // Gestor de simulaciones
+  try {
+    $gestorSimulaciones = new GestorSimulaciones();
+  } catch (LogicException $le) {
+    $renderArray = array('#markup' => '<p>' . $le->getMessage() . '</p>');
+    return $renderArray;
+  }
 
   // Creamos el formulario como tabs verticales
   $form['data_analysis'] = array(
@@ -20,7 +25,7 @@ function rjsim_datos_simulaciones_usuarios_admin_form($form, &$form_state, Gesto
     '#group' => 'data_analysis'
   );
 
-  $form['data_general_analysis'] += generate_form_data_general_analysis($form_state, $gestorSimulaciones, $provider);
+  $form['data_general_analysis'] += generate_form_data_general_analysis($form_state, $gestorSimulaciones);
 
   $form['data_group_analysis'] = array(
     '#type' => 'fieldset',
@@ -30,7 +35,7 @@ function rjsim_datos_simulaciones_usuarios_admin_form($form, &$form_state, Gesto
     '#group' => 'data_analysis',
   );
 
-  $form['data_group_analysis'] += generate_form_data_group_analysis($form_state, $gestorSimulaciones, $provider);
+  $form['data_group_analysis'] += generate_form_data_group_analysis($form_state, $gestorSimulaciones);
 
   $form['data_user_analysis'] = array(
     '#type' => 'fieldset',
@@ -40,7 +45,24 @@ function rjsim_datos_simulaciones_usuarios_admin_form($form, &$form_state, Gesto
     '#group' => 'data_analysis'
   );
 
-  $form['data_user_analysis'] += generate_form_data_user_analysis($form_state, $gestorSimulaciones, $provider);
+  $form['data_user_analysis'] += generate_form_data_user_analysis($form_state, $gestorSimulaciones);
+
+  return $form;
+}
+
+function rjsimulador_admin_form_infractions_analysis($form, &$form_state) {
+  // Gestor de simulaciones
+  try {
+    $gestorSimulaciones = new GestorSimulaciones();
+  } catch (LogicException $le) {
+    $renderArray = array('#markup' => '<p>' . $le->getMessage() . '</p>');
+    return $renderArray;
+  }
+
+  // Creamos el formulario como tabs verticales
+  $form['data_analysis'] = array(
+    '#type' => 'vertical_tabs',
+  );
 
   $form['infractions_general_analysis'] = array(
     '#type' => 'fieldset',
@@ -50,7 +72,7 @@ function rjsim_datos_simulaciones_usuarios_admin_form($form, &$form_state, Gesto
     '#group' => 'data_analysis'
   );
 
-  $form['infractions_general_analysis'] += generate_form_infractions_general_analysis($form_state, $gestorSimulaciones, $provider);
+  $form['infractions_general_analysis'] += generate_form_infractions_general_analysis($form_state, $gestorSimulaciones);
 
   $form['infractions_group_analysis'] = array(
     '#type' => 'fieldset',
@@ -60,7 +82,7 @@ function rjsim_datos_simulaciones_usuarios_admin_form($form, &$form_state, Gesto
     '#group' => 'data_analysis'
   );
 
-  $form['infractions_group_analysis'] += generate_form_infractions_group_analysis($form_state, $gestorSimulaciones, $provider);
+  $form['infractions_group_analysis'] += generate_form_infractions_group_analysis($form_state, $gestorSimulaciones);
 
   $form['infractions_user_analysis'] = array(
     '#type' => 'fieldset',
@@ -70,7 +92,7 @@ function rjsim_datos_simulaciones_usuarios_admin_form($form, &$form_state, Gesto
     '#group' => 'data_analysis'
   );
 
-  $form['infractions_user_analysis'] += generate_form_infractions_user_analysis($form_state, $gestorSimulaciones, $provider);
+  $form['infractions_user_analysis'] += generate_form_infractions_user_analysis($form_state, $gestorSimulaciones);
 
   return $form;
 }
@@ -78,7 +100,7 @@ function rjsim_datos_simulaciones_usuarios_admin_form($form, &$form_state, Gesto
 /* ******************************************************************************* */
 /* *                      Análisis de datos generales                            * */
 /* ******************************************************************************* */
-function generate_form_data_general_analysis(&$form_state, GestorSimulaciones $gestorSimulaciones, DataProvider $provider) {
+function generate_form_data_general_analysis(&$form_state, GestorSimulaciones $gestorSimulaciones) {
   // Recuperamos el idSimulacion por el que filtrar la gráfica
   $idSimulacion = isset($form_state['values']['data_general_select_simulation']) ?
     $form_state['values']['data_general_select_simulation'] : key($gestorSimulaciones->getArraySimulaciones());
@@ -186,7 +208,7 @@ function ajax_generate_form_data_general_analysis_callback($form, &$form_state) 
 /* ******************************************************************************* */
 /* *                   Análisis de datos por grupos                              * */
 /* ******************************************************************************* */
-function generate_form_data_group_analysis(&$form_state, GestorSimulaciones $gestorSimulaciones, DataProvider $provider) {
+function generate_form_data_group_analysis(&$form_state, GestorSimulaciones $gestorSimulaciones) {
   // Recuperamos el idSimulacion por el que filtrar la gráfica
   $idSimulacion = isset($form_state['values']['data_group_select_simulation']) ?
     $form_state['values']['data_group_select_simulation'] : key($gestorSimulaciones->getArraySimulaciones());
@@ -421,7 +443,8 @@ function ajax_generate_form_data_group_analysis_callback($form, &$form_state) {
 /* ******************************************************************************* */
 /* *                Tab Análisis de datos por Usuario                            * */
 /* ******************************************************************************* */
-function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gestorSimulaciones, DataProvider $provider) {
+function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gestorSimulaciones) {
+  $provider = FactoryDataManager::createDataProvider();
   /* RECUPERAMOS LOS DATOS POR AJAX */
   // Recuperamos el Usuario con el que vamos a comparar los datos
   $uidUser = isset($form_state['values']['data_user_select_user']) ?
@@ -773,7 +796,7 @@ function ajax_generate_form_data_user_analysis_callback($form, &$form_state) {
 /* ******************************************************************************* */
 /* *                 Análisis de infracciones generales                          * */
 /* ******************************************************************************* */
-function generate_form_infractions_general_analysis(&$form_state, GestorSimulaciones $gestorSimulaciones, DataProvider $provider) {
+function generate_form_infractions_general_analysis(&$form_state, GestorSimulaciones $gestorSimulaciones) {
   // Recuperamos el idSimulacion por el que filtrar la gráfica
   $idSimulacion = isset($form_state['values']['infractions_general_select_simulation']) ?
     $form_state['values']['infractions_general_select_simulation'] : key($gestorSimulaciones->getArraySimulaciones());
@@ -863,7 +886,7 @@ function ajax_generate_form_infractions_general_analysis_callback($form, &$form_
 /* ******************************************************************************* */
 /* *                  Análisis de infracciones por grupos                        * */
 /* ******************************************************************************* */
-function generate_form_infractions_group_analysis(&$form_state, GestorSimulaciones $gestorSimulaciones, DataProvider $provider) {
+function generate_form_infractions_group_analysis(&$form_state, GestorSimulaciones $gestorSimulaciones) {
   // Recuperamos el idSimulacion por el que filtrar la gráfica
   $idSimulacion = isset($form_state['values']['infractions_group_select_simulation']) ?
     $form_state['values']['infractions_group_select_simulation'] : key($gestorSimulaciones->getArraySimulaciones());
@@ -1080,7 +1103,8 @@ function ajax_generate_form_infractions_group_analysis_callback($form, &$form_st
 /* ******************************************************************************* */
 /* *                Tab Análisis de infracciones por Usuario                     * */
 /* ******************************************************************************* */
-function generate_form_infractions_user_analysis(&$form_state, GestorSimulaciones $gestorSimulaciones, DataProvider $provider) {
+function generate_form_infractions_user_analysis(&$form_state, GestorSimulaciones $gestorSimulaciones) {
+  $provider = FactoryDataManager::createDataProvider();
   /* RECUPERAMOS LOS DATOS POR AJAX */
   // Recuperamos el Usuario con el que vamos a comparar los datos
   $uidUser = isset($form_state['values']['infractions_user_select_user']) ?

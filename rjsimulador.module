@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Implementation of hook_permission().
  */
@@ -52,15 +51,41 @@ function rjsimulador_menu() {
     'access arguments' => array('ver info partidas', 3, 1),
     'type' => MENU_NORMAL_ITEM,
   );
-  $items['admin/simulaciones_usuarios'] = array(
-    'title' => 'General data about Simulations',
+  $items['admin/simulaciones_analysis'] = array(
+    'title' => 'Analysis of Simulations',
     'file' => 'rjsimulador.admin.inc',
     'page callback' => 'rjsimulador_simulaciones_usuarios_admin_page',
     'access arguments' => array('comparar info partidas'),
     'menu_name' => 'management',
     'type' => MENU_NORMAL_ITEM,
   );
-  $items['admin/simulaciones_usuarios/%/simulaciones'] = array(
+  $items['admin/simulaciones_analysis/simulaciones_users'] = array(
+    'title' => 'Analysis of Simulations by user',
+    'file' => 'rjsimulador.admin.inc',
+    'page callback' => 'rjsimulador_simulaciones_usuarios_admin_page',
+    'access arguments' => array('comparar info partidas'),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -50,
+  );
+  $items['admin/simulaciones_analysis/data_analysis'] = array(
+    'title' => 'Data analysis',
+    'file' => 'rjsimulador.forms.admin.inc',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('rjsimulador_admin_form_data_analysis'),
+    'access arguments' => array('comparar info partidas'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 0,
+  );
+  $items['admin/simulaciones_analysis/infractions_analysis'] = array(
+    'title' => 'Infractions analysis',
+    'file' => 'rjsimulador.forms.admin.inc',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('rjsimulador_admin_form_infractions_analysis'),
+    'access arguments' => array('comparar info partidas'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 50,
+  );
+  $items['admin/simulaciones_analysis/%/simulaciones'] = array(
     'title' => 'User with UID @uid: Data about Simulations',
     'title arguments' => array('@uid' => 2),
     'file' => 'rjsimulador.pages.inc',
@@ -69,7 +94,7 @@ function rjsimulador_menu() {
     'access arguments' => array('comparar info partidas'),
     'type' => MENU_NORMAL_ITEM,
   );
-  $items['admin/simulaciones_usuarios/%/simulaciones/%/partidas'] = array(
+  $items['admin/simulaciones_analysis/%/simulaciones/%/partidas'] = array(
     'title' => 'User with UID @uid: Partidas by Simulation @n_simulacion',
     'title arguments' => array('@uid' => 2, '@n_simulacion' => 4),
     'file' => 'rjsimulador.pages.inc',
@@ -78,7 +103,7 @@ function rjsimulador_menu() {
     'access arguments' => array('comparar info partidas'),
     'type' => MENU_NORMAL_ITEM,
   );
-  $items['admin/simulaciones_usuarios/%/simulaciones/%/partidas/%'] = array(
+  $items['admin/simulaciones_analysis/%/simulaciones/%/partidas/%'] = array(
     'title' => 'User with @uid: Partida Data',
     'title arguments' => array('@uid' => 2),
     'file' => 'rjsimulador.pages.inc',
