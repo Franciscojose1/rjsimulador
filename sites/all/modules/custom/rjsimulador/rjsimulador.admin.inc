@@ -73,11 +73,9 @@ function rjsimulador_simulaciones_usuarios_admin_page() {
       ),
     );
 
-  $renderFormArray = drupal_get_form('rjsim_datos_simulaciones_usuarios_admin_form', $gestorSimulaciones);
-
   $renderArrayFinal = array(
     '#theme' => 'lista_simulaciones_partidas',
-    '#main_content' => array($renderArrayTableSimulaciones, $renderFormArray),
+    '#main_content' => $renderArrayTableSimulaciones,
   );
 
   return $renderArrayFinal;
