@@ -104,10 +104,10 @@ function check_user_access_has_saved_partidas($permission, $uid = NULL) {
   $usuarios = $provider->loadAllSimulatorUsers();
 
   // Solo pueden ver la pantalla genérica de simulación los usuarios que tienen partidas guardadas
-  $usuarioTienePartidas = false;
+  $usuarioTienePartidas = FALSE;
   foreach ($usuarios as $user) {
     if ($user->getUid() == $usuario->uid) {
-      $usuarioTienePartidas = true;
+      $usuarioTienePartidas = TRUE;
       break;
     }
   }
@@ -223,7 +223,7 @@ function _user_register_custom($account) {
 
   drupal_form_submit('user_register_form', $form_state);
   // find and store the new user into the form_state
-  if(isset($form_state['values']['uid'])) {
+  if (isset($form_state['values']['uid'])) {
     $form_state['user'] = user_load($form_state['values']['uid']);
   }
 
@@ -245,5 +245,33 @@ function _user_register_custom($account) {
  * Implements hook_user_delete().
  */
 function rjsimulador_user_delete($account) {
+  $provider = FactoryDataManager::createDataProvider();
+  try {
+    $usuario = $provider->loadSimulatorUser($account->uid);
 
+    if ($usuario->countPartidas() == 0) {
+      throw new LogicException("El usuario borrado no tiene Partidas almacenadas que eliminar.");
+    }
+
+    // Creamos una transacción para eliminar la partida; si algo falla hacemos rollback
+    $transaction = db_transaction();
+    try {
+      foreach($usuario->getListaSimulaciones() as $simulacion) {
+        foreach($simulacion->getListaPartidas() as $partida) {
+          $partida->remove();
+        }
+      }
+    } catch (Exception $e) {
+      $transaction->rollback();
+      throw $e;
+    }
+  } catch (LogicException $le) {
+    watchdog_exception('rjsimulador', $le, 'There are no Partidas to delete for user with UID @uid and username @username.', array(
+      '@uid' => $account->uid,
+      '@username' => $account->name
+    ), WATCHDOG_INFO);
+  } catch (Exception $e) {
+    watchdog_exception('rjsimulador', $e, 'Error removing Partidas from user with UID @uid and username @username.',
+      array('@uid' => $account->uid, '@username' => $account->name), WATCHDOG_ERROR);
+  }
 }
