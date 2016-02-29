@@ -246,7 +246,7 @@ class Partida implements ServicesAdapterInterface {
     $url = base_path();
 
     if ($adminMode) {
-      $url .= 'admin/simulaciones_usuarios/' . $this->getUid() . '/';
+      $url .= 'admin/simulaciones_analysis/' . $this->getUid() . '/';
     }
 
     $url .= 'simulaciones/' . $this->getIdSimulacion() . '/partidas/' . $this->getIdPartida();

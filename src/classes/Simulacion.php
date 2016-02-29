@@ -102,7 +102,7 @@ class Simulacion {
     $url = base_path();
 
     if ($adminMode) {
-      $url .= 'admin/simulaciones_usuarios/' . $this->getUsuario()->getUid() . '/';
+      $url .= 'admin/simulaciones_analysis/' . $this->getUsuario()->getUid() . '/';
     }
 
     $url .= 'simulaciones/' . $this->getIdSimulacion() . '/partidas';
