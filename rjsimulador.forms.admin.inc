@@ -195,9 +195,11 @@ function generate_form_data_general_analysis(&$form_state, GestorSimulaciones $g
   );
 
   $form['data_general_actions']['data_general_filter_button'] = array(
-    '#type' => 'button',
+    '#type' => 'submit',
     '#value' => t('Filter graph'),
     '#name' => 'data_general_filter_button',
+    '#prefix' => '<div class="clearfix"></div>',
+    '#attributes' => array('class' => array('filter-btn')),
     '#ajax' => array(
       'callback' => 'ajax_generate_form_data_general_analysis_callback',
       'wrapper' => 'div-data-general-chart',
@@ -289,8 +291,10 @@ function generate_form_data_group_analysis(&$form_state, GestorSimulaciones $ges
   );
 
   $form['data_group_container']['data_group_actions']['data_group_filter_button'] = array(
-    '#type' => 'button',
+    '#type' => 'submit',
     '#value' => t('Filter graph'),
+    '#prefix' => '<div class="clearfix"></div>',
+    '#attributes' => array('class' => array('filter-btn')),
     '#name' => 'data_group_filter_button',
     '#validate' => array('generate_form_data_group_analysis_validate'),
     '#ajax' => array(
@@ -645,9 +649,11 @@ function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gest
   );
 
   $form['data_user_container']['data_user_actions']['data_user_filter_button'] = array(
-    '#type' => 'button',
+    '#type' => 'submit',
     '#value' => t('Filter graph'),
     '#name' => 'data_user_filter_button',
+    '#prefix' => '<div class="clearfix"></div>',
+    '#attributes' => array('class' => array('filter-btn')),
     '#validate' => array('generate_form_data_user_analysis_validate'),
     '#ajax' => array(
       'callback' => 'ajax_generate_form_data_user_analysis_callback',
@@ -874,9 +880,11 @@ function generate_form_infractions_general_analysis(&$form_state, GestorSimulaci
   );
 
   $form['infractions_general_actions']['infractions_general_filter_button'] = array(
-    '#type' => 'button',
+    '#type' => 'submit',
     '#value' => t('Filter graph'),
     '#name' => 'infractions_general_filter_button',
+    '#prefix' => '<div class="clearfix"></div>',
+    '#attributes' => array('class' => array('filter-btn')),
     '#ajax' => array(
       'callback' => 'ajax_generate_form_infractions_general_analysis_callback',
       'wrapper' => 'div-infractions-general-chart',
@@ -951,9 +959,11 @@ function generate_form_infractions_group_analysis(&$form_state, GestorSimulacion
   );
 
   $form['infractions_group_container']['infractions_group_actions']['infractions_group_filter_button'] = array(
-    '#type' => 'button',
+    '#type' => 'submit',
     '#value' => t('Filter graph'),
     '#name' => 'infractions_group_filter_button',
+    '#prefix' => '<div class="clearfix"></div>',
+    '#attributes' => array('class' => array('filter-btn')),
     '#validate' => array('generate_form_infractions_group_analysis_validate'),
     '#ajax' => array(
       'callback' => 'ajax_generate_form_infractions_group_analysis_callback',
@@ -1269,9 +1279,11 @@ function generate_form_infractions_user_analysis(&$form_state, GestorSimulacione
   );
 
   $form['infractions_user_container']['infractions_user_actions']['infractions_user_filter_button'] = array(
-    '#type' => 'button',
-    '#value' => t('Filter'),
+    '#type' => 'submit',
+    '#value' => t('Filter graph'),
     '#name' => 'infractions_user_filter_button',
+    '#prefix' => '<div class="clearfix"></div>',
+    '#attributes' => array('class' => array('filter-btn')),
     '#validate' => array('generate_form_infractions_user_analysis_validate'),
     '#ajax' => array(
       'callback' => 'ajax_generate_form_infractions_user_analysis_callback',
@@ -1433,6 +1445,10 @@ function generate_group_array($prefix, $index) {
     '#description' => t('Filter group'),
     '#attributes' => array('class' => array('group-analysis'))
   );
+
+  if ($index%3 == 0) {
+    $form += array('#suffix' => '<div class="clearfix"></div>');
+  }
 
   $form[$prefix . '_check_age'] = array(
     '#type' => 'checkbox',
