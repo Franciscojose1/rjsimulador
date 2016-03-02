@@ -99,7 +99,7 @@ class Simulacion {
    * @return string URL para ver los datos de una simulación.
    */
   public function getURLToSimulacionPage($adminMode, $type = NULL) {
-    $url = base_path();
+    $url = '';
 
     if ($adminMode) {
       $url .= 'admin/simulaciones_analysis/' . $this->getUsuario()->getUid() . '/';
@@ -108,7 +108,7 @@ class Simulacion {
     $url .= 'simulaciones/' . $this->getIdSimulacion() . '/partidas';
 
     if (isset($type) && $type == 'html_link') {
-      return '<a href="' . $url . '">Ver partidas de simulación</a>';
+      return l(t('Show Simulation\'s Partidas'), $url);
     }
 
     return $url;

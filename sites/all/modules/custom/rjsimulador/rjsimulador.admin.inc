@@ -51,7 +51,7 @@ function rjsimulador_simulaciones_usuarios_admin_page() {
       array(
         'data' => $usuario->getLastAccessDate(true)->format("d-m-Y H:i:s")
       ),
-      array('data' => l(t('Show info about simulations'), 'admin/simulaciones_usuarios/' . $usuario->getUid() . '/simulaciones'))
+      array('data' => l(t('Show info about simulations'), 'admin/simulaciones_analysis/' . $usuario->getUid() . '/simulaciones'))
     );
   }
 

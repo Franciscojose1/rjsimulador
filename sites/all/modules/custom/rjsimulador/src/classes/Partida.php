@@ -243,7 +243,7 @@ class Partida implements ServicesAdapterInterface {
    * @return string URL para ver los datos de una partida.
    */
   public function getURLToPartidaPage($adminMode, $type = NULL) {
-    $url = base_path();
+    $url = '';
 
     if ($adminMode) {
       $url .= 'admin/simulaciones_analysis/' . $this->getUid() . '/';
@@ -252,7 +252,7 @@ class Partida implements ServicesAdapterInterface {
     $url .= 'simulaciones/' . $this->getIdSimulacion() . '/partidas/' . $this->getIdPartida();
 
     if (isset($type) && $type == 'html_link') {
-      return '<a href="' . $url . '">Ver partida</a>';
+      return l(t('See Partida'), $url);
     }
 
     return $url;
