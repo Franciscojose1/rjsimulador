@@ -13,7 +13,7 @@ function rjsimulador_admin_form_data_analysis($form, &$form_state) {
 
   // Creamos el formulario como tabs verticales
   $form['data_analysis'] = array(
-    '#type' => 'vertical_tabs',
+    '#type' => 'vertical_tabs'
   );
 
   // Cada fieldset es referido al grupo de tabs será una tab vertical
@@ -22,7 +22,8 @@ function rjsimulador_admin_form_data_analysis($form, &$form_state) {
     '#title' => t('General data analysis'),
     '#collapsible' => TRUE,
     '#description' => t('General data analysis for all users.'),
-    '#group' => 'data_analysis'
+    '#group' => 'data_analysis',
+    '#attributes' => array('class' => array('rjsimulador-analysis'))
   );
 
   $form['data_general_analysis'] += generate_form_data_general_analysis($form_state, $gestorSimulaciones);
@@ -33,6 +34,7 @@ function rjsimulador_admin_form_data_analysis($form, &$form_state) {
     '#collapsible' => TRUE,
     '#description' => t('Data analysis by group.'),
     '#group' => 'data_analysis',
+    '#attributes' => array('class' => array('rjsimulador-analysis'))
   );
 
   $form['data_group_analysis'] += generate_form_data_group_analysis($form_state, $gestorSimulaciones);
@@ -42,7 +44,8 @@ function rjsimulador_admin_form_data_analysis($form, &$form_state) {
     '#title' => t('Data analysis by user'),
     '#collapsible' => TRUE,
     '#description' => t('Data analysis by user.'),
-    '#group' => 'data_analysis'
+    '#group' => 'data_analysis',
+    '#attributes' => array('class' => array('rjsimulador-analysis'))
   );
 
   $form['data_user_analysis'] += generate_form_data_user_analysis($form_state, $gestorSimulaciones);
@@ -69,7 +72,8 @@ function rjsimulador_admin_form_infractions_analysis($form, &$form_state) {
     '#title' => t('General infraction analysis'),
     '#collapsible' => TRUE,
     '#description' => t('General infractions analysis for all users.'),
-    '#group' => 'data_analysis'
+    '#group' => 'data_analysis',
+    '#attributes' => array('class' => array('rjsimulador-analysis'))
   );
 
   $form['infractions_general_analysis'] += generate_form_infractions_general_analysis($form_state, $gestorSimulaciones);
@@ -79,7 +83,8 @@ function rjsimulador_admin_form_infractions_analysis($form, &$form_state) {
     '#title' => t('Infraction analysis by group'),
     '#collapsible' => TRUE,
     '#description' => t('Infraction analysis by group.'),
-    '#group' => 'data_analysis'
+    '#group' => 'data_analysis',
+    '#attributes' => array('class' => array('rjsimulador-analysis'))
   );
 
   $form['infractions_group_analysis'] += generate_form_infractions_group_analysis($form_state, $gestorSimulaciones);
@@ -89,7 +94,8 @@ function rjsimulador_admin_form_infractions_analysis($form, &$form_state) {
     '#title' => t('Infraction analysis by user'),
     '#collapsible' => TRUE,
     '#description' => t('Infraction analysis by user.'),
-    '#group' => 'data_analysis'
+    '#group' => 'data_analysis',
+    '#attributes' => array('class' => array('rjsimulador-analysis'))
   );
 
   $form['infractions_user_analysis'] += generate_form_infractions_user_analysis($form_state, $gestorSimulaciones);
@@ -340,7 +346,8 @@ function generate_form_data_group_analysis(&$form_state, GestorSimulaciones $ges
     '#collapsible' => FALSE,
     '#description' => t('All groups showed.'),
     '#tree' => TRUE,
-    '#weight' => '50'
+    '#weight' => '50',
+    '#prefix' => '<div class="clearfix"></div>',
   );
 
   // Sacamos todos los grupos actuales
@@ -1424,13 +1431,17 @@ function generate_group_array($prefix, $index) {
     '#title' => t('Group @index', array('@index' => $index)),
     '#collapsible' => TRUE,
     '#description' => t('Filter group'),
+    '#attributes' => array('class' => array('group-analysis'))
   );
+
   $form[$prefix . '_check_age'] = array(
     '#type' => 'checkbox',
     '#title' => t('Filter by age.'),
   );
+
   $form[$prefix . '_age'] = array(
     '#type' => 'fieldset',
+    '#attributes' => array('class' => array('entradas')),
     '#states' => array(
       // Only show this field when the 'toggle_me' checkbox is enabled.
       'visible' => array(
@@ -1438,9 +1449,10 @@ function generate_group_array($prefix, $index) {
       ),
     ),
   );
+
   $form[$prefix . '_age']['from'] = array(
     '#type' => 'textfield',
-    '#field_prefix' => t('From'),
+    '#field_prefix' => t('From '),
     '#size' => 3,
     '#maxlength' => 3,
     '#required' => FALSE,
@@ -1451,9 +1463,10 @@ function generate_group_array($prefix, $index) {
       ),
     ),
   );
+
   $form[$prefix . '_age']['to'] = array(
     '#type' => 'textfield',
-    '#field_prefix' => t('to'),
+    '#field_prefix' => t(' to '),
     '#field_suffix' => t(' years'),
     '#size' => 3,
     '#maxlength' => 3,
@@ -1470,8 +1483,10 @@ function generate_group_array($prefix, $index) {
     '#type' => 'checkbox',
     '#title' => t('Filter by driving experience.'),
   );
+
   $form[$prefix . '_driving_experience'] = array(
     '#type' => 'fieldset',
+    '#attributes' => array('class' => array('entradas')),
     '#states' => array(
       // Only show this field when the 'toggle_me' checkbox is enabled.
       'visible' => array(
@@ -1479,9 +1494,10 @@ function generate_group_array($prefix, $index) {
       ),
     ),
   );
+
   $form[$prefix . '_driving_experience']['from'] = array(
     '#type' => 'textfield',
-    '#field_prefix' => t('From'),
+    '#field_prefix' => t('From '),
     '#size' => 3,
     '#maxlength' => 3,
     '#required' => FALSE,
@@ -1492,9 +1508,10 @@ function generate_group_array($prefix, $index) {
       ),
     ),
   );
+
   $form[$prefix . '_driving_experience']['to'] = array(
     '#type' => 'textfield',
-    '#field_prefix' => t('to'),
+    '#field_prefix' => t(' to '),
     '#field_suffix' => t(' years'),
     '#size' => 3,
     '#maxlength' => 3,
@@ -1511,8 +1528,10 @@ function generate_group_array($prefix, $index) {
     '#type' => 'checkbox',
     '#title' => t('Filter by average annual mileage.'),
   );
+
   $form[$prefix . '_average_annual_mileage'] = array(
     '#type' => 'fieldset',
+    '#attributes' => array('class' => array('entradas')),
     '#states' => array(
       // Only show this field when the 'toggle_me' checkbox is enabled.
       'visible' => array(
@@ -1520,9 +1539,10 @@ function generate_group_array($prefix, $index) {
       ),
     ),
   );
+
   $form[$prefix . '_average_annual_mileage']['from'] = array(
     '#type' => 'textfield',
-    '#field_prefix' => t('From'),
+    '#field_prefix' => t('From '),
     '#size' => 3,
     '#maxlength' => 3,
     '#required' => FALSE,
@@ -1533,10 +1553,11 @@ function generate_group_array($prefix, $index) {
       ),
     ),
   );
+
   $form[$prefix . '_average_annual_mileage']['to'] = array(
     '#type' => 'textfield',
-    '#field_prefix' => t('to'),
-    '#field_suffix' => t(' kilometers'),
+    '#field_prefix' => t(' to '),
+    '#field_suffix' => t(' kms'),
     '#size' => 6,
     '#maxlength' => 6,
     '#required' => FALSE,
@@ -1552,6 +1573,7 @@ function generate_group_array($prefix, $index) {
     '#type' => 'checkbox',
     '#title' => t('Filter by usual videogame player.'),
   );
+
   $form[$prefix . '_usual_videogame_player'] = array(
     '#type' => 'fieldset',
     '#states' => array(
@@ -1561,6 +1583,7 @@ function generate_group_array($prefix, $index) {
       ),
     ),
   );
+
   $form[$prefix . '_usual_videogame_player']['radios'] = array(
     '#type' => 'radios',
     '#title' => t('Usual videogame players?'),
