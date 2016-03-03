@@ -12,7 +12,7 @@
 /.idea
 /sites/*/settings*.php
 /sites/*/modules/develop
-!sites/*/files/adminimal-custom.css
+!/sites/*/files/adminimal-custom.css
 
 # Packages #
 ############
