@@ -42,9 +42,9 @@ class DBDataProvider implements DataProvider {
    * @inheritdoc
    */
   public function loadAllSimulatorUsers() {
-    $query = db_select('rjsim_partida', 'p')
-      ->fields('p', array('uid'))
-      ->distinct();
+    $query = db_select('rjsim_partida', 'p');
+    $query->fields('p', array('uid'))
+          ->distinct();
     $resultados = $query->execute();
 
     $usersUids = $resultados->fetchCol(0);
@@ -62,9 +62,9 @@ class DBDataProvider implements DataProvider {
   /**
    * @inheritdoc
    */
-  public function loadAllIdsInfracciones() {
-    $query = db_select('rjsim_infracciones', 'i')
-      ->fields('i', array('id_infraccion', 'nombre_infraccion'));
+  public function loadAllTiposInfracciones() {
+    $query = db_select('rjsim_infracciones', 'i');
+    $query->fields('i', array('id_infraccion', 'nombre_infraccion'));
     $resultados = $query->execute();
 
     $idsInfracciones = array();
@@ -78,9 +78,9 @@ class DBDataProvider implements DataProvider {
   /**
    * @inheritdoc
    */
-  public function loadAllIdsSimulaciones() {
-    $query = db_select('rjsim_simulacion', 's')
-      ->fields('s', array('id_simulacion', 'nombre_simulacion'));
+  public function loadAllTiposSimulaciones() {
+    $query = db_select('rjsim_simulacion', 's');
+    $query->fields('s', array('id_simulacion', 'nombre_simulacion'));
 
     $resultados = $query->execute();
 
@@ -95,25 +95,8 @@ class DBDataProvider implements DataProvider {
   /**
    * @inheritdoc
    */
-  public function loadNombreSimulacionFromID($id_simulacion) {
-    $query = db_select('rjsim_simulacion', 's');
-    $query->fields('s', array('nombre_simulacion'))
-      ->condition('id_simulacion', $id_simulacion, '=');
-    $resultados = $query->execute();
-
-    $nombre_simulacion = NULL;
-    while ($resultado = $resultados->fetchAssoc()) {
-      $nombre_simulacion = $resultado['nombre_simulacion'];
-    }
-
-    return $nombre_simulacion;
-  }
-
-  /**
-   * @inheritdoc
-   */
   public function loadListaSimulacionesByUsuario(UsuarioSimulacion $usuario) {
-    $idsSimulaciones = $this->loadAllIdsSimulaciones();
+    $idsSimulaciones = Constants::getTiposSimulacion();
 
     $listaSimulaciones = new ListaSimulaciones();
     foreach($idsSimulaciones as $id=>$nombre_simulacion) {
@@ -247,26 +230,5 @@ class DBDataProvider implements DataProvider {
     }
 
     return $listaDatos;
-  }
-
-  /**
-   * @inheritdoc
-   */
-  public function loadNombreInfraccionFromId($id_infraccion) {
-    $query = db_select('rjsim_infracciones', 's')
-      ->fields('s', array('nombre_infraccion'))
-      ->condition('id_infraccion', $id_infraccion, '=');
-    $resultado = $query->execute();
-
-    if ($resultado->rowCount() == 0) {
-      throw new Exception("No existe una infracción con ese ID en la tabla de almacenamiento.");
-    }
-
-    $nombre_infraccion = NULL;
-    while ($record = $resultado->fetchAssoc()) {
-      $nombre_infraccion = $record['nombre_infraccion'];
-    }
-
-    return $nombre_infraccion;
   }
 }

@@ -107,9 +107,13 @@ function rjsimulador_admin_form_infractions_analysis($form, &$form_state) {
 /* *                      Análisis de datos generales                            * */
 /* ******************************************************************************* */
 function generate_form_data_general_analysis(&$form_state, GestorSimulaciones $gestorSimulaciones) {
+  // Recuperamos variables locales
+  $tiposSimulacion = Constants::getTiposSimulacion();
+  $firstKeyTiposSimulacion = key($tiposSimulacion);
+
   // Recuperamos el idSimulacion por el que filtrar la gráfica
   $idSimulacion = isset($form_state['values']['data_general_select_simulation']) ?
-    $form_state['values']['data_general_select_simulation'] : key($gestorSimulaciones->getArraySimulaciones());
+    $form_state['values']['data_general_select_simulation'] : $firstKeyTiposSimulacion;
   // Recuperamos el tipo de dato que vamos a calcular
   $tipoDatoCalcular = isset($form_state['values']['data_general_select_type']) ?
     $form_state['values']['data_general_select_type'] : CalculateAverageData::CONSUMO_MEDIO;
@@ -117,19 +121,19 @@ function generate_form_data_general_analysis(&$form_state, GestorSimulaciones $g
   // Generamos el título del gráfico
   if ($tipoDatoCalcular == CalculateAverageData::CONSUMO_MEDIO) {
     $tituloGrafico = t("Average consumption of all users<br>@simulacion",
-      array('@simulacion' => $gestorSimulaciones->getArraySimulaciones()[$idSimulacion]));
+      array('@simulacion' => Constants::getNombreSimulacion($idSimulacion)));
   }
   elseif ($tipoDatoCalcular == CalculateAverageData::TIEMPO_TOTAL) {
     $tituloGrafico = t("Average Partida time length of all users<br>@simulacion",
-      array('@simulacion' => $gestorSimulaciones->getArraySimulaciones()[$idSimulacion]));
+      array('@simulacion' => Constants::getNombreSimulacion($idSimulacion)));
   }
   elseif ($tipoDatoCalcular == CalculateAverageData::VELOCIDAD) {
     $tituloGrafico = t("Average speed by Partida of all users<br>@simulacion",
-      array('@simulacion' => $gestorSimulaciones->getArraySimulaciones()[$idSimulacion]));
+      array('@simulacion' => Constants::getNombreSimulacion($idSimulacion)));
   }
   else {
     $tituloGrafico = t("Average RPMs by Partida of all users<br>@simulacion",
-      array('@simulacion' => $gestorSimulaciones->getArraySimulaciones()[$idSimulacion]));
+      array('@simulacion' => Constants::getNombreSimulacion($idSimulacion)));
   }
 
   // Etiqueta del Eje X
@@ -175,8 +179,8 @@ function generate_form_data_general_analysis(&$form_state, GestorSimulaciones $g
   $form['data_general_actions']['data_general_select_simulation'] = array(
     '#type' => 'select',
     '#title' => t('Select Simulation'),
-    '#options' => $gestorSimulaciones->getArraySimulaciones(),
-    '#default_value' => key($gestorSimulaciones->getArraySimulaciones()),
+    '#options' => $tiposSimulacion,
+    '#default_value' => $firstKeyTiposSimulacion,
     '#description' => t('Select the simulation about you want information.'),
   );
 
@@ -217,9 +221,13 @@ function ajax_generate_form_data_general_analysis_callback($form, &$form_state) 
 /* *                   Análisis de datos por grupos                              * */
 /* ******************************************************************************* */
 function generate_form_data_group_analysis(&$form_state, GestorSimulaciones $gestorSimulaciones) {
+  // Recuperamos variables locales
+  $tiposSimulacion = Constants::getTiposSimulacion();
+  $firstKeyTiposSimulacion = key($tiposSimulacion);
+
   // Recuperamos el idSimulacion por el que filtrar la gráfica
   $idSimulacion = isset($form_state['values']['data_group_select_simulation']) ?
-    $form_state['values']['data_group_select_simulation'] : key($gestorSimulaciones->getArraySimulaciones());
+    $form_state['values']['data_group_select_simulation'] : $firstKeyTiposSimulacion;
   // Recuperamos el dato a calcular
   $tipoDatoCalcular = isset($form_state['values']['data_group_select_type']) ?
     $form_state['values']['data_group_select_type'] : CalculateAverageData::CONSUMO_MEDIO;
@@ -227,19 +235,19 @@ function generate_form_data_group_analysis(&$form_state, GestorSimulaciones $ges
   // Generamos el título del gráfico
   if ($tipoDatoCalcular == CalculateAverageData::CONSUMO_MEDIO) {
     $tituloGrafico = t("Average consumption of users groups<br>@simulacion",
-      array('@simulacion' => $gestorSimulaciones->getArraySimulaciones()[$idSimulacion]));
+      array('@simulacion' => Constants::getNombreSimulacion($idSimulacion)));
   }
   elseif ($tipoDatoCalcular == CalculateAverageData::TIEMPO_TOTAL) {
     $tituloGrafico = t("Average Partida time length of users groups<br>@simulacion",
-      array('@simulacion' => $gestorSimulaciones->getArraySimulaciones()[$idSimulacion]));
+      array('@simulacion' => Constants::getNombreSimulacion($idSimulacion)));
   }
   elseif ($tipoDatoCalcular == CalculateAverageData::VELOCIDAD) {
     $tituloGrafico = t("Average speed by Partida of users groups<br>@simulacion",
-      array('@simulacion' => $gestorSimulaciones->getArraySimulaciones()[$idSimulacion]));
+      array('@simulacion' => Constants::getNombreSimulacion($idSimulacion)));
   }
   else {
     $tituloGrafico = t("Average RPMs by Partida of users groups<br>@simulacion",
-      array('@simulacion' => $gestorSimulaciones->getArraySimulaciones()[$idSimulacion]));
+      array('@simulacion' => Constants::getNombreSimulacion($idSimulacion)));
   }
 
   // Etiquet Eje X
@@ -271,8 +279,8 @@ function generate_form_data_group_analysis(&$form_state, GestorSimulaciones $ges
   $form['data_group_container']['data_group_actions']['data_group_select_simulation'] = array(
     '#type' => 'select',
     '#title' => t('Select Simulation'),
-    '#options' => $gestorSimulaciones->getArraySimulaciones(),
-    '#default_value' => key($gestorSimulaciones->getArraySimulaciones()),
+    '#options' => $tiposSimulacion,
+    '#default_value' => $firstKeyTiposSimulacion,
     '#description' => t('Select the simulation about you want information.'),
   );
 
@@ -455,14 +463,18 @@ function ajax_generate_form_data_group_analysis_callback($form, &$form_state) {
 /* *                Tab Análisis de datos por Usuario                            * */
 /* ******************************************************************************* */
 function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gestorSimulaciones) {
+  // Recuperamos variables locales
   $provider = FactoryDataManager::createDataProvider();
+  $tiposSimulacion = Constants::getTiposSimulacion();
+  $firstKeyTiposSimulacion = key($tiposSimulacion);
+
   /* RECUPERAMOS LOS DATOS POR AJAX */
   // Recuperamos el Usuario con el que vamos a comparar los datos
   $uidUser = isset($form_state['values']['data_user_select_user']) ?
     $form_state['values']['data_user_select_user'] : key($gestorSimulaciones->getArrayUsuariosUidName());
   // Recuperamos el idSimulacion por el que filtrar la gráfica
   $idSimulacion = isset($form_state['values']['data_user_select_simulation']) ?
-    $form_state['values']['data_user_select_simulation'] : key($gestorSimulaciones->getArraySimulaciones());
+    $form_state['values']['data_user_select_simulation'] : $firstKeyTiposSimulacion;
   // Recuperamos el tipo de dato que vamos a calcular
   $tipoDatoCalcular = isset($form_state['values']['data_user_select_type']) ?
     $form_state['values']['data_user_select_type'] : CalculateAverageData::CONSUMO_MEDIO;
@@ -476,33 +488,33 @@ function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gest
     $tituloGrafico = t("Average consumption of user @userName<br>@simulacion",
       array(
         '@userName' => $usuarioActual->getName(),
-        '@simulacion' => $gestorSimulaciones->getArraySimulaciones()[$idSimulacion]
+        '@simulacion' => Constants::getNombreSimulacion($idSimulacion)
       ));
   }
   elseif ($tipoDatoCalcular == CalculateAverageData::TIEMPO_TOTAL) {
     $tituloGrafico = t("Average Partida time length of user @userName<br>@simulacion",
       array(
         '@userName' => $usuarioActual->getName(),
-        '@simulacion' => $gestorSimulaciones->getArraySimulaciones()[$idSimulacion]
+        '@simulacion' => Constants::getNombreSimulacion($idSimulacion)
       ));
   }
   elseif ($tipoDatoCalcular == CalculateAverageData::VELOCIDAD) {
     $tituloGrafico = t("Average speed by Partida of user @userName<br>@simulacion",
       array(
         '@userName' => $usuarioActual->getName(),
-        '@simulacion' => $gestorSimulaciones->getArraySimulaciones()[$idSimulacion]
+        '@simulacion' => Constants::getNombreSimulacion($idSimulacion)
       ));
   }
   else {
     $tituloGrafico = t("Average RPMs by Partida of user @userName<br>@simulacion",
       array(
         '@userName' => $usuarioActual->getName(),
-        '@simulacion' => $gestorSimulaciones->getArraySimulaciones()[$idSimulacion]
+        '@simulacion' => Constants::getNombreSimulacion($idSimulacion)
       ));
   }
 
   // Etiqueta del Eje X
-  $labelAxisX[] = t("User and realted groups");
+  $labelAxisX[] = t("User and filter groups");
 
   /* **************************************************************************** */
   /* *              Generamos el formulario y la gráfica                        * */
@@ -629,8 +641,8 @@ function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gest
   $form['data_user_container']['data_user_actions']['data_user_select_simulation'] = array(
     '#type' => 'select',
     '#title' => t('Select Simulation'),
-    '#options' => $gestorSimulaciones->getArraySimulaciones(),
-    '#default_value' => key($gestorSimulaciones->getArraySimulaciones()),
+    '#options' => $tiposSimulacion,
+    '#default_value' => $firstKeyTiposSimulacion,
     '#description' => t('Select the simulation about you want information.'),
   );
 

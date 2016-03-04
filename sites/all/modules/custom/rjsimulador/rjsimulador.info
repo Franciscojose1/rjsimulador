@@ -13,6 +13,7 @@ files[] = src/interfaces/SortableInterface.php
 ; Includes - Classes
 files[] = src/classes/CalculateAverageData.php
 files[] = src/classes/CalculateTypicalDeviation.php
+files[] = src/classes/Constants.php
 files[] = src/classes/DatoInstantaneo.php
 files[] = src/classes/DBDataProvider.php
 files[] = src/classes/DBDataRemover.php

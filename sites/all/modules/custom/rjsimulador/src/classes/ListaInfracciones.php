@@ -45,7 +45,7 @@ class ListaInfracciones extends Lista {
   }
 
   /**
-   * @param ListaInfracciones $lista Lista a mezclar con la actual.
+   * @param Lista $lista Lista a mezclar con la actual.
    * @throws InvalidArgumentException Si el tipo pasado no es aceptado.
    */
   public function mergeList(Lista $lista) {
