@@ -131,7 +131,7 @@ class UsuarioSimulacion {
    * @throws \Exception
    */
   public function getGrupoEdad($asText = FALSE) {
-    foreach (Grupos::$GruposEdad as $idGrupo => $arrayDatos) {
+    foreach (Grupos::getGruposEdad() as $idGrupo => $arrayDatos) {
       if ($this->getAge() >= $arrayDatos['desde'] && $this->getAge() < $arrayDatos['hasta']) {
         if ($asText) {
           return t("age from " . $arrayDatos['desde'] . " to " . $arrayDatos['hasta'] . " years");
@@ -152,7 +152,7 @@ class UsuarioSimulacion {
    * @throws \Exception
    */
   public function getGrupoExperiencia($asText = FALSE) {
-    foreach (Grupos::$GruposExperiencia as $idGrupo => $arrayDatos) {
+    foreach (Grupos::getGruposExperiencia() as $idGrupo => $arrayDatos) {
       if ($this->getDrivingExperience() >= $arrayDatos['desde'] && $this->getDrivingExperience() < $arrayDatos['hasta']) {
         if ($asText) {
           return t("driving experience from " . $arrayDatos['desde'] . " to " . $arrayDatos['hasta'] . " years");
@@ -173,7 +173,7 @@ class UsuarioSimulacion {
    * @throws \Exception
    */
   public function getGrupoKilometrajeMedioAnual($asText = FALSE) {
-    foreach (Grupos::$GruposKilometrajeMedioAnual as $idGrupo => $arrayDatos) {
+    foreach (Grupos::getGrupoKmMedioAnual() as $idGrupo => $arrayDatos) {
       if ($this->getAverageAnnualMileage() >= $arrayDatos['desde'] && $this->getAverageAnnualMileage() < $arrayDatos['hasta']) {
         if ($asText) {
           return t("average annual mileage from " . $arrayDatos['desde'] . " to " . $arrayDatos['hasta'] . " years");

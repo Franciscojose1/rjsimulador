@@ -43,13 +43,12 @@ class Simulacion {
   }
 
   /**
-   * @return string
-   * @throws \Exception Posible error recuperando el nombre de la simulación.
+   * @return string EL nombre de la simulación.
+   * @throws \LogicException Error recuperando el nombre de la simulación.
    */
   public function getNombreSimulacion() {
     if(!isset($this->nombre_simulacion)) {
-      $provider = FactoryDataManager::createDataProvider();
-      $this->setNombreSimulacion($provider->loadNombreSimulacionFromID($this->getIdSimulacion()));
+      $this->setNombreSimulacion(Constants::getNombreSimulacion($this->getIdSimulacion()));
     }
 
     return $this->nombre_simulacion;

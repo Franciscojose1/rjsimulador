@@ -45,7 +45,7 @@ class ListaPartidas extends Lista implements SortableInterface {
   }
 
   /**
-   * @param ListaPartidas $lista Lista a mezclar con la actual.
+   * @param Lista $lista Lista a mezclar con la actual.
    */
   public function mergeList(Lista $lista) {
     if ($lista instanceof ListaPartidas) {

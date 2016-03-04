@@ -197,9 +197,8 @@ class Partida implements ServicesAdapterInterface {
    * @return string
    */
   public function getNombreSimulacion() {
-    if (!isset($this->nombre_simulacion)) {
-      $provider = FactoryDataManager::createDataProvider();
-      $this->setNombreSimulacion($provider->loadNombreSimulacionFromID($this->getIdSimulacion()));
+    if(!isset($this->nombre_simulacion)) {
+      $this->setNombreSimulacion(Constants::getNombreSimulacion($this->getIdSimulacion()));
     }
 
     return $this->nombre_simulacion;

@@ -19,21 +19,13 @@ interface DataProvider {
    * Permite recuperar todos los ids y descripciones de las infracciones actuales.
    * @return array Array indexado de la forma Id_infraccion => descripción de la infracción.
    */
-  public function loadAllIdsInfracciones();
+  public function loadAllTiposInfracciones();
 
   /**
    * Permite recuperar todos los ids y descripciones de las simulaciones actuales.
    * @return array Array indexado de la forma id_simulacion => descripción de la simulación.
    */
-  public function loadAllIdsSimulaciones();
-
-  /**
-   * Recupera el nombre asociado a un id de simulación.
-   * @param int $id_simulacion El id de la simulación.
-   * @return string Devuelve el nombre de la simulación asociado a ese ID.
-   * @throws Exception Si no existe esa simulación.
-   */
-  public function loadNombreSimulacionFromId($id_simulacion);
+  public function loadAllTiposSimulaciones();
 
   /**
    * Devuelve la lista con todas las simulaciones de este usuario.
@@ -68,12 +60,4 @@ interface DataProvider {
    * @return ListaDatosInstantaneos Lista de datos de la partida con ese id. Lista vacía si no encuentra ninguna.
    */
   public function loadListaDatosByPartida(Partida $partida);
-
-  /**
-   * Recupera el nombre de una infracción.
-   * @param int $id_infraccion El id de la infracción de la que recuperar el nombre.
-   * @return string Nombre de la infracción.
-   * @throws Exception Si no hay una infracción con ese ID.
-   */
-  public function loadNombreInfraccionFromId($id_infraccion);
 }

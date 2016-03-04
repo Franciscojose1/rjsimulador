@@ -4,13 +4,9 @@ class ListaUsuariosDataRetriever {
 
   /* @var ListaUsuariosSimulacion Una lista de usuarios de la que recuperar datos */
   private $listaUsuarios;
-  /* @var array $arraySimulaciones Array de la forma $id=>$nombre_simulacion */
-  private $arraySimulaciones;
 
   public function __construct(ListaUsuariosSimulacion $lista) {
-    $provider = FactoryDataManager::createDataProvider();
     // Recuperamos los ids de las simulaciones existentes
-    $this->setArraySimulaciones($provider->loadAllIdsSimulaciones());
     $this->listaUsuarios = $lista;
   }
 
@@ -26,20 +22,6 @@ class ListaUsuariosDataRetriever {
    */
   public function setListaUsuarios(ListaUsuariosSimulacion $listaUsuarios) {
     $this->listaUsuarios = $listaUsuarios;
-  }
-
-  /**
-   * @return array
-   */
-  public function getArraySimulaciones() {
-    return $this->arraySimulaciones;
-  }
-
-  /**
-   * @param array $arraySimulaciones
-   */
-  private function setArraySimulaciones(array $arraySimulaciones) {
-    $this->arraySimulaciones = $arraySimulaciones;
   }
 
   /**

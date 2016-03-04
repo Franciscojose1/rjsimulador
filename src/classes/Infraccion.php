@@ -102,8 +102,7 @@ class Infraccion implements ServicesAdapterInterface {
    */
   public function getNombreInfraccion() {
     if (!isset($this->nombre_infraccion)) {
-      $provider = FactoryDataManager::createDataProvider();
-      $this->setNombreInfraccion($provider->loadNombreInfraccionFromId($this->getIdInfraccion()));
+      $this->setNombreInfraccion(Constants::getNombreInfraccion($this->getIdInfraccion()));
     }
 
     return $this->nombre_infraccion;
