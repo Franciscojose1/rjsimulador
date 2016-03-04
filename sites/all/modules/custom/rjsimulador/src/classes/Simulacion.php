@@ -5,8 +5,8 @@ class Simulacion {
   private $id_simulacion;
   /* @var string $nombre_simulacion */
   private $nombre_simulacion;
-  /* @var UsuarioSimulacion $usuario */
-  private $usuario;
+  /* @var int $userUid */
+  private $userUid;
   /* @var ListaPartidas $listaPartidas */
   private $listaPartidas;
 
@@ -16,16 +16,16 @@ class Simulacion {
    * @param \UsuarioSimulacion $usuario
    * @throws InvalidArgumentException Si los datos del constructor son erróneos.
    */
-  public function __construct($id_simulacion, UsuarioSimulacion $usuario) {
+  public function __construct($id_simulacion, $userUid) {
     if (!is_numeric($id_simulacion)) {
       throw new InvalidArgumentException("El id de la simulación tiene que ser un entero.");
     }
-    else if (!($usuario instanceof UsuarioSimulacion)) {
-        throw new InvalidArgumentException("El usuario tiene que ser un objeto de tipo UsuarioSimulacion.");
+    else if (!is_numeric($userUid)) {
+        throw new InvalidArgumentException("El uid del usuario tiene que ser un entero.");
     }
 
     $this->setIdSimulacion($id_simulacion);
-    $this->setUsuario($usuario);
+    $this->setUserUid($userUid);
   }
 
   /**
@@ -62,17 +62,17 @@ class Simulacion {
   }
 
   /**
-   * @return UsuarioSimulacion
+   * @return int El UID del usuario de la simulación.
    */
-  public function getUsuario() {
-    return $this->usuario;
+  public function getUserUid() {
+    return $this->userUid;
   }
 
   /**
-   * @param UsuarioSimulacion $usuario
+   * @param int $uid El uid del usuario de la simulación.
    */
-  public function setUsuario(UsuarioSimulacion $usuario) {
-    $this->usuario = $usuario;
+  public function setUserUid($userUid) {
+    $this->userUid = intval($userUid);
   }
 
   /**
@@ -101,7 +101,7 @@ class Simulacion {
     $url = '';
 
     if ($adminMode) {
-      $url .= 'admin/simulaciones_analysis/' . $this->getUsuario()->getUid() . '/';
+      $url .= 'admin/simulaciones_analysis/' . $this->getUserUid() . '/';
     }
 
     $url .= 'simulaciones/' . $this->getIdSimulacion() . '/partidas';

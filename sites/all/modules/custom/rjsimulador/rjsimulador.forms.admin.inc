@@ -199,7 +199,7 @@ function generate_form_data_general_analysis(&$form_state, GestorSimulaciones $g
   );
 
   $form['data_general_actions']['data_general_filter_button'] = array(
-    '#type' => 'submit',
+    '#type' => 'button',
     '#value' => t('Filter graph'),
     '#name' => 'data_general_filter_button',
     '#prefix' => '<div class="clearfix"></div>',
@@ -299,7 +299,7 @@ function generate_form_data_group_analysis(&$form_state, GestorSimulaciones $ges
   );
 
   $form['data_group_container']['data_group_actions']['data_group_filter_button'] = array(
-    '#type' => 'submit',
+    '#type' => 'button',
     '#value' => t('Filter graph'),
     '#prefix' => '<div class="clearfix"></div>',
     '#attributes' => array('class' => array('filter-btn')),
@@ -661,7 +661,7 @@ function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gest
   );
 
   $form['data_user_container']['data_user_actions']['data_user_filter_button'] = array(
-    '#type' => 'submit',
+    '#type' => 'button',
     '#value' => t('Filter graph'),
     '#name' => 'data_user_filter_button',
     '#prefix' => '<div class="clearfix"></div>',
@@ -822,18 +822,24 @@ function ajax_generate_form_data_user_analysis_callback($form, &$form_state) {
 /* *                 Análisis de infracciones generales                          * */
 /* ******************************************************************************* */
 function generate_form_infractions_general_analysis(&$form_state, GestorSimulaciones $gestorSimulaciones) {
+  // Recupera las variables locales
+  $tiposSimulacion = Constants::getTiposSimulacion();
+  $firstKeyTiposSimulacion = key($tiposSimulacion);
+  $tiposInfraccion = Constants::getTiposInfracciones();
+  $firstKeyTiposInfraccion = key($tiposInfraccion);
+
   // Recuperamos el idSimulacion por el que filtrar la gráfica
   $idSimulacion = isset($form_state['values']['infractions_general_select_simulation']) ?
-    $form_state['values']['infractions_general_select_simulation'] : key($gestorSimulaciones->getArraySimulaciones());
+    $form_state['values']['infractions_general_select_simulation'] : $firstKeyTiposSimulacion;
   // Recuperamos el tipo de infracción por el que filtrar
-  $tipoInfraccion = isset($form_state['values']['infractions_general_select_type']) ?
-    $form_state['values']['infractions_general_select_type'] : key($gestorSimulaciones->getArrayInfracciones());
+  $idInfraccion = isset($form_state['values']['infractions_general_select_type']) ?
+    $form_state['values']['infractions_general_select_type'] : $firstKeyTiposInfraccion;
 
   // Generamos el título del gráfico
   $tituloGrafico = t("Average number of infraction '@infraccion' by Partida and user<br>@simulacion",
     array(
-      '@infraccion' => $gestorSimulaciones->getArrayInfracciones()[$tipoInfraccion],
-      '@simulacion' => $gestorSimulaciones->getArraySimulaciones()[$idSimulacion]
+      '@infraccion' => Constants::getNombreInfraccion($idInfraccion),
+      '@simulacion' => Constants::getNombreSimulacion($idSimulacion)
     ));
 
   // Etiqueta del Eje X
@@ -857,7 +863,7 @@ function generate_form_infractions_general_analysis(&$form_state, GestorSimulaci
   // Recuperamos el cálculo del dato para todos los usuarios que tienen partidas en el simulador
   foreach ($gestorSimulaciones->getListaTodosUsuarios() as $usuario) {
     // Media de infracciones por partida, del tipo infracción y la simulación pasadas
-    $dataUsuario = round($usuario->getAverageInfraccionesByPartida($tipoInfraccion, $idSimulacion), 2);
+    $dataUsuario = round($usuario->getAverageInfraccionesByPartida($idInfraccion, $idSimulacion), 2);
 
     $form['infractions_general_chart']['infractions_general_user_' . $usuario->getUid()] =
       array(
@@ -878,21 +884,21 @@ function generate_form_infractions_general_analysis(&$form_state, GestorSimulaci
   $form['infractions_general_actions']['infractions_general_select_simulation'] = array(
     '#type' => 'select',
     '#title' => t('Select Simulation'),
-    '#options' => $gestorSimulaciones->getArraySimulaciones(),
-    '#default_value' => key($gestorSimulaciones->getArraySimulaciones()),
+    '#options' => $tiposSimulacion,
+    '#default_value' => $firstKeyTiposSimulacion,
     '#description' => t('Select the simulation about you want information.'),
   );
 
   $form['infractions_general_actions']['infractions_general_select_type'] = array(
     '#type' => 'select',
     '#title' => t('Select infraction to show'),
-    '#options' => $gestorSimulaciones->getArrayInfracciones(),
-    '#default_value' => key($gestorSimulaciones->getArrayInfracciones()),
-    '#description' => t('Select the simulation about you want information.'),
+    '#options' => $tiposInfraccion,
+    '#default_value' => $firstKeyTiposInfraccion,
+    '#description' => t('Select the infraction about you want information.'),
   );
 
   $form['infractions_general_actions']['infractions_general_filter_button'] = array(
-    '#type' => 'submit',
+    '#type' => 'button',
     '#value' => t('Filter graph'),
     '#name' => 'infractions_general_filter_button',
     '#prefix' => '<div class="clearfix"></div>',
@@ -914,18 +920,24 @@ function ajax_generate_form_infractions_general_analysis_callback($form, &$form_
 /* *                  Análisis de infracciones por grupos                        * */
 /* ******************************************************************************* */
 function generate_form_infractions_group_analysis(&$form_state, GestorSimulaciones $gestorSimulaciones) {
+  // Recupera las variables locales
+  $tiposSimulacion = Constants::getTiposSimulacion();
+  $firstKeyTiposSimulacion = key($tiposSimulacion);
+  $tiposInfraccion = Constants::getTiposInfracciones();
+  $firstKeyTiposInfraccion = key($tiposInfraccion);
+
   // Recuperamos el idSimulacion por el que filtrar la gráfica
   $idSimulacion = isset($form_state['values']['infractions_group_select_simulation']) ?
-    $form_state['values']['infractions_group_select_simulation'] : key($gestorSimulaciones->getArraySimulaciones());
+    $form_state['values']['infractions_group_select_simulation'] : $firstKeyTiposSimulacion;
   // Recuperamos el tipo de infracción a calcular
-  $tipoInfraccion = isset($form_state['values']['infractions_group_select_type']) ?
-    $form_state['values']['infractions_group_select_type'] : key($gestorSimulaciones->getArrayInfracciones());
+  $idInfraccion = isset($form_state['values']['infractions_group_select_type']) ?
+    $form_state['values']['infractions_group_select_type'] : $firstKeyTiposInfraccion;
 
   // Generamos el título del gráfico
   $tituloGrafico = t("Average number of infractions '@infraccion' by Partida and group<br>@simulacion",
     array(
-      '@infraccion' => $gestorSimulaciones->getArrayInfracciones()[$tipoInfraccion],
-      '@simulacion' => $gestorSimulaciones->getArraySimulaciones()[$idSimulacion]
+      '@infraccion' => Constants::getNombreInfraccion($idInfraccion),
+      '@simulacion' => Constants::getNombreSimulacion($idSimulacion)
     ));
 
   // Etiquet Eje X
@@ -957,21 +969,21 @@ function generate_form_infractions_group_analysis(&$form_state, GestorSimulacion
   $form['infractions_group_container']['infractions_group_actions']['infractions_group_select_simulation'] = array(
     '#type' => 'select',
     '#title' => t('Select Simulation'),
-    '#options' => $gestorSimulaciones->getArraySimulaciones(),
-    '#default_value' => key($gestorSimulaciones->getArraySimulaciones()),
+    '#options' => $tiposSimulacion,
+    '#default_value' => $firstKeyTiposSimulacion,
     '#description' => t('Select the simulation about you want information.'),
   );
 
   $form['infractions_group_container']['infractions_group_actions']['infractions_group_select_type'] = array(
     '#type' => 'select',
-    '#title' => t('Select data to show'),
-    '#options' => $gestorSimulaciones->getArrayInfracciones(),
-    '#default_value' => key($gestorSimulaciones->getArrayInfracciones()),
-    '#description' => t('Select the simulation about you want information.'),
+    '#title' => t('Select infraction to show'),
+    '#options' => $tiposInfraccion,
+    '#default_value' => $firstKeyTiposInfraccion,
+    '#description' => t('Select the infraction about you want information.'),
   );
 
   $form['infractions_group_container']['infractions_group_actions']['infractions_group_filter_button'] = array(
-    '#type' => 'submit',
+    '#type' => 'button',
     '#value' => t('Filter graph'),
     '#name' => 'infractions_group_filter_button',
     '#prefix' => '<div class="clearfix"></div>',
@@ -1099,7 +1111,7 @@ function generate_form_infractions_group_analysis(&$form_state, GestorSimulacion
     $retriever = new ListaUsuariosDataRetriever($listaUsuarios);
 
     // Media del número de infracciones cometidas por simulación del grupo filtrado
-    $dataGroup = round($retriever->getAverageInfraccionesByPartida($tipoInfraccion, $idSimulacion), 2);
+    $dataGroup = round($retriever->getAverageInfraccionesByPartida($idInfraccion, $idSimulacion), 2);
 
     // Generamos el título del grupo según los filtros
     $tituloSustitucion = count($titulos) > 0 ? 'Group @index. Conditions:' : 'Group @index.';
@@ -1133,17 +1145,22 @@ function ajax_generate_form_infractions_group_analysis_callback($form, &$form_st
 /* *                Tab Análisis de infracciones por Usuario                     * */
 /* ******************************************************************************* */
 function generate_form_infractions_user_analysis(&$form_state, GestorSimulaciones $gestorSimulaciones) {
+  // Recupera las variables locales
   $provider = FactoryDataManager::createDataProvider();
-  /* RECUPERAMOS LOS DATOS POR AJAX */
+  $tiposSimulacion = Constants::getTiposSimulacion();
+  $firstKeyTiposSimulacion = key($tiposSimulacion);
+  $tiposInfraccion = Constants::getTiposInfracciones();
+  $firstKeyTiposInfraccion = key($tiposInfraccion);
+
   // Recuperamos el Usuario con el que vamos a comparar los datos
   $uidUser = isset($form_state['values']['infractions_user_select_user']) ?
     $form_state['values']['infractions_user_select_user'] : key($gestorSimulaciones->getArrayUsuariosUidName());
   // Recuperamos el idSimulacion por el que filtrar la gráfica
   $idSimulacion = isset($form_state['values']['infractions_user_select_simulation']) ?
-    $form_state['values']['infractions_user_select_simulation'] : key($gestorSimulaciones->getArraySimulaciones());
+    $form_state['values']['infractions_user_select_simulation'] : $firstKeyTiposSimulacion;
   // Recuperamos el dato a calcular
-  $tipoInfraccion = isset($form_state['values']['infractions_user_select_type']) ?
-    $form_state['values']['infractions_user_select_type'] : key($gestorSimulaciones->getArrayInfracciones());
+  $idInfraccion = isset($form_state['values']['infractions_user_select_type']) ?
+    $form_state['values']['infractions_user_select_type'] : $firstKeyTiposInfraccion;
 
   /* DATOS OBLIGATORIOS PARA EL ANÁLISIS DE DATOS POR USUARIO */
   // Seleccionamos el usuario para el que realizar la comparación
@@ -1153,8 +1170,8 @@ function generate_form_infractions_user_analysis(&$form_state, GestorSimulacione
   $tituloGrafico = t("Average number of infractions '@infraccion' by Partida from user @userName<br>@simulacion",
     array(
       '@userName' => $usuarioActual->getName(),
-      '@infraccion' => $gestorSimulaciones->getArrayInfracciones()[$tipoInfraccion],
-      '@simulacion' => $gestorSimulaciones->getArraySimulaciones()[$idSimulacion]
+      '@infraccion' => Constants::getNombreInfraccion($idInfraccion),
+      '@simulacion' => Constants::getNombreSimulacion($idSimulacion)
     ));
 
   // Etiqueta del Eje X
@@ -1185,7 +1202,7 @@ function generate_form_infractions_user_analysis(&$form_state, GestorSimulacione
   $gestorSimulaciones->setUsuarioActual($usuarioActual);
 
   // Recuperamos los datos del usuario actual
-  $dataUser = round($usuarioActual->getAverageInfraccionesByPartida($tipoInfraccion, $idSimulacion), 2);
+  $dataUser = round($usuarioActual->getAverageInfraccionesByPartida($idInfraccion, $idSimulacion), 2);
 
   $form['infractions_user_container']['infractions_user_chart']['infractions_user_actual'] =
     array(
@@ -1199,7 +1216,7 @@ function generate_form_infractions_user_analysis(&$form_state, GestorSimulacione
   // Instanciamos el recuperador de datos
   $retriever = new ListaUsuariosDataRetriever($listaRestoUsuarios);
 
-  $dataRestoUsuarios = round($retriever->getAverageInfraccionesByPartida($tipoInfraccion, $idSimulacion), 2);
+  $dataRestoUsuarios = round($retriever->getAverageInfraccionesByPartida($idInfraccion, $idSimulacion), 2);
 
   $form['infractions_user_container']['infractions_user_chart']['infractions_user_rest_of_user'] =
     array(
@@ -1212,7 +1229,7 @@ function generate_form_infractions_user_analysis(&$form_state, GestorSimulacione
   $listaRestoUsuariosMismoGrupoEdad = $listaRestoUsuarios->filterBy(new FilterByInterval($usuarioActual->getGrupoEdad(),
     FilterByInterval::AGE));
   $retriever->setListaUsuarios($listaRestoUsuariosMismoGrupoEdad);
-  $dataRestoUsuarioMismoGrupoEdad = round($retriever->getAverageInfraccionesByPartida($tipoInfraccion, $idSimulacion), 2);
+  $dataRestoUsuarioMismoGrupoEdad = round($retriever->getAverageInfraccionesByPartida($idInfraccion, $idSimulacion), 2);
 
   $form['infractions_user_container']['infractions_user_chart']['infractions_user_same_age_group'] =
     array(
@@ -1224,7 +1241,7 @@ function generate_form_infractions_user_analysis(&$form_state, GestorSimulacione
   // Recuperamos los datos del grupo del resto de usuarios que está en el mismo grupo de experiencia conductora que el usuario analizado
   $listaRestoUsuariosMismoGrupoExperiencia = $listaRestoUsuarios->filterBy(new FilterByInterval($usuarioActual->getGrupoExperiencia(), FilterByInterval::DRIVING_EXPERIENCE));
   $retriever->setListaUsuarios($listaRestoUsuariosMismoGrupoExperiencia);
-  $dataRestoUsuarioMismoGrupoExperiencia = round($retriever->getAverageInfraccionesByPartida($tipoInfraccion, $idSimulacion), 2);
+  $dataRestoUsuarioMismoGrupoExperiencia = round($retriever->getAverageInfraccionesByPartida($idInfraccion, $idSimulacion), 2);
 
   $form['infractions_user_container']['infractions_user_chart']['infractions_user_same_driving_experience_group'] =
     array(
@@ -1250,7 +1267,7 @@ function generate_form_infractions_user_analysis(&$form_state, GestorSimulacione
   $listaRestoUsuariosMismoTipoJugador = $listaRestoUsuarios->filterBy(new FilterByEquality(array($usuarioActual->isUsualVideogamePlayer()),
     FilterByEquality::USUARIO_USUAL_PLAYER));
   $retriever->setListaUsuarios($listaRestoUsuariosMismoTipoJugador);
-  $dataRestoUsuarioMismoTipoJugador = round($retriever->getAverageInfraccionesByPartida($tipoInfraccion, $idSimulacion), 2);
+  $dataRestoUsuarioMismoTipoJugador = round($retriever->getAverageInfraccionesByPartida($idInfraccion, $idSimulacion), 2);
 
   $form['infractions_user_container']['infractions_user_chart']['infractions_user_same_average_annual_mileage_group'] =
     array(
@@ -1277,21 +1294,21 @@ function generate_form_infractions_user_analysis(&$form_state, GestorSimulacione
   $form['infractions_user_container']['infractions_user_actions']['infractions_user_select_simulation'] = array(
     '#type' => 'select',
     '#title' => t('Select Simulation'),
-    '#options' => $gestorSimulaciones->getArraySimulaciones(),
-    '#default_value' => key($gestorSimulaciones->getArraySimulaciones()),
+    '#options' => $tiposSimulacion,
+    '#default_value' => $firstKeyTiposSimulacion,
     '#description' => t('Select the simulation about you want information.'),
   );
 
   $form['infractions_user_container']['infractions_user_actions']['infractions_user_select_type'] = array(
     '#type' => 'select',
     '#title' => t('Select data to show'),
-    '#options' => $gestorSimulaciones->getArrayInfracciones(),
-    '#default_value' => key($gestorSimulaciones->getArrayInfracciones()),
-    '#description' => t('Select the simulation about you want information.'),
+    '#options' => $tiposInfraccion,
+    '#default_value' => $firstKeyTiposInfraccion,
+    '#description' => t('Select the infraction about you want information.'),
   );
 
   $form['infractions_user_container']['infractions_user_actions']['infractions_user_filter_button'] = array(
-    '#type' => 'submit',
+    '#type' => 'button',
     '#value' => t('Filter graph'),
     '#name' => 'infractions_user_filter_button',
     '#prefix' => '<div class="clearfix"></div>',
@@ -1415,7 +1432,7 @@ function generate_form_infractions_user_analysis(&$form_state, GestorSimulacione
     $retriever = new ListaUsuariosDataRetriever($listaUsuarios);
 
     // Datos medios por simulación
-    $dataGroup = round($retriever->getAverageInfraccionesByPartida($tipoInfraccion, $idSimulacion), 2);
+    $dataGroup = round($retriever->getAverageInfraccionesByPartida($idInfraccion, $idSimulacion), 2);
 
     // Generamos el título del grupo según los filtros
     $tituloSustitucion = count($titulos) > 0 ? 'Group @index. Conditions:' : 'Group @index.';

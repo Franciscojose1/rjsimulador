@@ -6,8 +6,8 @@ class Partida implements ServicesAdapterInterface {
   /* ********************************************************************************* */
   /* @var int $id_partida */
   private $id_partida;
-  /* @var int $uid */
-  private $uid;
+  /* @var int $userUid */
+  private $userUid;
   /* @var int $fecha */
   private $fecha;
   /* @var int $id_simulacion */
@@ -35,7 +35,7 @@ class Partida implements ServicesAdapterInterface {
    * @param $id_simulacion
    */
   function __construct($uid, $fecha, $id_simulacion) {
-    $this->setUid($uid);
+    $this->setUserUid($uid);
     $this->setFecha($fecha);
     $this->setIdSimulacion($id_simulacion);
   }
@@ -214,17 +214,17 @@ class Partida implements ServicesAdapterInterface {
   /**
    * @return int
    */
-  public function getUid() {
-    return $this->uid;
+  public function getUserUid() {
+    return $this->userUid;
   }
 
   /**
-   * @param int $uid
+   * @param int $userUid
    * @throws InvalidArgumentException
    */
-  public function setUid($uid) {
-    if (is_numeric($uid)) {
-      $this->uid = intval($uid);
+  public function setUserUid($userUid) {
+    if (is_numeric($userUid)) {
+      $this->userUid = intval($userUid);
     }
     else {
       throw new InvalidArgumentException("El UID tiene que ser un entero.");
@@ -245,7 +245,7 @@ class Partida implements ServicesAdapterInterface {
     $url = '';
 
     if ($adminMode) {
-      $url .= 'admin/simulaciones_analysis/' . $this->getUid() . '/';
+      $url .= 'admin/simulaciones_analysis/' . $this->getUserUid() . '/';
     }
 
     $url .= 'simulaciones/' . $this->getIdSimulacion() . '/partidas/' . $this->getIdPartida();
@@ -262,7 +262,7 @@ class Partida implements ServicesAdapterInterface {
    * @throws \Exception Cuando ocurre un error durante el almacenamiento.
    */
   public function save() {
-    if ($this->getUid() == NULL || $this->getFecha() == NULL || $this->getIdSimulacion() == NULL) {
+    if ($this->getUserUid() == NULL || $this->getFecha() == NULL || $this->getIdSimulacion() == NULL) {
       throw new Exception("Los campos UID, Fecha e ID de Simulación son necesarios para insertar una nueva partida");
     }
 
