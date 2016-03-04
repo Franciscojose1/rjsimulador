@@ -30,7 +30,7 @@ class UsuarioSimulacion {
   public function getListaSimulaciones() {
     if (!isset($this->listaSimulaciones)) {
       $provider = FactoryDataManager::createDataProvider();
-      $this->listaSimulaciones = $provider->loadListaSimulacionesByUsuario($this);
+      $this->listaSimulaciones = $provider->loadListaSimulacionesByUsuario($this->getUid());
     }
     return $this->listaSimulaciones;
   }

@@ -96,12 +96,12 @@ class DBDataProvider implements DataProvider {
   /**
    * @inheritdoc
    */
-  public function loadListaSimulacionesByUsuario(UsuarioSimulacion $usuario) {
+  public function loadListaSimulacionesByUsuario($userUid) {
     $idsSimulaciones = Constants::getTiposSimulacion();
 
     $listaSimulaciones = new ListaSimulaciones();
     foreach($idsSimulaciones as $id=>$nombre_simulacion) {
-      $listaSimulaciones->add(new Simulacion($id, $usuario));
+      $listaSimulaciones->add(new Simulacion($id, $userUid));
     }
 
     return $listaSimulaciones;
@@ -116,7 +116,7 @@ class DBDataProvider implements DataProvider {
 
     $query = db_select('rjsim_partida', 'p');
     $query->fields('p', array('id_partida'))
-      ->condition('uid', $simulation->getUsuarioSimulacionUid(), '=')
+      ->condition('uid', $simulation->getUserUid(), '=')
       ->condition('id_simulacion', $simulation->getIdSimulacion(), '=');
 
     $resultado = $query->execute();
