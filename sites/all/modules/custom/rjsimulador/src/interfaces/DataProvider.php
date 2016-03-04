@@ -29,10 +29,10 @@ interface DataProvider {
 
   /**
    * Devuelve la lista con todas las simulaciones de este usuario.
-   * @param UsuarioSimulacion $usuario El usuario.
+   * @param int $userUid El uid del usuario.
    * @return ListaSimulaciones La lista de las simulaciones para este usuario.
    */
-  public function loadListaSimulacionesByUsuario(UsuarioSimulacion $usuario);
+  public function loadListaSimulacionesByUsuario($userUid);
 
   /**
    * @param Simulacion $simulation La simulación.
