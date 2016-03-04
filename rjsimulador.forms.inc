@@ -46,8 +46,10 @@ function rjsim_simulaciones_upper_left_form($form, &$form_state, GestorSimulacio
   $fechaInicio = new DateTime($fechaFin->format('Y-m-d'));
   $fechas = array('fecha_inicio' => $fechaInicio, 'fecha_fin' => $fechaFin);
 
+  // Recuperamos tipos de simulaciones
+  $tiposSimulacion = Constants::getTiposSimulacion();
   $arrayPartidasJugadasPorDia = array();
-  foreach ($gestorSimulaciones->getArraySimulaciones() as $idSimulacion => $nombreSimulacion) {
+  foreach ($tiposSimulacion as $idSimulacion => $nombreSimulacion) {
     $arrayPartidasJugadasPorDia[$idSimulacion][] = $gestorSimulaciones->getUsuarioActual()
       ->retrieveAllPartidasByIdSimulacion($idSimulacion)
       ->filterBy(new FilterByFecha($fechas))
@@ -59,7 +61,7 @@ function rjsim_simulaciones_upper_left_form($form, &$form_state, GestorSimulacio
     $fechaFin = new DateTime($fechaInicio->format('Y-m-d'));
     $fechaInicio->modify('-1 day');
     $fechas = array('fecha_inicio' => $fechaInicio, 'fecha_fin' => $fechaFin);
-    foreach ($gestorSimulaciones->getArraySimulaciones() as $idSimulacion => $nombreSimulacion) {
+    foreach ($tiposSimulacion as $idSimulacion => $nombreSimulacion) {
       $arrayPartidasJugadasPorDia[$idSimulacion][] = $gestorSimulaciones->getUsuarioActual()
         ->retrieveAllPartidasByIdSimulacion($idSimulacion)
         ->filterBy(new FilterByFecha($fechas))
@@ -136,7 +138,9 @@ function rjsim_simulaciones_upper_right_form($form, &$form_state, GestorSimulaci
   $dataUsuarioTiempo = array();
   $dataTotalTiempo = array();
 
-  foreach ($gestorSimulaciones->getArraySimulaciones() as $idSimulacion => $nombreSimulacion) {
+  // Recuperar tipos de simulacion
+  $tiposSimulacion = Constants::getTiposSimulacion();
+  foreach ($tiposSimulacion as $idSimulacion => $nombreSimulacion) {
     // Datos del eje X. Nombres de simulaciones.
     $labelXAxis[] = $nombreSimulacion;
 
@@ -242,7 +246,8 @@ function rjsim_simulaciones_main_form($form, &$form_state, GestorSimulaciones $g
   /* **************************************************************** */
   $listaPartidas = $gestorSimulaciones->getUsuarioActual()->retrieveAllPartidas();
 
-  $idsInfracciones = $gestorSimulaciones->getArrayInfracciones();
+  // Recuperamos los tipos de infracciones
+  $tiposInfracciones = Constants::getTiposInfracciones();
 
   $listaResultados = new ListaInfracciones();
   foreach ($listaPartidas as $partida) {
@@ -251,7 +256,7 @@ function rjsim_simulaciones_main_form($form, &$form_state, GestorSimulaciones $g
 
   $labels = array();
   $data = array();
-  foreach ($idsInfracciones as $id => $nombre_infraccion) {
+  foreach ($tiposInfracciones as $id => $nombre_infraccion) {
     $labels[] = check_plain($nombre_infraccion);
     $data[] = $listaResultados->filterBy(new FilterByEquality(array($id), FilterByEquality::INFRACCION_ID))->count();
   }
@@ -398,12 +403,12 @@ function rjsim_partidas_simulacion_main_form($form, &$form_state, GestorSimulaci
   $listaPartidas = $gestorSimulaciones->getUsuarioActual()->retrieveAllPartidasByIdSimulacion($id_simulacion);
   $listaPartidas->sortBy('Fecha', 'DESC');
 
-  $idsInfracciones = $gestorSimulaciones->getArrayInfracciones();
+  $tiposInfracciones = Constants::getTiposInfracciones();
 
   $labelAxisX = array();
   $data = array();
   foreach (new LimitIterator($listaPartidas, 0, 10) as $partida) {
-    foreach ($idsInfracciones as $id => $nombre_infraccion) {
+    foreach ($tiposInfracciones as $id => $nombre_infraccion) {
       $data[$id][] = $partida->getListaInfracciones()
         ->filterBy(new FilterByEquality(array($id), FilterByEquality::INFRACCION_ID))
         ->count();
@@ -434,7 +439,7 @@ function rjsim_partidas_simulacion_main_form($form, &$form_state, GestorSimulaci
       )
   );
 
-  foreach ($idsInfracciones as $id => $nombre_infraccion) {
+  foreach ($tiposInfracciones as $id => $nombre_infraccion) {
     $data[$id] = array_reverse($data[$id]);
     $form['chart_infracciones_simulacion'][$id] =
       array(
