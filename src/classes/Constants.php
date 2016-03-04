@@ -9,7 +9,7 @@ class Constants {
   public static function getTiposSimulacion() {
     if (!isset(self::$tiposSimulacion)) {
       $provider = FactoryDataManager::createDataProvider();
-      self::$tiposSimulacion = $provider->loadAllTiposInfracciones();
+      self::$tiposSimulacion = $provider->loadAllTiposSimulaciones();
       return self::$tiposSimulacion;
     }
 
