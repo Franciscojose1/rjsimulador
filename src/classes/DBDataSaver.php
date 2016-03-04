@@ -27,7 +27,7 @@ class DBDataSaver implements DataSaver {
   public function savePartida(Partida $partida) {
     $idPartidaNuevo = db_insert('rjsim_partida')
       ->fields(array(
-        'uid' => $partida->getUid(),
+        'uid' => $partida->getUserUid(),
         'fecha' => $partida->getFecha(),
         'id_simulacion' => $partida->getIdSimulacion(),
         'consumo_medio' => $partida->getConsumoMedio(),

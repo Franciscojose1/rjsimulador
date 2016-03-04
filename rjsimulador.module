@@ -118,40 +118,23 @@ function rjsimulador_menu() {
 }
 
 function check_user_access_has_saved_partidas($permission, $uid = NULL) {
-  if (isset($uid)) {
-    $usuario = user_uid_optional_load($uid);
-  }
-  else {
-    $usuario = user_uid_optional_load();
-  }
-
   $provider = FactoryDataManager::createDataProvider();
-  $usuarios = $provider->loadAllSimulatorUsers();
+  $usuario = $provider->loadSimulatorUser($uid);
 
   // Solo pueden ver la pantalla genérica de simulación los usuarios que tienen partidas guardadas
-  $usuarioTienePartidas = FALSE;
-  foreach ($usuarios as $user) {
-    if ($user->getUid() == $usuario->uid) {
-      $usuarioTienePartidas = TRUE;
-      break;
-    }
-  }
+  $usuarioTienePartidas = $usuario->countPartidas() > 0;
 
   return user_access($permission) && $usuarioTienePartidas;
 }
 
 function check_user_access_to_partida($permission, $id_partida, $id_simulacion, $uid = NULL) {
   // Si estamos en modo admin también se comprueba que el uid y el id_partida coincidan.
-  if (isset($uid)) {
-    $usuario = user_uid_optional_load($uid);
-  }
-  else {
-    $usuario = user_uid_optional_load();
-  }
+  $provider = FactoryDataManager::createDataProvider();
+  $usuario = $provider->loadSimulatorUser($uid);
   $partida = Partida::loadById($id_partida);
   // Comprobamos si el usuario que accede tiene permisos, si la partida coincide con la simulación de la URL
   // y si la partida a la que accede la creó él usuario.
-  return user_access($permission) && $partida->getIdSimulacion() == $id_simulacion && $usuario->uid == $partida->getUid();
+  return user_access($permission) && $partida->getIdSimulacion() == $id_simulacion && $usuario->getUid() == $partida->getUserUid();
 }
 
 /**

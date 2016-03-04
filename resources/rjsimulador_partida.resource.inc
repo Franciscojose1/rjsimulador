@@ -56,7 +56,8 @@ function _rjsimulador_partida_add($partida) {
   $usuario = $provider->loadSimulatorUser();
 
   try {
-    if (!array_key_exists($partida["id_simulacion"], $provider->loadAllIdsSimulaciones())) {
+    $tiposSimulaciones = Constants::getTiposSimulacion();
+    if (!array_key_exists($partida["id_simulacion"], $tiposSimulaciones)) {
       throw new InvalidArgumentException("No existe una simulación con el ID " . $partida["id_simulacion"] . ".");
     }
 
@@ -65,9 +66,9 @@ function _rjsimulador_partida_add($partida) {
     $newPartida->setConsumoTotal($partida['consumo_total']);
     $newPartida->setTiempoTotal($partida['tiempo_total']);
 
-    $arrayIdsInfracciones = $provider->loadAllIdsInfracciones();
+    $tiposInfracciones = Constants::getTiposInfracciones();
     foreach ($partida['infracciones'] as $infraccion) {
-      if (!array_key_exists($infraccion["id_infraccion"], $arrayIdsInfracciones)) {
+      if (!array_key_exists($infraccion["id_infraccion"], $tiposInfracciones)) {
         throw new InvalidArgumentException("No existe una infracción con el ID " . $infraccion["id_infraccion"] . ".");
       }
 
