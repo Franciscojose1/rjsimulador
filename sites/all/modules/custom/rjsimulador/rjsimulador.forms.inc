@@ -21,6 +21,8 @@ function rjsim_simulaciones_upper_left_form($form, &$form_state, GestorSimulacio
     '#legend' => FALSE,
     '#title' => t('No. of Partidas played by Simulation'),
     '#title_font_weight' => 'bold',
+    '#prefix' => '<div class="rjsim-margin">',
+    '#suffix' => '</div>',
     'simulation' => array(
       '#type' => 'chart_data',
       '#title' => 'Number of played Partidas',
@@ -78,7 +80,7 @@ function rjsim_simulaciones_upper_left_form($form, &$form_state, GestorSimulacio
     '#chart_library' => 'highcharts',
     '#title' => t('Number of played Partidas by Simulation in the last ') . $ultimosXDias . t(' days'),
     '#title_font_weight' => 'bold',
-    '#prefix' => '<div id="div-chart-partidas-ultimos-dias">',
+    '#prefix' => '<div id="div-chart-partidas-ultimos-dias" class="rjsim-margin">',
     '#suffix' => '</div>',
     'xaxis' =>
       array(
@@ -184,6 +186,8 @@ function rjsim_simulaciones_upper_right_form($form, &$form_state, GestorSimulaci
     '#chart_library' => 'highcharts',
     '#title' => t('Average Infractions by Partida and Simulation type'),
     '#title_font_weight' => 'bold',
+    '#prefix' => '<div class="rjsim-margin">',
+    '#suffix' => '</div>',
     'infracciones_usuario' => array(
       '#type' => 'chart_data',
       '#title' => t('User ') . $gestorSimulaciones->getUsuarioActual()
@@ -267,6 +271,8 @@ function rjsim_simulaciones_main_form($form, &$form_state, GestorSimulaciones $g
     '#title_font_weight' => 'bold',
     '#chart_type' => 'pie',
     '#chart_library' => 'highcharts',
+    '#prefix' => '<div class="rjsim-margin">',
+    '#suffix' => '</div>',
     '#legend_position' => 'right',
     '#data_labels' => TRUE,
     '#tooltips' => TRUE,
@@ -319,6 +325,8 @@ function rjsim_partidas_simulacion_upper_left_form($form, &$form_state, GestorSi
     '#chart_library' => 'highcharts',
     '#title' => t('User average consumption vs Simulation average consumption'),
     '#title_font_weight' => 'bold',
+    '#prefix' => '<div class="rjsim-margin">',
+    '#suffix' => '</div>',
     'usuario' =>
       array(
         '#type' => 'chart_data',
@@ -374,6 +382,8 @@ function rjsim_partidas_simulacion_upper_right_form($form, &$form_state, GestorS
     '#chart_library' => 'highcharts',
     '#title' => t('User average total time vs Simulation average total time'),
     '#title_font_weight' => 'bold',
+    '#prefix' => '<div class="rjsim-margin">',
+    '#suffix' => '</div>',
     'usuario' =>
       array(
         '#type' => 'chart_data',
@@ -425,6 +435,8 @@ function rjsim_partidas_simulacion_main_form($form, &$form_state, GestorSimulaci
     '#chart_type' => 'column',
     '#stacking' => TRUE,
     '#chart_library' => 'highcharts',
+    '#prefix' => '<div class="rjsim-margin">',
+    '#suffix' => '</div>',
     '#title' => t('Number of infractions in last Partidas'),
     '#title_font_weight' => 'bold',
     'xaxis' =>
@@ -444,7 +456,7 @@ function rjsim_partidas_simulacion_main_form($form, &$form_state, GestorSimulaci
     $form['chart_infracciones_simulacion'][$id] =
       array(
         '#type' => 'chart_data',
-        '#title' => t($nombre_infraccion),
+        '#title' => t('@nombreInfraccion', array('@nombreInfraccion' => $nombre_infraccion)),
         '#data' => $data[$id],
       );
   }

@@ -4,7 +4,9 @@ class CalculateAverageData implements CalculatedDataInterface {
   const CONSUMO_MEDIO = 0;
   const TIEMPO_TOTAL = 1;
   const VELOCIDAD = 2;
-  const RPM = 3;
+  const DESVIACION_VELOCIDAD = 3;
+  const RPM = 4;
+  const DESVIACION_RPM = 5;
 
   private $field;
 
@@ -24,16 +26,22 @@ class CalculateAverageData implements CalculatedDataInterface {
     if ($lista instanceof ListaPartidas) {
       switch ($this->field) {
         case self::CONSUMO_MEDIO:
-          return $this->calculateConsumoMedioListaPartidas($lista);
+          return $this->calculateMediaDeConsumoMedioListaPartidas($lista);
           break;
         case self::TIEMPO_TOTAL:
-          return $this->calculateTiempoTotalMedioListaPartidas($lista);
+          return $this->calculateMediaDeTiempoTotalMedioListaPartidas($lista);
           break;
         case self::VELOCIDAD:
-          return $this->calculateVelocidadMediaListaPartidas($lista);
+          return $this->calculateMediaDeVelocidadesMediasListaPartidas($lista);
+          break;
+        case self::DESVIACION_VELOCIDAD:
+          return $this->calculateMediaDeDesviacionesTipicasVelocidadListaPartidas($lista);
           break;
         case self::RPM:
-          return $this->calculateRpmsMediasListaPartidas($lista);
+          return $this->calculateMediaDeRpmsMediasListaPartidas($lista);
+          break;
+        case self::DESVIACION_RPM:
+          return $this->calculateMediaDeDesviacionesTipicasRpmsListaPartidas($lista);
           break;
         default:
           throw new Exception("No se puede procesar el campo pasado para el tipo ListaPartidas.");
@@ -64,7 +72,7 @@ class CalculateAverageData implements CalculatedDataInterface {
    * @param ListaPartidas $lista
    * @return float Consumo medio entre todas las partidas de la lista pasada.
    */
-  private function calculateConsumoMedioListaPartidas(ListaPartidas $lista) {
+  private function calculateMediaDeConsumoMedioListaPartidas(ListaPartidas $lista) {
     $resultadoConsumoMedio = 0;
 
     if ($lista->count() > 0) {
@@ -84,7 +92,7 @@ class CalculateAverageData implements CalculatedDataInterface {
    * @param ListaPartidas $lista
    * @return float Tiempo total entre todas las partidas de la lista pasada.
    */
-  private function calculateTiempoTotalMedioListaPartidas(ListaPartidas $lista) {
+  private function calculateMediaDeTiempoTotalMedioListaPartidas(ListaPartidas $lista) {
     $resultadoTiempoTotalMedio = 0;
 
     if ($lista->count() > 0) {
@@ -105,7 +113,7 @@ class CalculateAverageData implements CalculatedDataInterface {
    * @param ListaPartidas $lista
    * @return float|int
    */
-  private function calculateVelocidadMediaListaPartidas(ListaPartidas $lista) {
+  private function calculateMediaDeVelocidadesMediasListaPartidas(ListaPartidas $lista) {
     $resultadoVelocidadMediaTotal = 0;
 
     if ($lista->count() > 0) {
@@ -121,12 +129,28 @@ class CalculateAverageData implements CalculatedDataInterface {
     return $resultadoVelocidadMediaTotal;
   }
 
+  private function calculateMediaDeDesviacionesTipicasVelocidadListaPartidas(ListaPartidas $lista) {
+    $resultadoMediaDTVelocidad = 0;
+
+    if ($lista->count() > 0) {
+      $sumaDesviacionesVelocidad = 0;
+
+      foreach ($lista as $partida) {
+        $sumaDesviacionesVelocidad += $partida->getDesviacionTipicaVelocidad();
+      }
+
+      $resultadoMediaDTVelocidad = $sumaDesviacionesVelocidad / $lista->count();
+    }
+
+    return $resultadoMediaDTVelocidad;
+  }
+
   /**
    * Devuelve las RPMs medias de una lista de partidas.
    * @param ListaPartidas $lista
    * @return float|int
    */
-  private function calculateRpmsMediasListaPartidas(ListaPartidas $lista) {
+  private function calculateMediaDeRpmsMediasListaPartidas(ListaPartidas $lista) {
     $resultadoRpmsMediasTotal = 0;
 
     if ($lista->count() > 0) {
@@ -140,6 +164,22 @@ class CalculateAverageData implements CalculatedDataInterface {
     }
 
     return $resultadoRpmsMediasTotal;
+  }
+
+  private function calculateMediaDeDesviacionesTipicasRpmsListaPartidas(ListaPartidas $lista) {
+    $resultadoMediaDesviacionTipicaRpms = 0;
+
+    if ($lista->count() > 0) {
+      $sumaDesviacionesRpms = 0;
+
+      foreach ($lista as $partida) {
+        $sumaDesviacionesRpms += $partida->getDesviacionTipicaRpm();
+      }
+
+      $resultadoMediaDesviacionTipicaRpms = $sumaDesviacionesRpms / $lista->count();
+    }
+
+    return $resultadoMediaDesviacionTipicaRpms;
   }
 
   /**

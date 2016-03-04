@@ -1,16 +1,16 @@
-<div class="simulaciones-partidas-content">
-  <?php if (isset($upper_left)): ?>
-    <div style="float:left;width:50%;">
+<div class="rjsim simulaciones-partidas-content">
+  <div class="upper-left floating-left">
+    <?php if (isset($upper_left)): ?>
       <?php print render($upper_left); ?>
-    </div>
-  <?php endif; ?>
-  <?php if (isset($upper_right)): ?>
-    <div style="float:left;width:50%;">
+    <?php endif; ?>
+  </div>
+  <div class="upper-right floating-right">
+    <?php if (isset($upper_right)): ?>
       <?php print render($upper_right); ?>
-    </div>
-  <?php endif; ?>
+    <?php endif; ?>
+  </div>
+  <div style="clear:both;"></div>
   <?php if (isset($main_content)): ?>
-    <div style="clear:both;"></div>
     <div style="float:left;width: 100%">
       <?php print render($main_content); ?>
     </div>

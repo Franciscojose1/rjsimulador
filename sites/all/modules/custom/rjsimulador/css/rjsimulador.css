@@ -1,0 +1,62 @@
+.simulaciones-partidas-content {
+    width: 98%;
+    margin:auto;
+}
+
+.upper-left {
+    width: 48%;
+}
+
+.upper-right {
+    width: 48%;
+}
+
+.floating-left {
+    float:left;
+}
+
+.floating-right {
+    float:right;
+}
+
+.rjsim-margin {
+    margin: 35px 0 0 0;
+}
+
+.rjsim-tabla-top {
+    margin-top: 40px;
+}
+
+.rjsim-tabla {
+    margin-bottom: 40px;
+}
+
+.rjsim-tabla th, .rjsim-tabla td {
+    text-align: center;
+}
+
+.rjsim-tabla td {
+    font-weight: bold;
+}
+
+.rjsim-tabla td > span:first-child {
+    font-size: 1.2em;
+}
+
+.rjsim-green {
+    padding: 2px 5px;
+    margin-left: 15px;
+    border: solid 1px white;
+    outline: solid 2px #0E9C13;
+    background-color: #0E9C57;
+    color:white;
+}
+
+.rjsim-red {
+    padding: 2px 5px;
+    margin-left: 15px;
+    border: solid 1px white;
+    outline: solid 2px #b00002;
+    background-color: #bb2101;
+    color: white;
+}
