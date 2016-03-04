@@ -42,7 +42,6 @@ class DBDataProvider implements DataProvider {
    * @inheritdoc
    */
   public function loadAllSimulatorUsers() {
-    error_log("Entra loadAllSimulatorUsers");
     $query = db_select('rjsim_partida', 'p');
     $query->fields('p', array('uid'))
           ->distinct();
@@ -63,7 +62,6 @@ class DBDataProvider implements DataProvider {
    * @inheritdoc
    */
   public function loadAllTiposSimulaciones() {
-    error_log("Entra");
     $query = db_select('rjsim_simulacion', 's');
     $query->fields('s', array('id_simulacion', 'nombre_simulacion'));
 
