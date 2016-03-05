@@ -9,20 +9,27 @@ function rjsim_simulaciones_upper_left_form($form, &$form_state, GestorSimulacio
   $arrayData = array();
   $xLabels = array();
 
-  foreach ($gestorSimulaciones->getUsuarioActual()->getListaSimulaciones() as $simulacion) {
+  foreach ($gestorSimulaciones->getUsuarioActual()
+             ->getListaSimulaciones() as $simulacion) {
     $arrayData[] = $simulacion->getListaPartidas()->count();
     $xLabels[] = $simulacion->getNombreSimulacion();
   }
 
-  $form['chart_partidas_simulacion'] = array(
+  $form['rjsim_fieldset_partidas_simulacion'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Total number of played Partidas'),
+    '#collapsible' => FALSE,
+    '#description' => t('Total number of played Partidas by Simulation.'),
+    '#attributes' => array('class' => array('rjsim-margin"'))
+  );
+
+  $form['rjsim_fieldset_partidas_simulacion']['chart_partidas_simulacion'] = array(
     '#type' => 'chart',
     '#chart_type' => 'column',
     '#chart_library' => 'highcharts',
     '#legend' => FALSE,
     '#title' => t('No. of Partidas played by Simulation'),
     '#title_font_weight' => 'bold',
-    '#prefix' => '<div class="rjsim-margin">',
-    '#suffix' => '</div>',
     'simulation' => array(
       '#type' => 'chart_data',
       '#title' => 'Number of played Partidas',
@@ -46,7 +53,10 @@ function rjsim_simulaciones_upper_left_form($form, &$form_state, GestorSimulacio
   $ultimosXDias = isset($form_state['values']['select_ultimos_dias']) ? $form_state['values']['select_ultimos_dias'] : 7;
   $fechaFin = new DateTime();
   $fechaInicio = new DateTime($fechaFin->format('Y-m-d'));
-  $fechas = array('fecha_inicio' => $fechaInicio, 'fecha_fin' => $fechaFin);
+  $fechas = array(
+    FilterByFecha::FECHA_INICIO => $fechaInicio,
+    FilterByFecha::FECHA_FIN => $fechaFin
+  );
 
   // Recuperamos tipos de simulaciones
   $tiposSimulacion = Constants::getTiposSimulacion();
@@ -74,13 +84,21 @@ function rjsim_simulaciones_upper_left_form($form, &$form_state, GestorSimulacio
 
   $xDayLabels = array_reverse($xDayLabels);
 
-  $form['chart_partidas_ultimos_dias'] = array(
+  $form['rjsim_fieldset_partidas_ultimos_dias'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Played Partidas by Simulation in the last days'),
+    '#collapsible' => FALSE,
+    '#description' => t('Graph with number of last played Partidas by Simulation.'),
+    '#attributes' => array('class' => array('rjsim-margin"'))
+  );
+
+  $form['rjsim_fieldset_partidas_ultimos_dias']['chart_partidas_ultimos_dias'] = array(
     '#type' => 'chart',
     '#chart_type' => 'line',
     '#chart_library' => 'highcharts',
-    '#title' => t('Number of played Partidas by Simulation in the last ') . $ultimosXDias . t(' days'),
+    '#title' => t('Number of played Partidas by Simulation in the last @numberDays days', array('@numberDays' => $ultimosXDias)),
     '#title_font_weight' => 'bold',
-    '#prefix' => '<div id="div-chart-partidas-ultimos-dias" class="rjsim-margin">',
+    '#prefix' => '<div id="div-chart-partidas-ultimos-dias">',
     '#suffix' => '</div>',
     'xaxis' =>
       array(
@@ -97,19 +115,20 @@ function rjsim_simulaciones_upper_left_form($form, &$form_state, GestorSimulacio
 
   foreach ($arrayPartidasJugadasPorDia as $idSimulacion => $arrayPartidasPorSimulacion) {
     $arrayPartidasPorSimulacion = array_reverse($arrayPartidasPorSimulacion);
-    $form['chart_partidas_ultimos_dias'][$idSimulacion] = array(
+    $form['rjsim_fieldset_partidas_ultimos_dias']['chart_partidas_ultimos_dias'][$idSimulacion] = array(
       '#type' => 'chart_data',
       '#title' => t('Simulation ') . $idSimulacion,
       '#data' => $arrayPartidasPorSimulacion,
     );
   }
 
-  $form['select_ultimos_dias'] = array(
+  $form['rjsim_fieldset_partidas_ultimos_dias']['select_ultimos_dias'] = array(
     '#type' => 'select',
     '#title' => t('Días'),
     '#options' => array(
       7 => t('Last 7 days'),
       15 => t('Last 15 days'),
+      30 => t('Last 30 days')
     ),
     '#default_value' => 7,
     '#description' => t('Select number of days to show in graph.'),
@@ -123,7 +142,7 @@ function rjsim_simulaciones_upper_left_form($form, &$form_state, GestorSimulacio
 }
 
 function ajax_partidas_ultimos_dias_callback($form, &$form_state) {
-  return $form['chart_partidas_ultimos_dias'];
+  return $form['rjsim_fieldset_partidas_ultimos_dias']['chart_partidas_ultimos_dias'];
 }
 
 function rjsim_simulaciones_upper_right_form($form, &$form_state, GestorSimulaciones $gestorSimulaciones) {
@@ -146,7 +165,8 @@ function rjsim_simulaciones_upper_right_form($form, &$form_state, GestorSimulaci
     // Datos del eje X. Nombres de simulaciones.
     $labelXAxis[] = $nombreSimulacion;
 
-    $listaPartidasUsuarioPorSimulacion = $gestorSimulaciones->getUsuarioActual()->retrieveAllPartidasByIdSimulacion($idSimulacion);
+    $listaPartidasUsuarioPorSimulacion = $gestorSimulaciones->getUsuarioActual()
+      ->retrieveAllPartidasByIdSimulacion($idSimulacion);
     $dataUsuarioTiempo[] = $listaPartidasUsuarioPorSimulacion->calculateData(new CalculateAverageData(CalculateAverageData::TIEMPO_TOTAL));
 
     // Datos de las infracciones del usuario actual.
@@ -180,14 +200,20 @@ function rjsim_simulaciones_upper_right_form($form, &$form_state, GestorSimulaci
     }
   }
 
-  $form['chart_infracciones_simulacion'] = array(
+  $form['rjsim_fieldset_infracciones_simulacion'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Average number infractions by Simulation'),
+    '#collapsible' => FALSE,
+    '#description' => t('Graph with average number of infractions committed by Simulation.'),
+    '#attributes' => array('class' => array('rjsim-margin"'))
+  );
+
+  $form['rjsim_fieldset_infracciones_simulacion']['chart_infracciones_simulacion'] = array(
     '#type' => 'chart',
     '#chart_type' => 'column',
     '#chart_library' => 'highcharts',
     '#title' => t('Average Infractions by Partida and Simulation type'),
     '#title_font_weight' => 'bold',
-    '#prefix' => '<div class="rjsim-margin">',
-    '#suffix' => '</div>',
     'infracciones_usuario' => array(
       '#type' => 'chart_data',
       '#title' => t('User ') . $gestorSimulaciones->getUsuarioActual()
@@ -211,8 +237,15 @@ function rjsim_simulaciones_upper_right_form($form, &$form_state, GestorSimulaci
       )
   );
 
+  $form['rjsim_fieldset_tiempo_partida'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Average number infractions by Simulation'),
+    '#collapsible' => FALSE,
+    '#description' => t('Graph with average number of infractions committed by Simulation.'),
+    '#attributes' => array('class' => array('rjsim-margin"'))
+  );
 
-  $form['chart_tiempo_por_partida_simulacion'] = array(
+  $form['rjsim_fieldset_tiempo_partida']['chart_tiempo_por_partida_simulacion'] = array(
     '#type' => 'chart',
     '#chart_type' => 'column',
     '#chart_library' => 'highcharts',
@@ -248,7 +281,8 @@ function rjsim_simulaciones_main_form($form, &$form_state, GestorSimulaciones $g
   /* **************************************************************** */
   /* *        Gráfico porcentaje de infracciones totales            * */
   /* **************************************************************** */
-  $listaPartidas = $gestorSimulaciones->getUsuarioActual()->retrieveAllPartidas();
+  $listaPartidas = $gestorSimulaciones->getUsuarioActual()
+    ->retrieveAllPartidas();
 
   // Recuperamos los tipos de infracciones
   $tiposInfracciones = Constants::getTiposInfracciones();
@@ -262,17 +296,24 @@ function rjsim_simulaciones_main_form($form, &$form_state, GestorSimulaciones $g
   $data = array();
   foreach ($tiposInfracciones as $id => $nombre_infraccion) {
     $labels[] = check_plain($nombre_infraccion);
-    $data[] = $listaResultados->filterBy(new FilterByEquality(array($id), FilterByEquality::INFRACCION_ID))->count();
+    $data[] = $listaResultados->filterBy(new FilterByEquality(array($id), FilterByEquality::INFRACCION_ID))
+      ->count();
   }
 
-  $form['chart_infracciones'] = array(
+  $form['rjsim_fieldset_infracciones'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Infractions percentage of all Simulations.'),
+    '#collapsible' => FALSE,
+    '#description' => t('Shows most committed infractions in the Simulator.'),
+    '#attributes' => array('class' => array('rjsim-margin"'))
+  );
+
+  $form['rjsim_fieldset_infracciones']['chart_infracciones'] = array(
     '#type' => 'chart',
     '#title' => t('Percentage of total committed infractions'),
     '#title_font_weight' => 'bold',
     '#chart_type' => 'pie',
     '#chart_library' => 'highcharts',
-    '#prefix' => '<div class="rjsim-margin">',
-    '#suffix' => '</div>',
     '#legend_position' => 'right',
     '#data_labels' => TRUE,
     '#tooltips' => TRUE,
@@ -297,7 +338,8 @@ function rjsim_partidas_simulacion_upper_left_form($form, &$form_state, GestorSi
   /* *        de todas las partidas anteriores de todos los usuarios                    * */
   /* ************************************************************************************ */
   // Lista de partidas del usuario actual para la simulacion
-  $listaPartidasUsuario = $gestorSimulaciones->getUsuarioActual()->retrieveAllPartidasByIdSimulacion($id_simulacion);
+  $listaPartidasUsuario = $gestorSimulaciones->getUsuarioActual()
+    ->retrieveAllPartidasByIdSimulacion($id_simulacion);
   $listaPartidasUsuario->sortBy('Fecha', 'ASC');
 
   // Lista de partidas de todos los usuarios para la simulación
@@ -310,23 +352,32 @@ function rjsim_partidas_simulacion_upper_left_form($form, &$form_state, GestorSi
 
   $ultimasPartidas = ($listaPartidasUsuario->count() - 10 > 0) ? $listaPartidasUsuario->count() - 10 : 0;
   foreach (new LimitIterator($listaPartidasUsuario, $ultimasPartidas) as $partida) {
-    $labelAxisX[] = 'Partida ' . $partida->getFechaAsObject()->format('d-m-Y');
+    $labelAxisX[] = t('Partida @fecha', array(
+      '@fecha' => $partida->getFechaAsObject()
+        ->format('d-m-Y H:i:s')
+    ));
 
     $dataUsuario[] = $partida->getConsumoMedio();
 
-    $listaResultado = $listaPartidasTodos->filterBy(new FilterByFecha(array('fecha_fin' => $partida->getFechaAsObject())));
+    $listaResultado = $listaPartidasTodos->filterBy(new FilterByFecha(array(FilterByFecha::FECHA_FIN => $partida->getFechaAsObject())));
 
     $dataTodos[] = $listaResultado->calculateData(new CalculateAverageData(CalculateAverageData::CONSUMO_MEDIO));
   }
 
-  $form['chart_consumo_medio'] = array(
+  $form['rjsim_fieldset_consumo_medio'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Average consumption comparation.'),
+    '#collapsible' => FALSE,
+    '#description' => t('Comparation graph between average consumption form User and Simulatiton.'),
+    '#attributes' => array('class' => array('rjsim-margin"'))
+  );
+
+  $form['rjsim_fieldset_consumo_medio']['chart_consumo_medio'] = array(
     '#type' => 'chart',
     '#chart_type' => 'line',
     '#chart_library' => 'highcharts',
     '#title' => t('User average consumption vs Simulation average consumption'),
     '#title_font_weight' => 'bold',
-    '#prefix' => '<div class="rjsim-margin">',
-    '#suffix' => '</div>',
     'usuario' =>
       array(
         '#type' => 'chart_data',
@@ -367,23 +418,32 @@ function rjsim_partidas_simulacion_upper_right_form($form, &$form_state, GestorS
 
   $ultimasPartidas = ($listaPartidasUsuario->count() - 10 > 0) ? $listaPartidasUsuario->count() - 10 : 0;
   foreach (new LimitIterator($listaPartidasUsuario, $ultimasPartidas) as $partida) {
-    $labelAxisX[] = 'Partida ' . $partida->getFechaAsObject()->format('d-m-Y');
+    $labelAxisX[] = t('Partida @fecha', array(
+      '@fecha' => $partida->getFechaAsObject()
+        ->format('d-m-Y H:i:s')
+    ));
 
     $dataUsuario[] = $partida->getTiempoTotal();
 
-    $listaResultado = $listaPartidasTodos->filterBy(new FilterByFecha(array('fecha_fin' => $partida->getFechaAsObject())));
+    $listaResultado = $listaPartidasTodos->filterBy(new FilterByFecha(array(FilterByFecha::FECHA_FIN => $partida->getFechaAsObject())));
 
     $dataTodos[] = $listaResultado->calculateData(new CalculateAverageData(CalculateAverageData::TIEMPO_TOTAL));
   }
 
-  $form['chart_tiempo_medio'] = array(
+  $form['rjsim_fieldset_tiempo_medio'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Average time by Partida comparation.'),
+    '#collapsible' => FALSE,
+    '#description' => t('Comparation graph between average total time by user and all users.'),
+    '#attributes' => array('class' => array('rjsim-margin"'))
+  );
+
+  $form['rjsim_fieldset_tiempo_medio']['chart_tiempo_medio'] = array(
     '#type' => 'chart',
     '#chart_type' => 'line',
     '#chart_library' => 'highcharts',
     '#title' => t('User average total time vs Simulation average total time'),
     '#title_font_weight' => 'bold',
-    '#prefix' => '<div class="rjsim-margin">',
-    '#suffix' => '</div>',
     'usuario' =>
       array(
         '#type' => 'chart_data',
@@ -410,8 +470,9 @@ function rjsim_partidas_simulacion_main_form($form, &$form_state, GestorSimulaci
   /* ************************************************************************************ */
   /* *               Gráfico infracciones en las últimas partidas                       * */
   /* ************************************************************************************ */
-  $listaPartidas = $gestorSimulaciones->getUsuarioActual()->retrieveAllPartidasByIdSimulacion($id_simulacion);
-  $listaPartidas->sortBy('Fecha', 'DESC');
+  $listaPartidas = $gestorSimulaciones->getUsuarioActual()
+    ->retrieveAllPartidasByIdSimulacion($id_simulacion);
+  $listaPartidas->sortBy('Fecha', 'ASC');
 
   $tiposInfracciones = Constants::getTiposInfracciones();
 
@@ -430,13 +491,19 @@ function rjsim_partidas_simulacion_main_form($form, &$form_state, GestorSimulaci
 
   $labelAxisX = array_reverse($labelAxisX);
 
-  $form['chart_infracciones_simulacion'] = array(
+  $form['rjsim_fieldset_infracciones_simulacion'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Number of Infractions charts.'),
+    '#collapsible' => FALSE,
+    '#description' => t('Number of Infractions in column stacked charts in last Partidas.'),
+    '#attributes' => array('class' => array('rjsim-margin"'))
+  );
+
+  $form['rjsim_fieldset_infracciones_simulacion']['chart_infracciones_simulacion'] = array(
     '#type' => 'chart',
     '#chart_type' => 'column',
     '#stacking' => TRUE,
     '#chart_library' => 'highcharts',
-    '#prefix' => '<div class="rjsim-margin">',
-    '#suffix' => '</div>',
     '#title' => t('Number of infractions in last Partidas'),
     '#title_font_weight' => 'bold',
     'xaxis' =>
@@ -453,7 +520,7 @@ function rjsim_partidas_simulacion_main_form($form, &$form_state, GestorSimulaci
 
   foreach ($tiposInfracciones as $id => $nombre_infraccion) {
     $data[$id] = array_reverse($data[$id]);
-    $form['chart_infracciones_simulacion'][$id] =
+    $form['rjsim_fieldset_infracciones_simulacion']['chart_infracciones_simulacion'][$id] =
       array(
         '#type' => 'chart_data',
         '#title' => t('@nombreInfraccion', array('@nombreInfraccion' => $nombre_infraccion)),

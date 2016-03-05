@@ -1,24 +1,34 @@
 <?php
 
 class FilterByFecha implements FilterInterface {
-  /* @var DateTime */
+  /* **************************************** */
+  /*               CONSTANTES                 */
+  /* **************************************** */
+  const FECHA_INICIO = 'fecha_inicio';
+  const FECHA_FIN = 'fecha_fin';
+
+  /* @var DateTime $fechaInicio */
   private $fechaInicio;
-  /* @var DateTime */
+  /* @var DateTime $fechaFin */
   private $fechaFin;
 
   public function __construct(array $arrayFechas) {
-    if (isset($arrayFechas['fecha_inicio'])) {
-      if ($arrayFechas['fecha_inicio'] instanceof DateTime) {
-        $this->fechaInicio = $arrayFechas['fecha_inicio'];
+    if (!isset($arrayFechas[self::FECHA_INICIO]) && !isset($arrayFechas[self::FECHA_FIN])) {
+      throw new InvalidArgumentException(t("Es necesario pasar en el array al menos la fecha de inicio o de fin."));
+    }
+
+    if (isset($arrayFechas[self::FECHA_INICIO])) {
+      if ($arrayFechas[self::FECHA_INICIO] instanceof DateTime) {
+        $this->fechaInicio = $arrayFechas[self::FECHA_INICIO];
       }
       else {
         throw new InvalidArgumentException("La fecha de inicio debe ser de tipo DateTime");
       }
     }
 
-    if (isset($arrayFechas['fecha_fin'])) {
-      if ($arrayFechas['fecha_fin'] instanceof DateTime) {
-        $this->fechaFin = $arrayFechas['fecha_fin'];
+    if (isset($arrayFechas[self::FECHA_FIN])) {
+      if ($arrayFechas[self::FECHA_FIN] instanceof DateTime) {
+        $this->fechaFin = $arrayFechas[self::FECHA_FIN];
       }
       else {
         throw new InvalidArgumentException("La fecha de fin debe ser de tipo DateTime");
@@ -57,19 +67,14 @@ class FilterByFecha implements FilterInterface {
     if (isset($cumpleFechaMayorQueInicio) && isset($cumpleFechaMenorQueFin)) {
       return $cumpleFechaMayorQueInicio && $cumpleFechaMenorQueFin;
     }
+    elseif (isset($cumpleFechaMayorQueInicio)) {
+      return $cumpleFechaMayorQueInicio;
+    }
+    elseif (isset($cumpleFechaMenorQueFin)) {
+      return $cumpleFechaMenorQueFin;
+    }
     else {
-      if (isset($cumpleFechaMayorQueInicio)) {
-        return $cumpleFechaMayorQueInicio;
-      }
-      else {
-        if (isset($cumpleFechaMenorQueFin)) {
-          return $cumpleFechaMenorQueFin;
-        }
-        else {
-          throw new Exception("No existe ninguna fecha con la que comparar el elemento.");
-        }
-      }
+      throw new Exception("No existe ninguna fecha con la que comparar el elemento.");
     }
   }
-
 } 
