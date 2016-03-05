@@ -1,0 +1,102 @@
+.rjsim .simulaciones-partidas-content, .rjsim .partida-content {
+    width: 98%;
+    margin: auto;
+}
+
+.rjsim .upper-left {
+    width: 49%;
+}
+
+.rjsim .upper-right {
+    width: 49%;
+}
+
+.floating-left {
+    float: left;
+}
+
+.floating-right {
+    float: right;
+}
+
+.rjsim .min-table {
+    overflow: auto;
+    max-height: 300px;
+}
+
+.rjsim .action-section {
+    margin-top: 50px;
+    text-align: center;
+}
+
+.rjsim-btn {
+    padding: 10px 18px;
+    text-decoration: none;
+    display:inline-block;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.rjsim-btn:hover {
+    text-decoration: none;
+}
+
+.rjsim-btn.action {
+    border: solid 3px white;
+    background-color: #0074BD;
+    color: #b5dae4;
+}
+
+.rjsim-btn.action:hover {
+    border: solid 3px #004c99;
+    background-color: #004c99;
+    color: white;
+}
+
+.rjsim-btn.submit {
+    border: solid 2px #0a6700;
+    background-color: #4D8F46;
+    color: #2B2B2B;
+}
+
+.rjsim-margin {
+    margin: 35px 0 0 0;
+}
+
+.rjsim-tabla-top {
+    margin-top: 40px;
+}
+
+.rjsim-tabla {
+    margin-bottom: 40px;
+}
+
+.rjsim-tabla th, .rjsim-tabla td {
+    text-align: center;
+}
+
+.rjsim-tabla td {
+    font-weight: bold;
+}
+
+.rjsim-tabla td > span:first-child {
+    font-size: 1.2em;
+}
+
+.rjsim-green {
+    padding: 2px 5px;
+    margin-left: 15px;
+    border: solid 1px white;
+    outline: solid 2px #0E9C13;
+    background-color: #0E9C57;
+    color: white;
+}
+
+.rjsim-red {
+    padding: 2px 5px;
+    margin-left: 15px;
+    border: solid 1px white;
+    outline: solid 2px #b00002;
+    background-color: #bb2101;
+    color: white;
+}
