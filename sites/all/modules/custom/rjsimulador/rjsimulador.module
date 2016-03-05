@@ -148,7 +148,10 @@ function rjsimulador_services_resources() {
   return $resources;
 }
 
-function rjsimulador_theme() {
+/**
+ * Implements hook_theme().
+ */
+function rjsimulador_theme($existing, $type, $theme, $path) {
   return array(
     'lista_simulaciones_partidas' => array(
       'template' => 'templates/lista-simulaciones-partidas',
