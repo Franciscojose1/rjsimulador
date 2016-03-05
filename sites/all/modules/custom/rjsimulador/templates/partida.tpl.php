@@ -1,25 +1,28 @@
-<div class="partida-content">
+<div class="rjsim partida-content">
   <?php if (isset($upper_content)): ?>
     <div>
       <?php print render($upper_content); ?>
     </div>
   <?php endif; ?>
-  <?php if (isset($upper_left)): ?>
-    <div
-      style="float:left;width:50%;margin:auto;max-height:300px;overflow: auto;">
+  <div class="upper-left floating-left min-table">
+    <?php if (isset($upper_left)): ?>
       <?php print render($upper_left); ?>
-    </div>
-  <?php endif; ?>
-  <?php if (isset($upper_right)): ?>
-    <div
-      style="float:left;width:50%;margin:auto;max-height: 300px; overflow: auto;">
+    <?php endif; ?>
+  </div>
+  <div class="upper-right floating-right min-table">
+    <?php if (isset($upper_right)): ?>
       <?php print render($upper_right); ?>
-    </div>
-  <?php endif; ?>
-  <?php if (isset($main_content)): ?>
-    <div style="clear:both;"></div>
-    <div style="float:left;width: 100%">
+    <?php endif; ?>
+  </div>
+  <div class="clearfix"></div>
+  <div class="main-content">
+    <?php if (isset($main_content)): ?>
       <?php print render($main_content); ?>
+    <?php endif; ?>
+  </div>
+  <?php if (isset($action_section)): ?>
+    <div class="action-section">
+      <?php print render($action_section); ?>
     </div>
   <?php endif; ?>
 </div>

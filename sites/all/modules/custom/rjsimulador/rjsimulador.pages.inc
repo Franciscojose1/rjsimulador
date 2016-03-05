@@ -62,6 +62,7 @@ function rjsimulador_simulaciones_page($uid = NULL, $adminMode = FALSE) {
       );
   }
 
+  // Render Array Final
   $renderArrayFinal = array(
     '#theme' => 'lista_simulaciones_partidas',
     '#upper_left' => $renderUpperLeftForm,
@@ -71,6 +72,23 @@ function rjsimulador_simulaciones_page($uid = NULL, $adminMode = FALSE) {
       'css' => array(drupal_get_path('module', 'rjsimulador') . '/css/rjsimulador.css')
     )
   );
+
+  if ($adminMode) {
+    $link = array(
+      '#type' => 'link',
+      '#title' => t('Go Back'),
+      '#href' => '',
+      '#options' => array(
+        'attributes' => array(
+          'title' => 'back',
+          'class' => array('rjsim-btn', 'action'),
+          'onClick' => array('history.back();'),
+        ),
+        'html' => TRUE
+      )
+    );
+    $renderArrayFinal['#action_section'] = $link;
+  }
 
   return $renderArrayFinal;
 }
@@ -159,11 +177,26 @@ function rjsimulador_partidas_simulacion_page($id_simulacion, $uid = NULL, $admi
       );
   }
 
+  $link = array(
+    '#type' => 'link',
+    '#title' => t('Go Back'),
+    '#href' => '',
+    '#options' => array(
+      'attributes' => array(
+        'title' => 'back',
+        'class' => array('rjsim-btn', 'action'),
+        'onClick' => array('history.back();'),
+      ),
+      'html' => TRUE
+    )
+  );
+
   $renderArrayFinal = array(
     '#theme' => 'lista_simulaciones_partidas',
     '#upper_left' => $renderUpperLeftForm,
     '#upper_right' => $renderUpperRightForm,
     '#main_content' => array($renderUpperMainForm, $renderArrayTablePartidas),
+    '#action_section' => $link,
     '#attached' => array(
       'css' => array(drupal_get_path('module', 'rjsimulador') . '/css/rjsimulador.css')
     )
@@ -222,7 +255,6 @@ function rjsimulador_partida_page($id_partida) {
           '#header' => $headers,
           '#rows' => $rows,
           '#empty' => t('There is no data for this Partida.'),
-          '#attributes' => array('class' => array('rjsim-tabla'))
         ),
       );
   }
@@ -258,7 +290,6 @@ function rjsimulador_partida_page($id_partida) {
           '#header' => $headers,
           '#rows' => $rows,
           '#empty' => t('There is no data for this Partida.'),
-          '#attributes' => array('class' => array('rjsim-tabla'))
         ),
       );
   }
@@ -266,16 +297,18 @@ function rjsimulador_partida_page($id_partida) {
   $link = array(
     '#type' => 'link',
     '#title' => t('Go Back'),
-    '#href' => 'simulaciones/' . $miPartida->getIdSimulacion() . '/partidas',
+    '#href' => '',
     '#options' => array(
       'attributes' => array(
         'title' => 'back',
-        'style' => 'padding:8px;appearance:button;-webkit-appearance:button;text-decoration:none;'
+        'class' => array('rjsim-btn', 'action'),
+        'onClick' => array('history.back();'),
       ),
       'html' => TRUE
     )
   );
 
+  // Final Render array
   $renderArrayFinal = array(
     '#theme' => 'partida',
     '#upper_content' => array(
@@ -284,7 +317,7 @@ function rjsimulador_partida_page($id_partida) {
     ),
     '#upper_left' => $renderArrayTableDatos,
     '#upper_right' => $renderArrayTableInfracciones,
-    '#main_content' => $link,
+    '#action_section' => $link,
     '#attached' => array(
       'js' => array(drupal_get_path('module', 'rjsimulador') . '/js/rjsimulador.js'),
       'css' => array(drupal_get_path('module', 'rjsimulador') . '/css/rjsimulador.css')
