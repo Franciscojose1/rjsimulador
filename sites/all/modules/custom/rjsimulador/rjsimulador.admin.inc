@@ -9,7 +9,7 @@ function rjsimulador_simulaciones_usuarios_admin_page() {
   try {
     $gestorSimulaciones = new GestorSimulaciones();
   } catch (LogicException $le) {
-    $renderArray = array('#markup' => '<p>' . $le->getMessage() . '</p>');
+    $renderArray = array('#markup' => '<h3>' . $le->getMessage() . '</h3>');
     return $renderArray;
   }
 
