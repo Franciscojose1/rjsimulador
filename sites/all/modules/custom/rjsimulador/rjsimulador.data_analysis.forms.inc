@@ -52,6 +52,10 @@ function rjsimulador_admin_form_data_analysis($form, &$form_state) {
 
   $form['data_user_analysis'] += generate_form_data_user_analysis($form_state, $gestorSimulaciones);
 
+  $form['#attached'] = array(
+    'css' => array(drupal_get_path('module', 'rjsimulador') . '/css/rjsimulador-admin.css')
+  );
+
   return $form;
 }
 
@@ -317,7 +321,7 @@ function generate_form_data_group_analysis(&$form_state, GestorSimulaciones $ges
 
   // En primer lugar sacamos los grupos de edad existentes por defecto
   if (count(Grupos::getGruposEdad()) > 0) {
-    foreach(Grupos::getGruposEdad() as $indice => $arrayDatos){
+    foreach (Grupos::getGruposEdad() as $indice => $arrayDatos) {
 
       if (!isset($form_state['values']['data_group_groups'][$indice]['data_group_check_age'])) {
         $form_state['values']['data_group_groups'][$indice]['data_group_check_age'] = 1;
