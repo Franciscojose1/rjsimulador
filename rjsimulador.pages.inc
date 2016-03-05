@@ -181,7 +181,9 @@ function rjsimulador_partida_page($id_partida) {
   $miPartida = Partida::loadById($id_partida);
   // Cargamos el usuario de la partida
   $usuario = $provider->loadSimulatorUser($miPartida->getUserUid());
-  $listaPartidasUsuarioSimulacion = $usuario->retrieveAllPartidasByIdSimulacion($miPartida->getIdSimulacion());
+  // Recuperamos las partidas anteriores a esta del usuario para comparar
+  $listaPartidasUsuarioSimulacion = $usuario->retrieveAllPartidasByIdSimulacion($miPartida->getIdSimulacion())
+    ->filterBy(new FilterByFecha(array(FilterByFecha::FECHA_FIN => $miPartida->getFechaAsObject())));
 
   // Creamos la tabla con los datos de resumen de la partida
   $renderArrayTableDatosEstadisticos = generarTablaResumenDatosPartida($miPartida, $listaPartidasUsuarioSimulacion);
@@ -413,10 +415,10 @@ function generarTablaRpmMarchas(Partida $partida) {
 function renderElementDataDifference($actualData, $averageData) {
   $diferencia = round($actualData - $averageData, 2);
 
-  $element = '<span>' . round($actualData, 2) .'</span>';
-  if ($diferencia != 0) {
+  $element = '<span>' . round($actualData, 2) . '</span>';
+  if ($diferencia != 0 && $averageData != 0) {
     $element .= '<span ' . drupal_attributes(array('class' => array(getElementDiffClass($actualData, $averageData)))) . '>';
-    $element .= ($diferencia >= 0) ? ' + ' . abs($diferencia) :  ' - ' . abs($diferencia);
+    $element .= ($diferencia >= 0) ? ' + ' . abs($diferencia) : ' - ' . abs($diferencia);
     $element .= '</span>';
   }
 

@@ -11,10 +11,16 @@ class FilterByFecha implements FilterInterface {
   private $fechaInicio;
   /* @var DateTime $fechaFin */
   private $fechaFin;
+  /* @var bool $includeFechaFin */
+  private $includeFechaFin;
 
-  public function __construct(array $arrayFechas) {
+  public function __construct(array $arrayFechas, $includeFechaFin = false) {
     if (!isset($arrayFechas[self::FECHA_INICIO]) && !isset($arrayFechas[self::FECHA_FIN])) {
-      throw new InvalidArgumentException(t("Es necesario pasar en el array al menos la fecha de inicio o de fin."));
+      throw new InvalidArgumentException(t("It is necessary to pass in array FECHA_INICIO or FECHA_FIN at least."));
+    }
+
+    if (!is_bool($includeFechaFin)) {
+      throw new InvalidArgumentException(t("Variable includeFechaFin must be a boolean."));
     }
 
     if (isset($arrayFechas[self::FECHA_INICIO])) {
@@ -34,6 +40,8 @@ class FilterByFecha implements FilterInterface {
         throw new InvalidArgumentException("La fecha de fin debe ser de tipo DateTime");
       }
     }
+
+    $this->includeFechaFin = $includeFechaFin;
   }
 
   /**
@@ -61,7 +69,11 @@ class FilterByFecha implements FilterInterface {
     }
 
     if (isset($this->fechaFin)) {
-      $cumpleFechaMenorQueFin = ($item->getFecha() < $this->fechaFin->getTimestamp());
+      if ($this->includeFechaFin) {
+        $cumpleFechaMenorQueFin = ($item->getFecha() <= $this->fechaFin->getTimestamp());
+      } else {
+        $cumpleFechaMenorQueFin = ($item->getFecha() < $this->fechaFin->getTimestamp());
+      }
     }
 
     if (isset($cumpleFechaMayorQueInicio) && isset($cumpleFechaMenorQueFin)) {
