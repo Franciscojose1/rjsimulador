@@ -1,0 +1,54 @@
+.rjsimulador-analysis {
+    width:1140px;
+}
+
+.rjsimulador-analysis .form-actions .form-item {
+    width:32%;
+    float:left;
+}
+
+.rjsimulador-analysis .group-analysis {
+    width:28%;
+    margin-left: 1.5%;
+    margin-right: 1.5%;
+    float:left;
+}
+
+.rjsimulador-analysis .form-submit {
+    width: 20%;
+    font-size:1.15em;
+    padding:10px 12px;
+}
+
+/* Green Button */
+.rjsimulador-analysis input.filter-btn {
+    border: none;
+    padding: 10px 12px;
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.25em;
+    background: #4d8f46;
+}
+
+.rjsimulador-analysis input.filter-btn:hover {
+    background: #0a6700;
+    border-radius: 0;
+    border: none;
+    color: #fff;
+}
+
+.rjsimulador-analysis input.filter-btn:active {
+    border-radius: 0;
+    border: none;
+    color: #fff;
+}
+
+.rjsimulador-analysis input.filter-btn:focus {
+    outline: 3px solid #D0E8CE;
+}
+
+.rjsimulador-analysis .group-analysis > div.fieldset-wrapper > fieldset.form-wrapper.entradas > div.fieldset-wrapper .form-item {
+    padding-top: 5px;
+    width:auto;
+    float:left;
+}

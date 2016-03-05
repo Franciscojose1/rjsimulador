@@ -48,9 +48,12 @@ function rjsimulador_admin_form_infractions_analysis($form, &$form_state) {
 
   $form['infractions_user_analysis'] += generate_form_infractions_user_analysis($form_state, $gestorSimulaciones);
 
+  $form['#attached'] = array(
+    'css' => array(drupal_get_path('module', 'rjsimulador') . '/css/rjsimulador-admin.css')
+  );
+
   return $form;
 }
-
 
 
 /* ******************************************************************************* */
@@ -283,7 +286,7 @@ function generate_form_infractions_group_analysis(&$form_state, GestorSimulacion
 
   // En primer lugar sacamos los grupos de edad existentes por defecto
   if (count(Grupos::getGruposEdad()) > 0) {
-    foreach(Grupos::getGruposEdad() as $indice => $arrayDatos){
+    foreach (Grupos::getGruposEdad() as $indice => $arrayDatos) {
 
       if (!isset($form_state['values']['infractions_group_groups'][$indice]['infractions_group_check_age'])) {
         $form_state['values']['infractions_group_groups'][$indice]['infractions_group_check_age'] = 1;
@@ -500,7 +503,7 @@ function generate_form_infractions_user_analysis(&$form_state, GestorSimulacione
   $form['infractions_user_container']['infractions_user_chart']['infractions_user_same_age_group'] =
     array(
       '#type' => 'chart_data',
-      '#title' => t('Group of users which @user_group', array('@user_group' => $usuarioActual->getGrupoEdad(true))),
+      '#title' => t('Group of users which @user_group', array('@user_group' => $usuarioActual->getGrupoEdad(TRUE))),
       '#data' => array($dataRestoUsuarioMismoGrupoEdad),
     );
 
@@ -512,7 +515,7 @@ function generate_form_infractions_user_analysis(&$form_state, GestorSimulacione
   $form['infractions_user_container']['infractions_user_chart']['infractions_user_same_driving_experience_group'] =
     array(
       '#type' => 'chart_data',
-      '#title' => t('Group of users which @user_group', array('@user_group' => $usuarioActual->getGrupoExperiencia(true))),
+      '#title' => t('Group of users which @user_group', array('@user_group' => $usuarioActual->getGrupoExperiencia(TRUE))),
       '#data' => array($dataRestoUsuarioMismoGrupoExperiencia),
     );
 
