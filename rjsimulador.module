@@ -53,7 +53,7 @@ function rjsimulador_menu() {
   );
   $items['admin/simulaciones_analysis'] = array(
     'title' => 'Analysis of Simulations',
-    'file' => 'rjsimulador.admin.inc',
+    'file' => 'rjsimulador.user_analysis.inc',
     'page callback' => 'rjsimulador_simulaciones_usuarios_admin_page',
     'access arguments' => array('comparar info partidas'),
     'menu_name' => 'management',
@@ -61,7 +61,7 @@ function rjsimulador_menu() {
   );
   $items['admin/simulaciones_analysis/simulaciones_users'] = array(
     'title' => 'Analysis of Simulations by user',
-    'file' => 'rjsimulador.admin.inc',
+    'file' => 'rjsimulador.user_analysis.inc',
     'page callback' => 'rjsimulador_simulaciones_usuarios_admin_page',
     'access arguments' => array('comparar info partidas'),
     'type' => MENU_DEFAULT_LOCAL_TASK,
@@ -111,6 +111,15 @@ function rjsimulador_menu() {
     'page arguments' => array(6, 2),
     'access callback' => 'check_user_access_to_partida',
     'access arguments' => array('comparar info partidas', 6, 4, 2),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['admin/config/media/rjsimulador'] = array(
+    'title' => 'Simulator module',
+    'description' => 'Configure groups of analysis for users in Simulator',
+    'file' => 'rjsimulador.admin.inc',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('rjsimulador_configuration_admin_form'),
+    'access arguments' => array('comparar info partidas'),
     'type' => MENU_NORMAL_ITEM,
   );
 
