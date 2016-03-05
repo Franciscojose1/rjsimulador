@@ -371,7 +371,8 @@ function generate_form_data_group_analysis(&$form_state, GestorSimulaciones $ges
     $listaUsuarios = $gestorSimulaciones->getListaTodosUsuarios();
     // Solo filtramos si no hay errores
     $titulos = array();
-    if (empty(form_get_errors())) {
+    $formErrors = form_get_errors();
+    if (empty($formErrors)) {
       if (isset($form_state['values']['data_group_groups'][$index])) {
         if ($form_state['values']['data_group_groups'][$index]['data_group_check_age'] == 1) {
           $from = $form_state['values']['data_group_groups'][$index]['data_group_age']['from'];
