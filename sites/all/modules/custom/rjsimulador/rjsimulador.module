@@ -78,7 +78,7 @@ function rjsimulador_menu() {
   );
   $items['admin/simulaciones_analysis/infractions_analysis'] = array(
     'title' => 'Infractions analysis',
-    'file' => 'infractions_analysis.forms.admin.inc',
+    'file' => 'infractions_analysis.forms.inc',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('rjsimulador_admin_form_infractions_analysis'),
     'access arguments' => array('comparar info partidas'),
