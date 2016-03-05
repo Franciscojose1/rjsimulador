@@ -9,8 +9,8 @@ function rjsimulador_admin_form_data_analysis($form, &$form_state) {
   try {
     $gestorSimulaciones = new GestorSimulaciones();
   } catch (LogicException $le) {
-    $renderArray = array('#markup' => '<h3>' . $le->getMessage() . '</h3>');
-    return $renderArray;
+    $form['user_without_partidas_error'] = array('#markup' => '<h3>' . $le->getMessage() . '</h3>');
+    return $form;
   }
 
   // Creamos el formulario como tabs verticales
