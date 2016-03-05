@@ -268,8 +268,8 @@ function generate_form_data_group_analysis(&$form_state, GestorSimulaciones $ges
   );
 
   // Número de grupos
-  $numeroMinimoGrupos = 1;
-  $numeroMaximoGrupos = 6;
+  $numeroMinimoGrupos = Grupos::getDataMinGroups();
+  $numeroMaximoGrupos = Grupos::getDataMaxGroups();
   $numeroInicialGrupos = count(Grupos::getGruposEdad()) > $numeroMinimoGrupos ? count(Grupos::getGruposEdad()) : $numeroMinimoGrupos;
   $form_state['data_group_number_groups'] = isset($form_state['data_group_number_groups']) ?
     $form_state['data_group_number_groups'] : $numeroInicialGrupos;
@@ -662,8 +662,8 @@ function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gest
   );
 
   // Número de grupos
-  $numeroMinimoGrupos = 0;
-  $numeroMaximoGrupos = 2;
+  $numeroMinimoGrupos = Grupos::getInfractionsMinGroups();
+  $numeroMaximoGrupos = Grupos::getInfractionsMaxGroups();
   $form_state['data_user_number_groups'] = isset($form_state['data_user_number_groups']) ?
     $form_state['data_user_number_groups'] : $numeroMinimoGrupos;
 
