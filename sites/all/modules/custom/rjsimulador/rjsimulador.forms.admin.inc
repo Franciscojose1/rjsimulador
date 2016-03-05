@@ -314,8 +314,9 @@ function generate_form_data_group_analysis(&$form_state, GestorSimulaciones $ges
   // Número de grupos
   $numeroMinimoGrupos = 1;
   $numeroMaximoGrupos = 6;
+  $numeroInicialGrupos = count(Grupos::getGruposEdad()) > $numeroMinimoGrupos ? count(Grupos::getGruposEdad()) : $numeroMinimoGrupos;
   $form_state['data_group_number_groups'] = isset($form_state['data_group_number_groups']) ?
-    $form_state['data_group_number_groups'] : $numeroMinimoGrupos;
+    $form_state['data_group_number_groups'] : $numeroInicialGrupos;
 
   if (isset($form_state['clicked_button'])) {
     if ($form_state['clicked_button']['#name'] == 'data_group_add_group_button') {
@@ -362,10 +363,40 @@ function generate_form_data_group_analysis(&$form_state, GestorSimulaciones $ges
     '#prefix' => '<div class="clearfix"></div>',
   );
 
+  // En primer lugar sacamos los grupos de edad existentes por defecto
+  if (count(Grupos::getGruposEdad()) > 0) {
+    foreach(Grupos::getGruposEdad() as $indice => $arrayDatos){
+
+      if (!isset($form_state['values']['data_group_groups'][$indice]['data_group_check_age'])) {
+        $form_state['values']['data_group_groups'][$indice]['data_group_check_age'] = 1;
+
+        if (!isset($form_state['values']['data_group_groups'][$indice]['data_group_age']['from'])) {
+          $form_state['values']['data_group_groups'][$indice]['data_group_age']['from'] = $arrayDatos[FilterByInterval::DESDE];
+        }
+
+        if (!isset($form_state['values']['data_group_groups'][$indice]['data_group_age']['to'])) {
+          $form_state['values']['data_group_groups'][$indice]['data_group_age']['to'] = $arrayDatos[FilterByInterval::HASTA];
+        }
+      }
+
+      if (!isset($form_state['values']['data_group_groups'][$indice]['data_group_check_driving_experience'])) {
+        $form_state['values']['data_group_groups'][$indice]['data_group_check_driving_experience'] = 0;
+      }
+
+      if (!isset($form_state['values']['data_group_groups'][$indice]['data_group_check_average_annual_mileage'])) {
+        $form_state['values']['data_group_groups'][$indice]['data_group_check_average_annual_mileage'] = 0;
+      }
+
+      if (!isset($form_state['values']['data_group_groups'][$indice]['data_group_check_usual_videogame_player'])) {
+        $form_state['values']['data_group_groups'][$indice]['data_group_check_usual_videogame_player'] = 0;
+      }
+    }
+  }
+
   // Sacamos todos los grupos actuales
   for ($index = 1; $index <= $form_state['data_group_number_groups']; $index++) {
     // Generamos el form de cada grupo
-    $form['data_group_container']['data_group_groups'][$index] = generate_group_array('data_group', $index);
+    $form['data_group_container']['data_group_groups'][$index] = generate_group_array('data_group', $index, $form_state);
 
     // Listado de todos los usuarios
     $listaUsuarios = $gestorSimulaciones->getListaTodosUsuarios();
@@ -727,7 +758,7 @@ function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gest
   );
 
   for ($index = 1; $index <= $form_state['data_user_number_groups']; $index++) {
-    $form['data_user_container']['data_user_groups'][$index] = generate_group_array('data_user', $index);
+    $form['data_user_container']['data_user_groups'][$index] = generate_group_array('data_user', $index, $form_state);
     // Lista de todos los usuarios salvo el actual
     $listaUsuarios = $gestorSimulaciones->getListaTodosUsuariosExceptoActual();
     // Solo filtramos si no hay errores
@@ -999,8 +1030,9 @@ function generate_form_infractions_group_analysis(&$form_state, GestorSimulacion
   // Número de grupos
   $numeroMinimoGrupos = 1;
   $numeroMaximoGrupos = 6;
+  $numeroInicialGrupos = count(Grupos::getGruposEdad()) > $numeroMinimoGrupos ? count(Grupos::getGruposEdad()) : $numeroMinimoGrupos;
   $form_state['infractions_group_number_groups'] = isset($form_state['infractions_group_number_groups']) ?
-    $form_state['infractions_group_number_groups'] : $numeroMinimoGrupos;
+    $form_state['infractions_group_number_groups'] : $numeroInicialGrupos;
 
   if (isset($form_state['clicked_button'])) {
     if ($form_state['clicked_button']['#name'] == 'infractions_group_add_group_button') {
@@ -1046,10 +1078,40 @@ function generate_form_infractions_group_analysis(&$form_state, GestorSimulacion
     '#weight' => '50'
   );
 
+  // En primer lugar sacamos los grupos de edad existentes por defecto
+  if (count(Grupos::getGruposEdad()) > 0) {
+    foreach(Grupos::getGruposEdad() as $indice => $arrayDatos){
+
+      if (!isset($form_state['values']['infractions_group_groups'][$indice]['infractions_group_check_age'])) {
+        $form_state['values']['infractions_group_groups'][$indice]['infractions_group_check_age'] = 1;
+
+        if (!isset($form_state['values']['infractions_group_groups'][$indice]['infractions_group_age']['from'])) {
+          $form_state['values']['infractions_group_groups'][$indice]['infractions_group_age']['from'] = $arrayDatos[FilterByInterval::DESDE];
+        }
+
+        if (!isset($form_state['values']['infractions_group_groups'][$indice]['infractions_group_age']['to'])) {
+          $form_state['values']['infractions_group_groups'][$indice]['infractions_group_age']['to'] = $arrayDatos[FilterByInterval::HASTA];
+        }
+      }
+
+      if (!isset($form_state['values']['infractions_group_groups'][$indice]['infractions_group_check_driving_experience'])) {
+        $form_state['values']['infractions_group_groups'][$indice]['infractions_group_check_driving_experience'] = 0;
+      }
+
+      if (!isset($form_state['values']['infractions_group_groups'][$indice]['infractions_group_check_average_annual_mileage'])) {
+        $form_state['values']['infractions_group_groups'][$indice]['infractions_group_check_average_annual_mileage'] = 0;
+      }
+
+      if (!isset($form_state['values']['infractions_group_groups'][$indice]['infractions_group_check_usual_videogame_player'])) {
+        $form_state['values']['infractions_group_groups'][$indice]['infractions_group_check_usual_videogame_player'] = 0;
+      }
+    }
+  }
+
   // Sacamos todos los grupos actuales
   for ($index = 1; $index <= $form_state['infractions_group_number_groups']; $index++) {
     // Generamos el form de cada grupo
-    $form['infractions_group_container']['infractions_group_groups'][$index] = generate_group_array('infractions_group', $index);
+    $form['infractions_group_container']['infractions_group_groups'][$index] = generate_group_array('infractions_group', $index, $form_state);
 
     // Listado de todos los usuarios
     $listaUsuarios = $gestorSimulaciones->getListaTodosUsuarios();
@@ -1372,7 +1434,7 @@ function generate_form_infractions_user_analysis(&$form_state, GestorSimulacione
   );
 
   for ($index = 1; $index <= $form_state['infractions_user_number_groups']; $index++) {
-    $form['infractions_user_container']['infractions_user_groups'][$index] = generate_group_array('infractions_user', $index);
+    $form['infractions_user_container']['infractions_user_groups'][$index] = generate_group_array('infractions_user', $index, $form_state);
     // Lista de todos los usuarios excepto el actual
     $listaUsuarios = $gestorSimulaciones->getListaTodosUsuariosExceptoActual();
     // Regeneramos los grupos si no hay errores
@@ -1466,7 +1528,7 @@ function ajax_generate_form_infractions_user_analysis_callback($form, &$form_sta
 /* ******************************************************************************* */
 /* *                       General functions                                     * */
 /* ******************************************************************************* */
-function generate_group_array($prefix, $index) {
+function generate_group_array($prefix, $index, &$form_state) {
   // This is the field fieldset.
   $form = array(
     '#type' => 'fieldset',
@@ -1483,6 +1545,8 @@ function generate_group_array($prefix, $index) {
   $form[$prefix . '_check_age'] = array(
     '#type' => 'checkbox',
     '#title' => t('Filter by age.'),
+    '#default_value' => isset($form_state['values'][$prefix . '_groups'][$index][$prefix . '_check_age']) ?
+      $form_state['values'][$prefix . '_groups'][$index][$prefix . '_check_age'] : 0,
   );
 
   $form[$prefix . '_age'] = array(
@@ -1499,6 +1563,8 @@ function generate_group_array($prefix, $index) {
   $form[$prefix . '_age']['from'] = array(
     '#type' => 'textfield',
     '#field_prefix' => t('From '),
+    '#default_value' => isset($form_state['values'][$prefix . '_groups'][$index][$prefix . '_age']['from']) ?
+      $form_state['values'][$prefix . '_groups'][$index][$prefix . '_age']['from'] : "",
     '#size' => 3,
     '#maxlength' => 3,
     '#required' => FALSE,
@@ -1513,6 +1579,8 @@ function generate_group_array($prefix, $index) {
   $form[$prefix . '_age']['to'] = array(
     '#type' => 'textfield',
     '#field_prefix' => t(' to '),
+    '#default_value' => isset($form_state['values'][$prefix . '_groups'][$index][$prefix . '_age']['to']) ?
+      $form_state['values'][$prefix . '_groups'][$index][$prefix . '_age']['to'] : "",
     '#field_suffix' => t(' years'),
     '#size' => 3,
     '#maxlength' => 3,

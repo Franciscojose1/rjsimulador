@@ -1,24 +1,34 @@
 <?php
 
 class FilterByInterval implements FilterInterface {
+  /* ********************************* */
+  /* *          CONSTANTES           * */
+  /* ********************************* */
+  const DESDE = 'desde';
+  const HASTA = 'hasta';
+
+  /* ********************************************* */
+  /* *       CONSTANTES DE SELECCION             * */
+  /* ********************************************* */
   const AGE = 0;
   const DRIVING_EXPERIENCE = 1;
   const AVERAGE_ANNUAL_MILEAGE = 2;
 
+  /* @var $field */
   private $field;
-
+  /* @var int|float $desde */
   private $desde;
-
+  /* @var int|float string $hasta */
   private $hasta;
 
   public function __construct(array $paramInterval, $paramField) {
-    if (!isset($paramInterval['desde']) || !isset($paramInterval['hasta']) || !isset($paramField)) {
+    if (!isset($paramInterval[self::DESDE]) || !isset($paramInterval[self::HASTA]) || !isset($paramField)) {
       throw new InvalidArgumentException("Son necesarios los parámetros desde, hasta y el tipo de intervalo.");
     }
 
     $this->field = $paramField;
-    $this->desde = $paramInterval['desde'];
-    $this->hasta = $paramInterval['hasta'];
+    $this->desde = $paramInterval[self::DESDE];
+    $this->hasta = $paramInterval[self::HASTA];
   }
 
   public function filter($item) {
