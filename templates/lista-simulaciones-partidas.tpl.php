@@ -9,10 +9,15 @@
       <?php print render($upper_right); ?>
     <?php endif; ?>
   </div>
-  <div style="clear:both;"></div>
+  <div class="clearfix"></div>
   <?php if (isset($main_content)): ?>
-    <div style="float:left;width: 100%">
+    <div class="main-content">
       <?php print render($main_content); ?>
+    </div>
+  <?php endif; ?>
+  <?php if (isset($action_section)): ?>
+    <div class="action-section">
+      <?php print render($action_section); ?>
     </div>
   <?php endif; ?>
 </div>

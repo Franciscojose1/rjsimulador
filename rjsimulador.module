@@ -69,7 +69,7 @@ function rjsimulador_menu() {
   );
   $items['admin/simulaciones_analysis/data_analysis'] = array(
     'title' => 'Data analysis',
-    'file' => 'rjsimulador.forms.admin.inc',
+    'file' => 'data_analysis.forms.inc',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('rjsimulador_admin_form_data_analysis'),
     'access arguments' => array('comparar info partidas'),
@@ -78,7 +78,7 @@ function rjsimulador_menu() {
   );
   $items['admin/simulaciones_analysis/infractions_analysis'] = array(
     'title' => 'Infractions analysis',
-    'file' => 'rjsimulador.forms.admin.inc',
+    'file' => 'infractions_analysis.forms.admin.inc',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('rjsimulador_admin_form_infractions_analysis'),
     'access arguments' => array('comparar info partidas'),
@@ -155,7 +155,8 @@ function rjsimulador_theme() {
       'variables' => array(
         'upper_left' => NULL,
         'upper_right' => NULL,
-        'main_content' => NULL
+        'main_content' => NULL,
+        'action_section' => NULL
       )
     ),
     'partida' => array(
@@ -164,7 +165,8 @@ function rjsimulador_theme() {
         'upper_content' => NULL,
         'upper_left' => NULL,
         'upper_right' => NULL,
-        'main_content' => NULL
+        'main_content' => NULL,
+        'action_section' => NULL
       )
     )
   );

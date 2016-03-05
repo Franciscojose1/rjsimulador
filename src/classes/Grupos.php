@@ -3,34 +3,34 @@
 class Grupos {
   /* @var array $GruposEdad Array con los grupos de edad considerados actualmente. */
   private static $GruposEdad = array(
-    1 => array("desde" => 0, "hasta" => 30),
-    2 => array("desde" => 30, "hasta" => 60),
-    3 => array("desde" => 60, "hasta" => 120)
+    1 => array(FilterByInterval::DESDE => 0, FilterByInterval::HASTA => 30),
+    2 => array(FilterByInterval::DESDE => 30, FilterByInterval::HASTA => 60),
+    3 => array(FilterByInterval::DESDE => 60, FilterByInterval::HASTA => 120)
   );
 
   /* @var array $GruposExperiencia Array con los grupos de experiencia considerados actualmente. */
   private static $GruposExperiencia = array(
-    1 => array("desde" => 0, "hasta" => 10),
-    2 => array("desde" => 10, "hasta" => 20),
-    3 => array("desde" => 20, "hasta" => 120)
+    1 => array(FilterByInterval::DESDE => 0, FilterByInterval::HASTA => 10),
+    2 => array(FilterByInterval::DESDE => 10, FilterByInterval::HASTA => 20),
+    3 => array(FilterByInterval::DESDE => 20, FilterByInterval::HASTA => 120)
   );
 
   /* @var array $GruposExperiencia Array con los grupos de experiencia considerados actualmente. */
   private static $GruposKilometrajeMedioAnual = array(
-    1 => array("desde" => 0, "hasta" => 30000),
-    2 => array("desde" => 30000, "hasta" => 50000),
-    3 => array("desde" => 50000, "hasta" => 999999)
+    1 => array(FilterByInterval::DESDE => 0, FilterByInterval::HASTA => 30000),
+    2 => array(FilterByInterval::DESDE => 30000, FilterByInterval::HASTA => 50000),
+    3 => array(FilterByInterval::DESDE => 50000, FilterByInterval::HASTA => 999999)
   );
 
   public static function getGruposEdad() {
-    return self::$GruposEdad;
+    return variable_get('rjsimulador_grupos_edad', self::$GruposEdad);
   }
 
   public static function getGruposExperiencia() {
-    return self::$GruposExperiencia;
+    return variable_get('rjsimulador_grupos_experiencia', self::$GruposExperiencia);
   }
 
   public static function getGrupoKmMedioAnual() {
-    return self::$GruposKilometrajeMedioAnual;
+    return variable_get('rjsimulador_grupos_kilometraje', self::$GruposKilometrajeMedioAnual);
   }
 }
