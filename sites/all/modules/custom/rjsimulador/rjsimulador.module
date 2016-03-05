@@ -1,0 +1,287 @@
+<?php
+/**
+ * Implementation of hook_permission().
+ */
+function rjsimulador_permission() {
+  return array(
+    'crear partidas' => array(
+      'title' => t('Create new Partidas'),
+      'description' => t('Allows users with this permission to store data of a Partida.'),
+    ),
+    'ver info partidas' => array(
+      'title' => t('See your own statistics'),
+      'description' => t('Allows users with this permission see their own statistics.'),
+    ),
+    'comparar info partidas' => array(
+      'title' => t('Access all information about Simulator'),
+      'description' => t('Allows user with this permission see all information about the Simulator.'),
+    ),
+  );
+}
+
+/**
+ * Implementation of hook_menu().
+ */
+function rjsimulador_menu() {
+  $items = array();
+  $items['simulaciones'] = array(
+    'title' => 'My data about the Simulations',
+    'file' => 'rjsimulador.pages.inc',
+    'page callback' => 'rjsimulador_simulaciones_page',
+    'access callback' => 'check_user_access_has_saved_partidas',
+    'access arguments' => array('ver info partidas'),
+    'menu_name' => 'main-menu',
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['simulaciones/%/partidas'] = array(
+    'title' => 'Partidas by Simulation @n_simulacion',
+    'title arguments' => array('@n_simulacion' => 1),
+    'file' => 'rjsimulador.pages.inc',
+    'page callback' => 'rjsimulador_partidas_simulacion_page',
+    'page arguments' => array(1),
+    'access arguments' => array('ver info partidas'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['simulaciones/%/partidas/%'] = array(
+    'title' => 'Partida Data',
+    'file' => 'rjsimulador.pages.inc',
+    'page callback' => 'rjsimulador_partida_page',
+    'page arguments' => array(3),
+    'access callback' => 'check_user_access_to_partida',
+    'access arguments' => array('ver info partidas', 3, 1),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['admin/simulaciones_analysis'] = array(
+    'title' => 'Analysis of Simulations',
+    'file' => 'rjsimulador.admin.inc',
+    'page callback' => 'rjsimulador_simulaciones_usuarios_admin_page',
+    'access arguments' => array('comparar info partidas'),
+    'menu_name' => 'management',
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['admin/simulaciones_analysis/simulaciones_users'] = array(
+    'title' => 'Analysis of Simulations by user',
+    'file' => 'rjsimulador.admin.inc',
+    'page callback' => 'rjsimulador_simulaciones_usuarios_admin_page',
+    'access arguments' => array('comparar info partidas'),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -50,
+  );
+  $items['admin/simulaciones_analysis/data_analysis'] = array(
+    'title' => 'Data analysis',
+    'file' => 'data_analysis.forms.inc',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('rjsimulador_admin_form_data_analysis'),
+    'access arguments' => array('comparar info partidas'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 0,
+  );
+  $items['admin/simulaciones_analysis/infractions_analysis'] = array(
+    'title' => 'Infractions analysis',
+    'file' => 'infractions_analysis.forms.admin.inc',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('rjsimulador_admin_form_infractions_analysis'),
+    'access arguments' => array('comparar info partidas'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 50,
+  );
+  $items['admin/simulaciones_analysis/%/simulaciones'] = array(
+    'title' => 'User with UID @uid: Data about Simulations',
+    'title arguments' => array('@uid' => 2),
+    'file' => 'rjsimulador.pages.inc',
+    'page callback' => 'rjsimulador_simulaciones_page',
+    'page arguments' => array(2, TRUE),
+    'access arguments' => array('comparar info partidas'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['admin/simulaciones_analysis/%/simulaciones/%/partidas'] = array(
+    'title' => 'User with UID @uid: Partidas by Simulation @n_simulacion',
+    'title arguments' => array('@uid' => 2, '@n_simulacion' => 4),
+    'file' => 'rjsimulador.pages.inc',
+    'page callback' => 'rjsimulador_partidas_simulacion_page',
+    'page arguments' => array(4, 2, TRUE),
+    'access arguments' => array('comparar info partidas'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['admin/simulaciones_analysis/%/simulaciones/%/partidas/%'] = array(
+    'title' => 'User with @uid: Partida Data',
+    'title arguments' => array('@uid' => 2),
+    'file' => 'rjsimulador.pages.inc',
+    'page callback' => 'rjsimulador_partida_page',
+    'page arguments' => array(6, 2),
+    'access callback' => 'check_user_access_to_partida',
+    'access arguments' => array('comparar info partidas', 6, 4, 2),
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+
+function check_user_access_has_saved_partidas($permission, $uid = NULL) {
+  $provider = FactoryDataManager::createDataProvider();
+  $usuario = $provider->loadSimulatorUser($uid);
+
+  // Solo pueden ver la pantalla genérica de simulación los usuarios que tienen partidas guardadas
+  $usuarioTienePartidas = $usuario->countPartidas() > 0;
+
+  return user_access($permission) && $usuarioTienePartidas;
+}
+
+function check_user_access_to_partida($permission, $id_partida, $id_simulacion, $uid = NULL) {
+  // Si estamos en modo admin también se comprueba que el uid y el id_partida coincidan.
+  $provider = FactoryDataManager::createDataProvider();
+  $usuario = $provider->loadSimulatorUser($uid);
+  $partida = Partida::loadById($id_partida);
+  // Comprobamos si el usuario que accede tiene permisos, si la partida coincide con la simulación de la URL
+  // y si la partida a la que accede la creó él usuario.
+  return user_access($permission) && $partida->getIdSimulacion() == $id_simulacion && $usuario->getUid() == $partida->getUserUid();
+}
+
+/**
+ *  Implements hook_services_resources().
+ */
+function rjsimulador_services_resources() {
+  // Include resources definitions
+  module_load_include('inc', 'rjsimulador', 'resources/rjsimulador_partida.resource');
+  $resources = array();
+  $resources += partida_resource_definition();
+  return $resources;
+}
+
+function rjsimulador_theme() {
+  return array(
+    'lista_simulaciones_partidas' => array(
+      'template' => 'templates/lista-simulaciones-partidas',
+      'variables' => array(
+        'upper_left' => NULL,
+        'upper_right' => NULL,
+        'main_content' => NULL,
+        'action_section' => NULL
+      )
+    ),
+    'partida' => array(
+      'template' => 'templates/partida',
+      'variables' => array(
+        'upper_content' => NULL,
+        'upper_left' => NULL,
+        'upper_right' => NULL,
+        'main_content' => NULL,
+        'action_section' => NULL
+      )
+    )
+  );
+}
+
+/**
+ *  Implements hook_services_resources_alter().
+ */
+function rjsimulador_services_resources_alter(&$resources, &$endpoint) {
+  $resources['user']['actions']['register']['callback'] = "_user_register_custom";
+}
+
+/**
+ * @param $account
+ * @return array
+ * @throws ServicesException
+ */
+function _user_register_custom($account) {
+  // Adds backwards compatability with regression fixed in #1083242
+  $account = _services_arg_value($account, 'account');
+
+  // Load the required includes for saving profile information
+  // with drupal_form_submit().
+  module_load_include('inc', 'user', 'user.pages');
+
+  // Register a new user.
+  $form_state['values'] = $account;
+
+  // Determine the password(s). Passwords may not be available as this callback
+  // is used for registration as well.
+  $pass1 = '';
+  $pass2 = '';
+  if (isset($account['pass'])) {
+    // For legacy usage, passwords come in as a single string. To match the
+    // actual form state value keys used by Drupal, we also can collect two
+    // passwords via an array.
+    if (is_array($account['pass'])) {
+      $pass1 = $account['pass']['pass1'];
+      $pass2 = $account['pass']['pass2'];
+    }
+    else {
+      $pass1 = $account['pass'];
+      $pass2 = $account['pass'];
+    }
+  }
+  $form_state['values']['pass'] = array(
+    'pass1' => $pass1,
+    'pass2' => $pass2
+  );
+
+  // Set the form state op.
+  $form_state['values']['op'] = variable_get('services_user_create_button_resource_create', t('Create new account'));
+
+  // Execute the register form.
+  $form_state['programmed_bypass_access_check'] = FALSE;
+
+  // Ensure this is validated, as drupal_form_submit will not call validation.
+  user_register_validate(drupal_get_form('user_register_form'), $form_state);
+  $errors = form_get_errors();
+  // If there are errors, then short circuit and return early.
+  if ($errors) {
+    return services_error(implode(' ', $errors), 406, array('form_errors' => $errors));
+  }
+
+  drupal_form_submit('user_register_form', $form_state);
+  // find and store the new user into the form_state
+  if (isset($form_state['values']['uid'])) {
+    $form_state['user'] = user_load($form_state['values']['uid']);
+  }
+
+  // Error if needed.
+  if ($errors = form_get_errors()) {
+    return services_error(implode(" ", $errors), 406, array('form_errors' => $errors));
+  }
+  else {
+    $user = array('uid' => $form_state['user']->uid);
+    if ($uri = services_resource_uri(array('user', $user['uid']))) {
+      $user['uri'] = $uri;
+    }
+    _user_resource_update_services_user($user['uid'], time());
+    return $user;
+  }
+}
+
+/**
+ * Implements hook_user_delete().
+ */
+function rjsimulador_user_delete($account) {
+  $provider = FactoryDataManager::createDataProvider();
+  try {
+    $usuario = $provider->loadSimulatorUser($account->uid);
+
+    if ($usuario->countPartidas() == 0) {
+      throw new LogicException("El usuario borrado no tiene Partidas almacenadas que eliminar.");
+    }
+
+    // Creamos una transacción para eliminar la partida; si algo falla hacemos rollback
+    $transaction = db_transaction();
+    try {
+      foreach($usuario->getListaSimulaciones() as $simulacion) {
+        foreach($simulacion->getListaPartidas() as $partida) {
+          $partida->remove();
+        }
+      }
+    } catch (Exception $e) {
+      $transaction->rollback();
+      throw $e;
+    }
+  } catch (LogicException $le) {
+    watchdog_exception('rjsimulador', $le, 'There are no Partidas to delete for user with UID @uid and username @username.', array(
+      '@uid' => $account->uid,
+      '@username' => $account->name
+    ), WATCHDOG_INFO);
+  } catch (Exception $e) {
+    watchdog_exception('rjsimulador', $e, 'Error removing Partidas from user with UID @uid and username @username.',
+      array('@uid' => $account->uid, '@username' => $account->name), WATCHDOG_ERROR);
+  }
+}
