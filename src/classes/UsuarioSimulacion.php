@@ -173,7 +173,7 @@ class UsuarioSimulacion {
    * @throws \Exception
    */
   public function getGrupoKilometrajeMedioAnual($asText = FALSE) {
-    foreach (Grupos::getGrupoKmMedioAnual() as $idGrupo => $arrayDatos) {
+    foreach (Grupos::getGruposKmMedioAnual() as $idGrupo => $arrayDatos) {
       if ($this->getAverageAnnualMileage() >= $arrayDatos['desde'] && $this->getAverageAnnualMileage() < $arrayDatos['hasta']) {
         if ($asText) {
           return t("average annual mileage from " . $arrayDatos['desde'] . " to " . $arrayDatos['hasta'] . " years");

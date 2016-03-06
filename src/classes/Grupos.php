@@ -51,7 +51,7 @@ class Grupos {
     return variable_get('rjsimulador_grupos_experiencia', self::$GruposExperiencia);
   }
 
-  public static function getGrupoKmMedioAnual() {
+  public static function getGruposKmMedioAnual() {
     return variable_get('rjsimulador_grupos_kilometraje', self::$GruposKilometrajeMedioAnual);
   }
 }
