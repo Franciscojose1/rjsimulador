@@ -300,7 +300,8 @@ function generate_form_infractions_group_analysis(&$form_state, GestorSimulacion
     $listaUsuarios = $gestorSimulaciones->getListaTodosUsuarios();
     // Solo filtramos si no hay errores
     $titulos = array();
-    if (empty(form_get_errors())) {
+    $formErrors = form_get_errors();
+    if (empty($formErrors)) {
       if (isset($form_state['values']['infractions_group_groups'][$index])) {
         if ($form_state['values']['infractions_group_groups'][$index]['infractions_group_check_age'] == 1) {
           $from = $form_state['values']['infractions_group_groups'][$index]['infractions_group_age']['from'];
@@ -622,7 +623,8 @@ function generate_form_infractions_user_analysis(&$form_state, GestorSimulacione
     $listaUsuarios = $gestorSimulaciones->getListaTodosUsuariosExceptoActual();
     // Regeneramos los grupos si no hay errores
     $titulos = array();
-    if (empty(form_get_errors())) {
+    $formErrors = form_get_errors();
+    if (empty($formErrors)) {
       if (isset($form_state['values']['infractions_user_groups'][$index])) {
         if ($form_state['values']['infractions_user_groups'][$index]['infractions_user_check_age'] == 1) {
           $from = $form_state['values']['infractions_user_groups'][$index]['infractions_user_age']['from'];
