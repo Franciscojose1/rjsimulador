@@ -696,7 +696,8 @@ function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gest
     $listaUsuarios = $gestorSimulaciones->getListaTodosUsuariosExceptoActual();
     // Solo filtramos si no hay errores
     $titulos = array();
-    if (empty(form_get_errors())) {
+    $formErrors = form_get_errors();
+    if (empty($formErrors)) {
       if (isset($form_state['values']['data_user_groups'][$index])) {
         if ($form_state['values']['data_user_groups'][$index]['data_user_check_age'] == 1) {
           $from = $form_state['values']['data_user_groups'][$index]['data_user_age']['from'];
