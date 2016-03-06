@@ -23,8 +23,14 @@ class Grupos {
   /* @var array $GruposExperiencia Array con los grupos de experiencia considerados actualmente. */
   private static $GruposKilometrajeMedioAnual = array(
     1 => array(FilterByInterval::DESDE => 0, FilterByInterval::HASTA => 30000),
-    2 => array(FilterByInterval::DESDE => 30000, FilterByInterval::HASTA => 50000),
-    3 => array(FilterByInterval::DESDE => 50000, FilterByInterval::HASTA => 999999)
+    2 => array(
+      FilterByInterval::DESDE => 30000,
+      FilterByInterval::HASTA => 50000
+    ),
+    3 => array(
+      FilterByInterval::DESDE => 50000,
+      FilterByInterval::HASTA => 999999
+    )
   );
 
   public static function getDataMinGroups() {
@@ -53,5 +59,31 @@ class Grupos {
 
   public static function getGruposKmMedioAnual() {
     return variable_get('rjsimulador_grupos_kilometraje', self::$GruposKilometrajeMedioAnual);
+  }
+
+  public static function getListaGrupos() {
+    $listaGrupos = array(
+      0 => t('Group by Age'),
+      1 => t('Group by Driving Experience'),
+      2 => t('Group by Average Annual Mileage')
+    );
+
+    return $listaGrupos;
+  }
+
+  public static function getGruposDefault() {
+    $defaultGroup = variable_get('rjsimulador_grupo_default', 0);
+
+    switch ($defaultGroup) {
+      case 1:
+        return self::getGruposExperiencia();
+        break;
+      case 2:
+        return self::getGruposKmMedioAnual();
+        break;
+      default:
+        return self::getGruposEdad();
+        break;
+    }
   }
 }

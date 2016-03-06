@@ -12,7 +12,7 @@ function generate_group_array($prefix, $index, &$form_state) {
     '#attributes' => array('class' => array('group-analysis'))
   );
 
-  if ($index%3 == 0) {
+  if ($index % 3 == 0) {
     $form += array('#suffix' => '<div class="clearfix"></div>');
   }
 
@@ -70,6 +70,8 @@ function generate_group_array($prefix, $index, &$form_state) {
   $form[$prefix . '_check_driving_experience'] = array(
     '#type' => 'checkbox',
     '#title' => t('Filter by driving experience.'),
+    '#default_value' => isset($form_state['values'][$prefix . '_groups'][$index][$prefix . '_check_driving_experience']) ?
+      $form_state['values'][$prefix . '_groups'][$index][$prefix . '_check_driving_experience'] : 0,
   );
 
   $form[$prefix . '_driving_experience'] = array(
@@ -86,6 +88,8 @@ function generate_group_array($prefix, $index, &$form_state) {
   $form[$prefix . '_driving_experience']['from'] = array(
     '#type' => 'textfield',
     '#field_prefix' => t('From '),
+    '#default_value' => isset($form_state['values'][$prefix . '_groups'][$index][$prefix . '_driving_experience']['from']) ?
+      $form_state['values'][$prefix . '_groups'][$index][$prefix . '_driving_experience']['from'] : "",
     '#size' => 3,
     '#maxlength' => 3,
     '#required' => FALSE,
@@ -100,6 +104,8 @@ function generate_group_array($prefix, $index, &$form_state) {
   $form[$prefix . '_driving_experience']['to'] = array(
     '#type' => 'textfield',
     '#field_prefix' => t(' to '),
+    '#default_value' => isset($form_state['values'][$prefix . '_groups'][$index][$prefix . '_driving_experience']['to']) ?
+      $form_state['values'][$prefix . '_groups'][$index][$prefix . '_driving_experience']['to'] : "",
     '#field_suffix' => t(' years'),
     '#size' => 3,
     '#maxlength' => 3,
@@ -115,6 +121,8 @@ function generate_group_array($prefix, $index, &$form_state) {
   $form[$prefix . '_check_average_annual_mileage'] = array(
     '#type' => 'checkbox',
     '#title' => t('Filter by average annual mileage.'),
+    '#default_value' => isset($form_state['values'][$prefix . '_groups'][$index][$prefix . '_check_average_annual_mileage']) ?
+      $form_state['values'][$prefix . '_groups'][$index][$prefix . '_check_average_annual_mileage'] : 0,
   );
 
   $form[$prefix . '_average_annual_mileage'] = array(
@@ -131,6 +139,8 @@ function generate_group_array($prefix, $index, &$form_state) {
   $form[$prefix . '_average_annual_mileage']['from'] = array(
     '#type' => 'textfield',
     '#field_prefix' => t('From '),
+    '#default_value' => isset($form_state['values'][$prefix . '_groups'][$index][$prefix . '_average_annual_mileage']['from']) ?
+      $form_state['values'][$prefix . '_groups'][$index][$prefix . '_average_annual_mileage']['from'] : "",
     '#size' => 3,
     '#maxlength' => 3,
     '#required' => FALSE,
@@ -145,6 +155,8 @@ function generate_group_array($prefix, $index, &$form_state) {
   $form[$prefix . '_average_annual_mileage']['to'] = array(
     '#type' => 'textfield',
     '#field_prefix' => t(' to '),
+    '#default_value' => isset($form_state['values'][$prefix . '_groups'][$index][$prefix . '_average_annual_mileage']['to']) ?
+      $form_state['values'][$prefix . '_groups'][$index][$prefix . '_average_annual_mileage']['to'] : "",
     '#field_suffix' => t(' kms'),
     '#size' => 6,
     '#maxlength' => 6,
@@ -295,5 +307,94 @@ function validate_group_fields(&$form_state, $prefix) {
           t('Must select one radio button.'));
       }
     }
+  }
+}
+
+function initializeDefaultgroups(&$form_state, $prefix) {
+  $grupoDefault = Grupos::getGruposDefault();
+  $grupoDefaultKey = variable_get('rjsimulador_grupo_default', 0);
+
+  switch ($grupoDefaultKey) {
+    case 1:
+      foreach ($grupoDefault as $indice => $arrayDatos) {
+        if (!isset($form_state['values'][$prefix . '_groups'][$indice][$prefix . '_check_age'])) {
+          $form_state['values'][$prefix . '_groups'][$indice][$prefix . '_check_age'] = 0;
+        }
+
+        if (!isset($form_state['values'][$prefix . '_groups'][$indice][$prefix . '_check_driving_experience'])) {
+          $form_state['values'][$prefix . '_groups'][$indice][$prefix . '_check_driving_experience'] = 1;
+
+          if (!isset($form_state['values'][$prefix . '_groups'][$indice][$prefix . '_driving_experience']['from'])) {
+            $form_state['values'][$prefix . '_groups'][$indice][$prefix . '_driving_experience']['from'] = $arrayDatos[FilterByInterval::DESDE];
+          }
+
+          if (!isset($form_state['values'][$prefix . '_groups'][$indice][$prefix . '_driving_experience']['to'])) {
+            $form_state['values'][$prefix . '_groups'][$indice][$prefix . '_driving_experience']['to'] = $arrayDatos[FilterByInterval::HASTA];
+          }
+        }
+
+        if (!isset($form_state['values'][$prefix . '_groups'][$indice][$prefix . '_check_average_annual_mileage'])) {
+          $form_state['values'][$prefix . '_groups'][$indice][$prefix . '_check_average_annual_mileage'] = 0;
+        }
+
+        if (!isset($form_state['values'][$prefix . '_groups'][$indice][$prefix . '_check_usual_videogame_player'])) {
+          $form_state['values'][$prefix . '_groups'][$indice][$prefix . '_check_usual_videogame_player'] = 0;
+        }
+      }
+      break;
+    case 2:
+      foreach ($grupoDefault as $indice => $arrayDatos) {
+        if (!isset($form_state['values'][$prefix . '_groups'][$indice][$prefix . '_check_age'])) {
+          $form_state['values'][$prefix . '_groups'][$indice][$prefix . '_check_age'] = 0;
+        }
+
+        if (!isset($form_state['values'][$prefix . '_groups'][$indice][$prefix . '_check_driving_experience'])) {
+          $form_state['values'][$prefix . '_groups'][$indice][$prefix . '_check_driving_experience'] = 0;
+        }
+
+        if (!isset($form_state['values'][$prefix . '_groups'][$indice][$prefix . '_check_average_annual_mileage'])) {
+          $form_state['values'][$prefix . '_groups'][$indice][$prefix . '_check_average_annual_mileage'] = 1;
+
+          if (!isset($form_state['values'][$prefix . '_groups'][$indice][$prefix . '_average_annual_mileage']['from'])) {
+            $form_state['values'][$prefix . '_groups'][$indice][$prefix . '_average_annual_mileage']['from'] = $arrayDatos[FilterByInterval::DESDE];
+          }
+
+          if (!isset($form_state['values'][$prefix . '_groups'][$indice][$prefix . '_average_annual_mileage']['to'])) {
+            $form_state['values'][$prefix . '_groups'][$indice][$prefix . '_average_annual_mileage']['to'] = $arrayDatos[FilterByInterval::HASTA];
+          }
+        }
+
+        if (!isset($form_state['values'][$prefix . '_groups'][$indice][$prefix . '_check_usual_videogame_player'])) {
+          $form_state['values'][$prefix . '_groups'][$indice][$prefix . '_check_usual_videogame_player'] = 0;
+        }
+      }
+      break;
+    default:
+      foreach ($grupoDefault as $indice => $arrayDatos) {
+        if (!isset($form_state['values'][$prefix . '_groups'][$indice][$prefix . '_check_age'])) {
+          $form_state['values'][$prefix . '_groups'][$indice][$prefix . '_check_age'] = 1;
+
+          if (!isset($form_state['values'][$prefix . '_groups'][$indice][$prefix . '_age']['from'])) {
+            $form_state['values'][$prefix . '_groups'][$indice][$prefix . '_age']['from'] = $arrayDatos[FilterByInterval::DESDE];
+          }
+
+          if (!isset($form_state['values'][$prefix . '_groups'][$indice][$prefix . '_age']['to'])) {
+            $form_state['values'][$prefix . '_groups'][$indice][$prefix . '_age']['to'] = $arrayDatos[FilterByInterval::HASTA];
+          }
+        }
+
+        if (!isset($form_state['values'][$prefix . '_groups'][$indice][$prefix . '_check_driving_experience'])) {
+          $form_state['values'][$prefix . '_groups'][$indice][$prefix . '_check_driving_experience'] = 0;
+        }
+
+        if (!isset($form_state['values'][$prefix . '_groups'][$indice][$prefix . '_check_average_annual_mileage'])) {
+          $form_state['values'][$prefix . '_groups'][$indice][$prefix . '_check_average_annual_mileage'] = 0;
+        }
+
+        if (!isset($form_state['values'][$prefix . '_groups'][$indice][$prefix . '_check_usual_videogame_player'])) {
+          $form_state['values'][$prefix . '_groups'][$indice][$prefix . '_check_usual_videogame_player'] = 0;
+        }
+      }
+      break;
   }
 }

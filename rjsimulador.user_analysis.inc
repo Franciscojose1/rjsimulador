@@ -19,6 +19,10 @@ function rjsimulador_simulaciones_usuarios_admin_page() {
   $headers = array(
     array('data' => t('User ID'), 'field' => 'Uid', 'sort' => 'ASC'),
     array('data' => t('User Name'), 'field' => 'Name'),
+    array('data' => t('Age')),
+    array('data' => t('Driving Experience')),
+    array('data' => t('Average Annual Mileage')),
+    array('data' => t('Usual videogame player?')),
     array('data' => t('Email')),
     array('data' => t('Created'), 'field' => 'Created'),
     array('data' => t('Last Login'), 'field' => 'Login'),
@@ -41,6 +45,10 @@ function rjsimulador_simulaciones_usuarios_admin_page() {
     $rows[] = array(
       array('data' => $usuario->getUid()),
       array('data' => $usuario->getName()),
+      array('data' => $usuario->getAge()),
+      array('data' => $usuario->getDrivingExperience()),
+      array('data' => $usuario->getAverageAnnualMileage()),
+      array('data' => $usuario->isUsualVideogamePlayer(true) ? t("Yes") : t("No") ),
       array('data' => $usuario->getMail()),
       array(
         'data' => $usuario->getCreationDate(true)->format("d-m-Y H:i:s")

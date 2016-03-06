@@ -236,7 +236,9 @@ function generate_form_infractions_group_analysis(&$form_state, GestorSimulacion
   // Número de grupos
   $numeroMinimoGrupos = 1;
   $numeroMaximoGrupos = 6;
-  $numeroInicialGrupos = count(Grupos::getGruposEdad()) > $numeroMinimoGrupos ? count(Grupos::getGruposEdad()) : $numeroMinimoGrupos;
+
+  $grupoDefault = Grupos::getGruposDefault();
+  $numeroInicialGrupos = count($grupoDefault) > $numeroMinimoGrupos ? count($grupoDefault) : $numeroMinimoGrupos;
   $form_state['infractions_group_number_groups'] = isset($form_state['infractions_group_number_groups']) ?
     $form_state['infractions_group_number_groups'] : $numeroInicialGrupos;
 
@@ -285,33 +287,8 @@ function generate_form_infractions_group_analysis(&$form_state, GestorSimulacion
   );
 
   // En primer lugar sacamos los grupos de edad existentes por defecto
-  if (count(Grupos::getGruposEdad()) > 0) {
-    foreach (Grupos::getGruposEdad() as $indice => $arrayDatos) {
-
-      if (!isset($form_state['values']['infractions_group_groups'][$indice]['infractions_group_check_age'])) {
-        $form_state['values']['infractions_group_groups'][$indice]['infractions_group_check_age'] = 1;
-
-        if (!isset($form_state['values']['infractions_group_groups'][$indice]['infractions_group_age']['from'])) {
-          $form_state['values']['infractions_group_groups'][$indice]['infractions_group_age']['from'] = $arrayDatos[FilterByInterval::DESDE];
-        }
-
-        if (!isset($form_state['values']['infractions_group_groups'][$indice]['infractions_group_age']['to'])) {
-          $form_state['values']['infractions_group_groups'][$indice]['infractions_group_age']['to'] = $arrayDatos[FilterByInterval::HASTA];
-        }
-      }
-
-      if (!isset($form_state['values']['infractions_group_groups'][$indice]['infractions_group_check_driving_experience'])) {
-        $form_state['values']['infractions_group_groups'][$indice]['infractions_group_check_driving_experience'] = 0;
-      }
-
-      if (!isset($form_state['values']['infractions_group_groups'][$indice]['infractions_group_check_average_annual_mileage'])) {
-        $form_state['values']['infractions_group_groups'][$indice]['infractions_group_check_average_annual_mileage'] = 0;
-      }
-
-      if (!isset($form_state['values']['infractions_group_groups'][$indice]['infractions_group_check_usual_videogame_player'])) {
-        $form_state['values']['infractions_group_groups'][$indice]['infractions_group_check_usual_videogame_player'] = 0;
-      }
-    }
+  if (count($grupoDefault) > 0) {
+    initializeDefaultGroups($form_state, 'infractions_group');
   }
 
   // Sacamos todos los grupos actuales
@@ -476,7 +453,7 @@ function generate_form_infractions_user_analysis(&$form_state, GestorSimulacione
   $form['infractions_user_container']['infractions_user_chart']['infractions_user_actual'] =
     array(
       '#type' => 'chart_data',
-      '#title' => t('User @name', array('@name' => $usuarioActual->getName())),
+      '#title' => t('User @name (UID:@uid)', array('@name' => $usuarioActual->getName(), '@uid' => $usuarioActual->getUid())),
       '#data' => array($dataUser),
     );
 

@@ -270,7 +270,9 @@ function generate_form_data_group_analysis(&$form_state, GestorSimulaciones $ges
   // Número de grupos
   $numeroMinimoGrupos = Grupos::getDataMinGroups();
   $numeroMaximoGrupos = Grupos::getDataMaxGroups();
-  $numeroInicialGrupos = count(Grupos::getGruposEdad()) > $numeroMinimoGrupos ? count(Grupos::getGruposEdad()) : $numeroMinimoGrupos;
+
+  $grupoDefault = Grupos::getGruposDefault();
+  $numeroInicialGrupos = count($grupoDefault) > $numeroMinimoGrupos ? count($grupoDefault) : $numeroMinimoGrupos;
   $form_state['data_group_number_groups'] = isset($form_state['data_group_number_groups']) ?
     $form_state['data_group_number_groups'] : $numeroInicialGrupos;
 
@@ -320,33 +322,8 @@ function generate_form_data_group_analysis(&$form_state, GestorSimulaciones $ges
   );
 
   // En primer lugar sacamos los grupos de edad existentes por defecto
-  if (count(Grupos::getGruposEdad()) > 0) {
-    foreach (Grupos::getGruposEdad() as $indice => $arrayDatos) {
-
-      if (!isset($form_state['values']['data_group_groups'][$indice]['data_group_check_age'])) {
-        $form_state['values']['data_group_groups'][$indice]['data_group_check_age'] = 1;
-
-        if (!isset($form_state['values']['data_group_groups'][$indice]['data_group_age']['from'])) {
-          $form_state['values']['data_group_groups'][$indice]['data_group_age']['from'] = $arrayDatos[FilterByInterval::DESDE];
-        }
-
-        if (!isset($form_state['values']['data_group_groups'][$indice]['data_group_age']['to'])) {
-          $form_state['values']['data_group_groups'][$indice]['data_group_age']['to'] = $arrayDatos[FilterByInterval::HASTA];
-        }
-      }
-
-      if (!isset($form_state['values']['data_group_groups'][$indice]['data_group_check_driving_experience'])) {
-        $form_state['values']['data_group_groups'][$indice]['data_group_check_driving_experience'] = 0;
-      }
-
-      if (!isset($form_state['values']['data_group_groups'][$indice]['data_group_check_average_annual_mileage'])) {
-        $form_state['values']['data_group_groups'][$indice]['data_group_check_average_annual_mileage'] = 0;
-      }
-
-      if (!isset($form_state['values']['data_group_groups'][$indice]['data_group_check_usual_videogame_player'])) {
-        $form_state['values']['data_group_groups'][$indice]['data_group_check_usual_videogame_player'] = 0;
-      }
-    }
+  if (count($grupoDefault) > 0) {
+    initializeDefaultGroups($form_state, 'data_group');
   }
 
   // Sacamos todos los grupos actuales

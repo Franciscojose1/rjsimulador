@@ -1,5 +1,20 @@
 <?php
 function rjsimulador_configuration_admin_form($form, &$form_state) {
+  $form['general_configuration'] = arraY(
+    '#type' => 'fieldset',
+    '#title' => t('General configuration'),
+    '#description' => t('General configuration about module.')
+  );
+
+  $form['general_configuration']['select_grupo_default'] = array(
+    '#type' => 'select',
+    '#title' => t('Default group'),
+    '#description' => t('Select default group to show info about in Data Analysis or Infractions Analysis by group.'),
+    '#options' => Grupos::getListaGrupos(),
+    '#default_value' => variable_get('rjsimulador_grupo_default', 0),
+    '#required' => TRUE
+  );
+
   $form['grupo_edad'] = array(
     '#type' => 'fieldset',
     '#title' => t("Groups by Ages"),
@@ -294,6 +309,10 @@ function ajax_grupos_kilometraje_config_callback($form, &$form_state) {
 }
 
 function rjsimulador_configuration_admin_form_validate($form, &$form_state) {
+  if (!isset($form_state['values']['select_grupo_default']) || !is_numeric($form_state['values']['select_grupo_default'])) {
+    form_set_error('select_grupo_default', t('Group default is not correct.'));
+  }
+
   $groupNameArray = array(
     'grupo_edad' => t('Age'),
     'grupo_experiencia' => t('Driving Experience'),
@@ -349,6 +368,10 @@ function rjsimulador_configuration_admin_form_validate($form, &$form_state) {
 }
 
 function rjsimulador_configuration_admin_form_submit($form, &$form_state) {
+  if (isset($form_state['values']['select_grupo_default']) && is_numeric($form_state['values']['select_grupo_default'])) {
+    variable_set('rjsimulador_grupo_default', $form_state['values']['select_grupo_default']);
+  }
+
   if (isset($form_state['grupo_edad_number']['#value']) && is_numeric($form_state['grupo_edad_number']['#value'])) {
     for ($index = 1; $index <= $form_state['grupo_edad_number']['#value']; $index++) {
       $gruposEdad[$index] = $form_state['values']['grupo_edad'][$index];
