@@ -36,7 +36,7 @@ class Grupos {
   }
 
   public static function getInfractionsMinGroups() {
-    return self::$infractionsMaxGroups;
+    return self::$infractionsMinGroups;
   }
 
   public static function getInfractionsMaxGroups() {
