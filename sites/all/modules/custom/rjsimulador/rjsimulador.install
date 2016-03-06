@@ -268,3 +268,9 @@ function rjsimulador_schema() {
   );
   return $schema;
 }
+
+function rjsimulador_uninstall() {
+  variable_del('rjsimulador_grupos_edad');
+  variable_del('rjsimulador_grupos_experiencia');
+  variable_del('rjsimulador_grupos_kilometraje');
+}
