@@ -270,6 +270,7 @@ function rjsimulador_schema() {
 }
 
 function rjsimulador_uninstall() {
+  variable_del('rjsimulador_grupo_default');
   variable_del('rjsimulador_grupos_edad');
   variable_del('rjsimulador_grupos_experiencia');
   variable_del('rjsimulador_grupos_kilometraje');
