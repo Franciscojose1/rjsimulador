@@ -27,7 +27,6 @@ function generate_group_array($prefix, $index, &$form_state) {
     '#type' => 'fieldset',
     '#attributes' => array('class' => array('entradas')),
     '#states' => array(
-      // Only show this field when the 'toggle_me' checkbox is enabled.
       'visible' => array(
         ':input[name="' . $prefix . '_groups[' . $index . '][' . $prefix . '_check_age]"]' => array('checked' => TRUE),
       ),
@@ -36,14 +35,13 @@ function generate_group_array($prefix, $index, &$form_state) {
 
   $form[$prefix . '_age']['from'] = array(
     '#type' => 'textfield',
-    '#field_prefix' => t('From '),
+    '#field_prefix' => t('From'),
     '#default_value' => isset($form_state['values'][$prefix . '_groups'][$index][$prefix . '_age']['from']) ?
       $form_state['values'][$prefix . '_groups'][$index][$prefix . '_age']['from'] : "",
-    '#size' => 3,
+    '#size' => 1,
     '#maxlength' => 3,
     '#required' => FALSE,
     '#states' => array(
-      // Only show this field when the 'toggle_me' checkbox is enabled.
       'disabled' => array(
         ':input[name="' . $prefix . '_groups[' . $index . '][' . $prefix . '_check_age]"]' => array('checked' => FALSE),
       ),
@@ -52,15 +50,14 @@ function generate_group_array($prefix, $index, &$form_state) {
 
   $form[$prefix . '_age']['to'] = array(
     '#type' => 'textfield',
-    '#field_prefix' => t(' to '),
+    '#field_prefix' => t('to'),
     '#default_value' => isset($form_state['values'][$prefix . '_groups'][$index][$prefix . '_age']['to']) ?
       $form_state['values'][$prefix . '_groups'][$index][$prefix . '_age']['to'] : "",
-    '#field_suffix' => t(' years'),
-    '#size' => 3,
+    '#field_suffix' => t('years'),
+    '#size' => 1,
     '#maxlength' => 3,
     '#required' => FALSE,
     '#states' => array(
-      // Only show this field when the 'toggle_me' checkbox is enabled.
       'disabled' => array(
         ':input[name="' . $prefix . '_groups[' . $index . '][' . $prefix . '_check_age]"]' => array('checked' => FALSE),
       ),
@@ -78,7 +75,6 @@ function generate_group_array($prefix, $index, &$form_state) {
     '#type' => 'fieldset',
     '#attributes' => array('class' => array('entradas')),
     '#states' => array(
-      // Only show this field when the 'toggle_me' checkbox is enabled.
       'visible' => array(
         ':input[name="' . $prefix . '_groups[' . $index . '][' . $prefix . '_check_driving_experience]"]' => array('checked' => TRUE),
       ),
@@ -87,14 +83,13 @@ function generate_group_array($prefix, $index, &$form_state) {
 
   $form[$prefix . '_driving_experience']['from'] = array(
     '#type' => 'textfield',
-    '#field_prefix' => t('From '),
+    '#field_prefix' => t('From'),
     '#default_value' => isset($form_state['values'][$prefix . '_groups'][$index][$prefix . '_driving_experience']['from']) ?
       $form_state['values'][$prefix . '_groups'][$index][$prefix . '_driving_experience']['from'] : "",
-    '#size' => 3,
+    '#size' => 1,
     '#maxlength' => 3,
     '#required' => FALSE,
     '#states' => array(
-      // Only show this field when the 'toggle_me' checkbox is enabled.
       'disabled' => array(
         ':input[name="' . $prefix . '_groups[' . $index . '][' . $prefix . '_check_driving_experience]"]' => array('checked' => FALSE),
       ),
@@ -103,15 +98,14 @@ function generate_group_array($prefix, $index, &$form_state) {
 
   $form[$prefix . '_driving_experience']['to'] = array(
     '#type' => 'textfield',
-    '#field_prefix' => t(' to '),
+    '#field_prefix' => t('to'),
     '#default_value' => isset($form_state['values'][$prefix . '_groups'][$index][$prefix . '_driving_experience']['to']) ?
       $form_state['values'][$prefix . '_groups'][$index][$prefix . '_driving_experience']['to'] : "",
-    '#field_suffix' => t(' years'),
-    '#size' => 3,
+    '#field_suffix' => t('years'),
+    '#size' => 1,
     '#maxlength' => 3,
     '#required' => FALSE,
     '#states' => array(
-      // Only show this field when the 'toggle_me' checkbox is enabled.
       'disabled' => array(
         ':input[name="' . $prefix . '_groups[' . $index . '][' . $prefix . '_check_driving_experience]"]' => array('checked' => FALSE),
       ),
@@ -129,7 +123,6 @@ function generate_group_array($prefix, $index, &$form_state) {
     '#type' => 'fieldset',
     '#attributes' => array('class' => array('entradas')),
     '#states' => array(
-      // Only show this field when the 'toggle_me' checkbox is enabled.
       'visible' => array(
         ':input[name="' . $prefix . '_groups[' . $index . '][' . $prefix . '_check_average_annual_mileage]"]' => array('checked' => TRUE),
       ),
@@ -138,14 +131,13 @@ function generate_group_array($prefix, $index, &$form_state) {
 
   $form[$prefix . '_average_annual_mileage']['from'] = array(
     '#type' => 'textfield',
-    '#field_prefix' => t('From '),
+    '#field_prefix' => t('From'),
     '#default_value' => isset($form_state['values'][$prefix . '_groups'][$index][$prefix . '_average_annual_mileage']['from']) ?
       $form_state['values'][$prefix . '_groups'][$index][$prefix . '_average_annual_mileage']['from'] : "",
     '#size' => 3,
-    '#maxlength' => 3,
+    '#maxlength' => 6,
     '#required' => FALSE,
     '#states' => array(
-      // Only show this field when the 'toggle_me' checkbox is enabled.
       'disabled' => array(
         ':input[name="' . $prefix . '_groups[' . $index . '][' . $prefix . '_check_average_annual_mileage]"]' => array('checked' => FALSE),
       ),
@@ -154,15 +146,14 @@ function generate_group_array($prefix, $index, &$form_state) {
 
   $form[$prefix . '_average_annual_mileage']['to'] = array(
     '#type' => 'textfield',
-    '#field_prefix' => t(' to '),
+    '#field_prefix' => t('to'),
     '#default_value' => isset($form_state['values'][$prefix . '_groups'][$index][$prefix . '_average_annual_mileage']['to']) ?
       $form_state['values'][$prefix . '_groups'][$index][$prefix . '_average_annual_mileage']['to'] : "",
-    '#field_suffix' => t(' kms'),
-    '#size' => 6,
+    '#field_suffix' => t('kms'),
+    '#size' => 3,
     '#maxlength' => 6,
     '#required' => FALSE,
     '#states' => array(
-      // Only show this field when the 'toggle_me' checkbox is enabled.
       'disabled' => array(
         ':input[name="' . $prefix . '_groups[' . $index . '][' . $prefix . '_check_average_annual_mileage]"]' => array('checked' => FALSE),
       ),
@@ -177,7 +168,6 @@ function generate_group_array($prefix, $index, &$form_state) {
   $form[$prefix . '_usual_videogame_player'] = array(
     '#type' => 'fieldset',
     '#states' => array(
-      // Only show this field when the 'toggle_me' checkbox is enabled.
       'visible' => array(
         ':input[name="' . $prefix . '_groups[' . $index . '][' . $prefix . '_check_usual_videogame_player]"]' => array('checked' => TRUE),
       ),
@@ -190,7 +180,6 @@ function generate_group_array($prefix, $index, &$form_state) {
     '#default_value' => 0,
     '#options' => array(0 => t('No'), 1 => t('Yes')),
     '#states' => array(
-      // Only show this field when the 'toggle_me' checkbox is enabled.
       'disabled' => array(
         ':input[name="' . $prefix . '_groups[' . $index . '][' . $prefix . '_check_usual_videogame_player]"]' => array('checked' => FALSE),
       ),
