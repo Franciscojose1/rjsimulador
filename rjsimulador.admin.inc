@@ -9,7 +9,7 @@ function rjsimulador_configuration_admin_form($form, &$form_state) {
   $form['general_configuration']['select_grupo_default'] = array(
     '#type' => 'select',
     '#title' => t('Default group'),
-    '#description' => t('Select default group to show info about in Data Analysis or Infractions Analysis by group.'),
+    '#description' => t('Select default group to show info about in "Data Analysis or Infractions Analysis by group".'),
     '#options' => Grupos::getListaGrupos(),
     '#default_value' => variable_get('rjsimulador_grupo_default', 0),
     '#required' => TRUE
@@ -176,7 +176,7 @@ function generarGruposExperienciaConfiguracion(&$form_state) {
   for ($index = 1; $index <= $totalGrupos; $index++) {
     $form[$index]['desde'] = array(
       '#type' => 'textfield',
-      '#title' => t("Age group no. @number", array('@number' => $index)),
+      '#title' => t("Driving Experience group no. @number", array('@number' => $index)),
       '#field_prefix' => t('From'),
       '#default_value' => isset($gruposEdad[$index][FilterByInterval::DESDE]) ? $gruposEdad[$index][FilterByInterval::DESDE] : 0,
       '#size' => 3,

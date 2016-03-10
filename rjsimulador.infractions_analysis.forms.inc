@@ -74,7 +74,7 @@ function generate_form_infractions_general_analysis(&$form_state, GestorSimulaci
     $form_state['values']['infractions_general_select_type'] : $firstKeyTiposInfraccion;
 
   // Generamos el título del gráfico
-  $tituloGrafico = t("Average number of infraction '@infraccion' by Partida and user<br>@simulacion",
+  $tituloGrafico = t("Average number of infraction '@infraccion' by played game and user<br>@simulacion",
     array(
       '@infraccion' => Constants::getNombreInfraccion($idInfraccion),
       '@simulacion' => Constants::getNombreSimulacion($idSimulacion)
@@ -172,7 +172,7 @@ function generate_form_infractions_group_analysis(&$form_state, GestorSimulacion
     $form_state['values']['infractions_group_select_type'] : $firstKeyTiposInfraccion;
 
   // Generamos el título del gráfico
-  $tituloGrafico = t("Average number of infractions '@infraccion' by Partida and group<br>@simulacion",
+  $tituloGrafico = t("Average number of infractions '@infraccion' by played game and group<br>@simulacion",
     array(
       '@infraccion' => Constants::getNombreInfraccion($idInfraccion),
       '@simulacion' => Constants::getNombreSimulacion($idSimulacion)
@@ -414,7 +414,7 @@ function generate_form_infractions_user_analysis(&$form_state, GestorSimulacione
   $usuarioActual = $provider->loadSimulatorUser($uidUser);
 
   // Generamos el título del gráfico
-  $tituloGrafico = t("Average number of infractions '@infraccion' by Partida from user @userName<br>@simulacion",
+  $tituloGrafico = t("Average number of infractions '@infraccion' by played game from user @userName<br>@simulacion",
     array(
       '@userName' => $usuarioActual->getName(),
       '@infraccion' => Constants::getNombreInfraccion($idInfraccion),
