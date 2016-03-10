@@ -304,7 +304,7 @@ function rjsim_simulaciones_main_form($form, &$form_state, GestorSimulaciones $g
 
   $form['rjsim_fieldset_infracciones'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Infractions percentage of all Simulations.'),
+    '#title' => t('Infractions percentage for all simulations.'),
     '#collapsible' => FALSE,
     '#description' => t('Shows most committed infractions in the Simulator.'),
     '#attributes' => array('class' => array('rjsim-margin"'))
