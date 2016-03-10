@@ -27,7 +27,7 @@ function rjsimulador_simulaciones_page($uid = NULL, $adminMode = FALSE) {
   // Headers array
   $headers = array(
     array('data' => t('No. of Simulation')),
-    array('data' => t('Simulation Name')),
+    array('data' => t('Simulation name')),
     array('data' => t('Links'))
   );
 
@@ -113,7 +113,7 @@ function rjsimulador_partidas_simulacion_page($id_simulacion, $uid = NULL, $admi
     ->retrieveAllPartidasByIdSimulacion($id_simulacion);
 
   if ($listadoPartidas->count() == 0) {
-    $renderArray = array('#markup' => '<span>' . t('You have no stored Partidas for this Simulation.') . '</span>');
+    $renderArray = array('#markup' => t('<span>You have no stored games for this Simulation.</span>'));
     return $renderArray;
   }
 
@@ -128,10 +128,10 @@ function rjsimulador_partidas_simulacion_page($id_simulacion, $uid = NULL, $admi
   // Headers array
   $headers = array(
     array('data' => t('Date'), 'field' => 'Fecha', 'sort' => 'desc'),
-    array('data' => t('Simulation Name')),
-    array('data' => t('Average Consumption')),
-    array('data' => t('Total Consumption')),
-    array('data' => t('Total Time')),
+    array('data' => t('Simulation name')),
+    array('data' => t('Average consumption')),
+    array('data' => t('Total consumption')),
+    array('data' => t('Total time')),
     array('data' => t('Links'))
   );
 
@@ -148,9 +148,9 @@ function rjsimulador_partidas_simulacion_page($id_simulacion, $uid = NULL, $admi
     $rows[] = array(
       array('data' => $partida->getFechaAsObject()->format("Y-m-d H:i:s")),
       array('data' => $partida->getNombreSimulacion()),
-      array('data' => $partida->getConsumoMedio()),
-      array('data' => $partida->getConsumoTotal()),
-      array('data' => $partida->getTiempoTotal()),
+      array('data' => round($partida->getConsumoMedio(), 2)),
+      array('data' => round($partida->getConsumoTotal(), 2)),
+      array('data' => round($partida->getTiempoTotal(), 2)),
       array('data' => $partida->getURLToPartidaPage($adminMode, 'html_link'))
     );
   }
@@ -166,7 +166,7 @@ function rjsimulador_partidas_simulacion_page($id_simulacion, $uid = NULL, $admi
           '#theme' => 'table',
           '#header' => $headers,
           '#rows' => array_slice($rows, $offset, $limit),
-          '#empty' => t('You have no stored Partidas for this Simulation.'),
+          '#empty' => t('You have no stored games for this simulation.'),
           '#attributes' => array('class' => array('rjsim-tabla-top'))
         ),
         array(
@@ -254,7 +254,7 @@ function rjsimulador_partida_page($id_partida) {
           '#theme' => 'table',
           '#header' => $headers,
           '#rows' => $rows,
-          '#empty' => t('There is no data for this Partida.'),
+          '#empty' => t('There is no data for this game.'),
         ),
       );
   }
@@ -262,7 +262,7 @@ function rjsimulador_partida_page($id_partida) {
   // Creamos la tabla a sacar para mostrar las infracciones de la partida
   // Headers array
   $headers = array(
-    array('data' => t('Infraction Number')),
+    array('data' => t('Infraction number')),
     array('data' => t('Instant')),
   );
 
@@ -289,7 +289,7 @@ function rjsimulador_partida_page($id_partida) {
           '#theme' => 'table',
           '#header' => $headers,
           '#rows' => $rows,
-          '#empty' => t('There is no data for this Partida.'),
+          '#empty' => t('There is no data for this game.'),
         ),
       );
   }
@@ -346,12 +346,12 @@ function generarTablaResumenDatosPartida(Partida $partida, ListaPartidas $listaP
 
   // Creamos la tabla con los datos de resumen de la partida
   $headers = array(
-    array('data' => t('Average Consumption')),
-    array('data' => t('Total Time')),
-    array('data' => t('Average Speed')),
-    array('data' => t('Speed Typical Deviation')),
+    array('data' => t('Average consumption')),
+    array('data' => t('Total time')),
+    array('data' => t('Average speed')),
+    array('data' => t('Speed typical deviation')),
     array('data' => t('Average RPM')),
-    array('data' => t('RPM Typical Deviation'))
+    array('data' => t('RPM typical deviation'))
   );
 
   $rows =
@@ -373,8 +373,8 @@ function generarTablaResumenDatosPartida(Partida $partida, ListaPartidas $listaP
         '#theme' => 'table',
         '#header' => $headers,
         '#rows' => $rows,
-        '#empty' => t('There is no data for this Partida.'),
-        '#caption' => '<h3>' . t('General data from Partida') . '</h3>',
+        '#empty' => t('There is no data for this game.'),
+        '#caption' => t('<h3>General data from game</h3>'),
         '#attributes' => array('class' => array('rjsim-tabla'))
       ),
     );
@@ -436,8 +436,8 @@ function generarTablaRpmMarchas(Partida $partida) {
         '#theme' => 'table',
         '#header' => $headers,
         '#rows' => $rows,
-        '#empty' => t('There is no data for this Partida.'),
-        '#caption' => '<h3>' . t('Average RPMs by gear') . '</h3>',
+        '#empty' => t('There is no data for this game.'),
+        '#caption' => t('<h3>Average RPMs by gear</h3>'),
         '#attributes' => array('class' => array('rjsim-tabla'))
       ),
     );

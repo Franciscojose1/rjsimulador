@@ -76,24 +76,24 @@ function generate_form_data_general_analysis(&$form_state, GestorSimulaciones $g
 
   // Generamos el título del gráfico
   if ($tipoDatoCalcular == CalculateAverageData::CONSUMO_MEDIO) {
-    $tituloGrafico = t("Average consumption of all users<br>@simulacion",
+    $tituloGrafico = t('Average consumption of all users<br>@simulacion',
       array('@simulacion' => Constants::getNombreSimulacion($idSimulacion)));
   }
   elseif ($tipoDatoCalcular == CalculateAverageData::TIEMPO_TOTAL) {
-    $tituloGrafico = t("Average Partida time length of all users<br>@simulacion",
+    $tituloGrafico = t('Average Partida time length of all users<br>@simulacion',
       array('@simulacion' => Constants::getNombreSimulacion($idSimulacion)));
   }
   elseif ($tipoDatoCalcular == CalculateAverageData::VELOCIDAD) {
-    $tituloGrafico = t("Average speed by Partida of all users<br>@simulacion",
+    $tituloGrafico = t('Average speed by Partida of all users<br>@simulacion',
       array('@simulacion' => Constants::getNombreSimulacion($idSimulacion)));
   }
   else {
-    $tituloGrafico = t("Average RPMs by Partida of all users<br>@simulacion",
+    $tituloGrafico = t('Average RPMs by Partida of all users<br>@simulacion',
       array('@simulacion' => Constants::getNombreSimulacion($idSimulacion)));
   }
 
   // Etiqueta del Eje X
-  $labelAxisX[] = t("Users");
+  $labelAxisX[] = t('Users');
 
   // Generamos el gráfico
   $form['data_general_chart'] = array(
@@ -190,24 +190,24 @@ function generate_form_data_group_analysis(&$form_state, GestorSimulaciones $ges
 
   // Generamos el título del gráfico
   if ($tipoDatoCalcular == CalculateAverageData::CONSUMO_MEDIO) {
-    $tituloGrafico = t("Average consumption of users groups<br>@simulacion",
+    $tituloGrafico = t('Average consumption of users groups<br>@simulacion',
       array('@simulacion' => Constants::getNombreSimulacion($idSimulacion)));
   }
   elseif ($tipoDatoCalcular == CalculateAverageData::TIEMPO_TOTAL) {
-    $tituloGrafico = t("Average Partida time length of users groups<br>@simulacion",
+    $tituloGrafico = t('Average Partida time length of users groups<br>@simulacion',
       array('@simulacion' => Constants::getNombreSimulacion($idSimulacion)));
   }
   elseif ($tipoDatoCalcular == CalculateAverageData::VELOCIDAD) {
-    $tituloGrafico = t("Average speed by Partida of users groups<br>@simulacion",
+    $tituloGrafico = t('Average speed by Partida of users groups<br>@simulacion',
       array('@simulacion' => Constants::getNombreSimulacion($idSimulacion)));
   }
   else {
-    $tituloGrafico = t("Average RPMs by Partida of users groups<br>@simulacion",
+    $tituloGrafico = t('Average RPMs by Partida of users groups<br>@simulacion',
       array('@simulacion' => Constants::getNombreSimulacion($idSimulacion)));
   }
 
   // Etiquet Eje X
-  $labelAxisX[] = t("Groups of users");
+  $labelAxisX[] = t('Groups of users');
 
   $form['data_group_container'] = array(
     '#prefix' => '<div id="div-data-group">',
@@ -457,21 +457,21 @@ function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gest
       ));
   }
   elseif ($tipoDatoCalcular == CalculateAverageData::TIEMPO_TOTAL) {
-    $tituloGrafico = t("Average Partida time length of user @userName<br>@simulacion",
+    $tituloGrafico = t("Average played game time length of user @userName<br>@simulacion",
       array(
         '@userName' => $usuarioActual->getName(),
         '@simulacion' => Constants::getNombreSimulacion($idSimulacion)
       ));
   }
   elseif ($tipoDatoCalcular == CalculateAverageData::VELOCIDAD) {
-    $tituloGrafico = t("Average speed by Partida of user @userName<br>@simulacion",
+    $tituloGrafico = t("Average speed by game of user @userName<br>@simulacion",
       array(
         '@userName' => $usuarioActual->getName(),
         '@simulacion' => Constants::getNombreSimulacion($idSimulacion)
       ));
   }
   else {
-    $tituloGrafico = t("Average RPMs by Partida of user @userName<br>@simulacion",
+    $tituloGrafico = t("Average RPMs by game of user @userName<br>@simulacion",
       array(
         '@userName' => $usuarioActual->getName(),
         '@simulacion' => Constants::getNombreSimulacion($idSimulacion)

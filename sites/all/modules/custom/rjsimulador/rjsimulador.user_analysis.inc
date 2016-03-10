@@ -20,13 +20,13 @@ function rjsimulador_simulaciones_usuarios_admin_page() {
     array('data' => t('User ID'), 'field' => 'Uid', 'sort' => 'ASC'),
     array('data' => t('User Name'), 'field' => 'Name'),
     array('data' => t('Age')),
-    array('data' => t('Driving Experience')),
-    array('data' => t('Average Annual Mileage')),
+    array('data' => t('Driving experience')),
+    array('data' => t('Average annual mileage')),
     array('data' => t('Usual videogame player?')),
     array('data' => t('Email')),
     array('data' => t('Created'), 'field' => 'Created'),
-    array('data' => t('Last Login'), 'field' => 'Login'),
-    array('data' => t('Last Access'), 'field' => 'LastAccess'),
+    array('data' => t('Last login'), 'field' => 'Login'),
+    array('data' => t('Last access'), 'field' => 'LastAccess'),
     array('data' => t('Links'))
   );
 

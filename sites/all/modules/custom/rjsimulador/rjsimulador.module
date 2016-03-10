@@ -6,7 +6,7 @@ function rjsimulador_permission() {
   return array(
     'crear partidas' => array(
       'title' => t('Create new Partidas'),
-      'description' => t('Allows users with this permission to store data of a Partida.'),
+      'description' => t('Allows users with this permission to store data of a game.'),
     ),
     'ver info partidas' => array(
       'title' => t('See your own statistics'),
