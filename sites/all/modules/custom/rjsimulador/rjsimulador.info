@@ -2,6 +2,7 @@ name = Análisis de datos de simulación
 description = Gestión de los resultados recibidos desde la aplicación de conducción de Unity.
 package = UVa Simulador
 core = 7.x
+version = 7.x-1.0
 ; Configuration
 configure = admin/config/media/rjsimulador
 ; Includes - Interfaces
