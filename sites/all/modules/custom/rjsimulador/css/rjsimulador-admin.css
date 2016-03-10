@@ -47,10 +47,22 @@
     outline: 3px solid #D0E8CE;
 }
 
+.rjsimulador-analysis .group-analysis .entradas {
+    padding: 5px;
+}
+
 .rjsimulador-analysis .group-analysis > div.fieldset-wrapper > fieldset.form-wrapper.entradas > div.fieldset-wrapper .form-item {
     padding-top: 5px;
     width:auto;
     float:left;
+}
+
+.rjsimulador-analysis .group-analysis > div.fieldset-wrapper > fieldset.form-wrapper.entradas > div.fieldset-wrapper .form-item .field-prefix {
+    padding-right: 2px;
+}
+
+.rjsimulador-analysis .group-analysis > div.fieldset-wrapper > fieldset.form-wrapper.entradas > div.fieldset-wrapper .form-item .field-suffix {
+    padding-left: 2px;
 }
 
 .rjsimulador-config .group {
