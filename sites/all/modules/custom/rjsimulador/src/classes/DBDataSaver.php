@@ -129,4 +129,38 @@ class DBDataSaver implements DataSaver {
       throw new LogicException(t("Array pass to function must have correct keys."));
     }
   }
+
+  /**
+   * @inheritdoc
+   */
+  public function saveTipoSimulacion(array $tipoSimulacion) {
+    // Si se pasa la key simulation_id se va a actualizar
+    if (key_exists('simulation_id', $tipoSimulacion)) {
+      $existQuery = db_select('rjsim_simulacion', 's')
+        ->fields('s', array('id_simulacion'))
+        ->condition('s.id_simulacion', $tipoSimulacion['simulation_id'], "=")
+        ->execute();
+
+      if ($existQuery->rowCount() > 0) {
+        $updateTipoSimulacion =
+          db_update('rjsim_simulacion')
+            ->fields(array('nombre_simulacion' => $tipoSimulacion['simulacion_name']))
+            ->condition('id_simulacion', $tipoSimulacion['simulation_id'], '=')
+            ->execute();
+      } else {
+        throw new DatabaseSchemaObjectDoesNotExistException(t("Simulation id @simulation_id not exists in database.",
+          array('simulation_id', $tipoSimulacion['simulation_id'])));
+      }
+    } elseif (!key_exists('simulation_id', $tipoSimulacion) && key_exists('simulation_name', $tipoSimulacion)) {
+      $queryTipoSimulacion =
+        db_insert('rjsim_simulacion')
+          ->fields(
+            array('nombre_simulacion' => $tipoSimulacion['simulation_name'])
+          );
+
+      $queryTipoSimulacion->execute();
+    } else {
+      throw new LogicException(t("Array pass to function must have correct keys."));
+    }
+  }
 } 

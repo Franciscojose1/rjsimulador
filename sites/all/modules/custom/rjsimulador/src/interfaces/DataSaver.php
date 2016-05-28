@@ -26,4 +26,18 @@ interface DataSaver {
    * creará un nuevo tipo de infracción.
    */
   public function saveTipoInfraccion(array $tipoInfraccion);
+
+  /**
+   * Almacena o actualiza un tipo de simulación.
+   * @param array $tipoInfraccion Tipo de infracción como un array con keys
+   * 'infraction_id' e 'infraction_name'. Si 'infraction_id' no existe se
+   * creará un nuevo tipo de infracción.
+   */
+  /**
+   * Almacena o actualiza un tipo de simulación.
+   * @param array $tipoSimulacion Tipo de simulación como un array con keys
+   * 'simulation_id' y 'simulation_name'. Si 'simulation_id' no existe se
+   * creará un nuevo tipo de simulación.
+   */
+  public function saveTipoSimulacion(array $tipoSimulacion);
 } 

@@ -149,6 +149,24 @@ function rjsimulador_menu() {
     'access arguments' => array('configurar simulador'),
     'type' => MENU_LOCAL_ACTION,
   );
+  $items['admin/config/media/rjsimulador/simulations'] = array(
+    'title' => 'Simulations configuration',
+    'description' => 'Configure simulations data',
+    'file' => 'rjsimulador.admin.inc',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('rjsimulador_configuration_simulations_admin_form'),
+    'access arguments' => array('configurar simulador'),
+    'type' => MENU_LOCAL_TASK,
+  );
+  $items['admin/config/media/rjsimulador/simulations/add'] = array(
+    'title' => 'Add new simulation type',
+    'description' => 'Add new simulation type',
+    'file' => 'rjsimulador.admin.inc',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('rjsimulador_configuration_simulations_add_admin_form'),
+    'access arguments' => array('configurar simulador'),
+    'type' => MENU_LOCAL_ACTION,
+  );
 
   return $items;
 }

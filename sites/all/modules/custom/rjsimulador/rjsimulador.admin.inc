@@ -501,7 +501,7 @@ function rjsimulador_configuration_infractions_admin_form_submit($form, &$form_s
     watchdog_exception('rjsimulador', $e);
   }
 
-  drupal_set_message(t('All infractions have been updated.'), 'status');
+  drupal_set_message(t('All selected infractions have been updated.'), 'status');
 }
 
 function rjsimulador_configuration_infractions_add_admin_form($form, &$form_state) {
@@ -557,6 +557,7 @@ function rjsimulador_configuration_infractions_add_admin_form($form, &$form_stat
     '#type' => 'button',
     '#value' => t('Delete new type'),
     '#name' => 'delete_new_type_button',
+    '#limit_validation_errors' => array(),
     '#ajax' => array(
       'callback' => 'ajax_infraction_type_add_callback',
       'wrapper' => 'infraction-type-container',
@@ -592,5 +593,200 @@ function rjsimulador_configuration_infractions_add_admin_form_submit($form, &$fo
     watchdog_exception('rjsimulador', $e);
   }
 
+  $form_state['redirect'] = 'admin/config/media/rjsimulador/infractions';
+
   drupal_set_message(t('New infractions added.'), 'status');
+}
+
+function rjsimulador_configuration_simulations_admin_form($form, &$form_state) {
+  $provider = FactoryDataManager::createDataProvider();
+
+  $tiposSimulacion = $provider->loadAllTiposSimulaciones();
+
+  // Creamos la tabla a sacar para mostrar las simulaciones
+  // Headers array
+  $headers = array(
+    'simulation_id' => array('data' => t('Simulation ID')),
+    'simulation_name' => array('data' => t('Simulation Name')),
+  );
+
+  $options = array();
+  foreach ($tiposSimulacion as $idSimulacion => $nombreSimulacion) {
+    $options[$idSimulacion] = array(
+      'simulation_id' => array(
+        'data' => array(
+          '#markup' => $idSimulacion
+        )
+      ),
+      'simulation_name' => array(
+        'data' => array(
+          '#type' => 'textfield',
+          '#value' => $nombreSimulacion,
+          '#name' => 'simulation_name['.$idSimulacion.']',
+          '#size' => 100,
+          '#maxlength' => 250,
+          '#required' => TRUE,
+          '#attributes' => array('onChange' => 'document.getElementsByName("simulations_table['.$idSimulacion.']")[0].checked = true;')
+        ),
+      ),
+    );
+  }
+
+  $form['configure_simulations']['simulations_table'] = array(
+    '#type' => 'tableselect',
+    '#header' => $headers,
+    '#options' => $options,
+    '#empty' => t('There are no simulations in the database.'),
+  );
+
+  $form['configure_simulations']['simulation_name'] = array(
+    '#type' => 'value',
+  );
+
+  $form['configure_simulations']['actions'] = array (
+    '#type' => 'actions'
+  );
+
+  $form['configure_simulations']['actions']['submit'] = array (
+    '#type' => 'submit',
+    '#value' => t('Submit')
+  );
+
+  $form['configure_simulations']['actions']['reset'] = array(
+    '#type' => 'button',
+    '#value' => t('Reset'),
+    '#attributes' => array('onclick' => 'this.form.reset(); return false;')
+  );
+
+  return $form;
+}
+
+function rjsimulador_configuration_simulations_admin_form_validate($form, &$form_state) {
+  $data = array_filter($form_state['values']['simulations_table']);
+  if (empty($data)) {
+    form_set_error('simulations_table', t('You have to select at least one row to be processed.'));
+  }
+}
+
+function rjsimulador_configuration_simulations_admin_form_submit($form, &$form_state) {
+  $selectedRows = array_filter($form_state['values']['simulations_table']);
+
+  $saver = FactoryDataManager::createDataSaver();
+
+  $transaction = db_transaction();
+
+  try {
+    foreach($selectedRows as $idSimulacion) {
+      $nombreSimulacion = $form_state['values']['infraction_name'][$idSimulacion];
+
+      $tipoSimulacion = array(
+        'simulation_id' => $idSimulacion,
+        'simulation_name' => $nombreSimulacion
+      );
+
+      $saver->saveTipoSimulacion($tipoSimulacion);
+    }
+    // Damos por finalizada la transacción
+    unset($transaction);
+
+  } catch (Exception $e) {
+    $transaction->rollback();
+    watchdog_exception('rjsimulador', $e);
+  }
+
+  drupal_set_message(t('All selected simulations have been updated.'), 'status');
+}
+
+function rjsimulador_configuration_simulations_add_admin_form($form, &$form_state) {
+
+  $form['simulations_type_container']['simulation_type'] = array(
+    '#type' => 'fieldset',
+    '#prefix' => '<div id="simulation-type-container">',
+    '#suffix' => '</div>',
+    '#title' => t('Add simulations types'),
+    '#tree' => TRUE
+  );
+
+  $form_state['total_rows'] = isset($form_state['total_rows']) ? $form_state['total_rows'] : 1;
+
+  if (isset($form_state['clicked_button'])) {
+    if ($form_state['clicked_button']['#name'] == 'add_new_type_button') {
+      $form_state['total_rows']++;
+    }
+
+    if ($form_state['clicked_button']['#name'] == 'delete_new_type_button') {
+      $form_state['total_rows']--;
+    }
+  }
+
+  $form_state['total_rows'] = $form_state['total_rows'] == 0 ? 1 : $form_state['total_rows'];
+
+  for($index = 0; $index < $form_state['total_rows']; $index++) {
+    $form['simulations_type_container']['simulation_type'][$index] = array(
+      '#type' => 'textfield',
+      '#title' => t('New simulation name'),
+      '#size' => 100,
+      '#maxlength' => 250,
+      '#required' => TRUE
+    );
+  }
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit')
+  );
+
+  $form['add_button'] = array(
+    '#type' => 'button',
+    '#value' => t('Add new type'),
+    '#name' => 'add_new_type_button',
+    '#ajax' => array(
+      'callback' => 'ajax_simulation_type_add_callback',
+      'wrapper' => 'simulation-type-container',
+    ),
+  );
+
+  $form['delete_button'] = array(
+    '#type' => 'button',
+    '#value' => t('Delete new type'),
+    '#name' => 'delete_new_type_button',
+    '#limit_validation_errors' => array(),
+    '#ajax' => array(
+      'callback' => 'ajax_simulation_type_add_callback',
+      'wrapper' => 'simulation-type-container',
+    ),
+  );
+
+  return $form;
+}
+
+function ajax_simulation_type_add_callback($form, &$form_state) {
+  return $form['simulations_type_container']['simulation_type'];
+}
+
+function rjsimulador_configuration_simulations_add_admin_form_submit($form, &$form_state) {
+  $saver = FactoryDataManager::createDataSaver();
+
+  $transaction = db_transaction();
+
+  try {
+    foreach($form_state['values']['simulation_type'] as $simulationTypeName) {
+      // Como vamos a crear nuevas simulaciones no tenemos id, así que no metemos nada
+      $simulationType = array(
+        'simulation_name' => check_plain($simulationTypeName)
+      );
+
+      $saver->saveTipoSimulacion($simulationType);
+    }
+    // Damos la transacción por finalizada
+    unset($transaction);
+
+  } catch (Exception $e) {
+    $transaction->rollback();
+    watchdog_exception('rjsimulador', $e);
+  }
+
+  $form_state['redirect'] = 'admin/config/media/rjsimulador/simulations';
+
+  drupal_set_message(t('New simulations added.'), 'status');
 }
