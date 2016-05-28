@@ -299,7 +299,7 @@ function validate_group_fields(&$form_state, $prefix) {
   }
 }
 
-function initializeDefaultgroups(&$form_state, $prefix) {
+function initializeDefaultGroups(&$form_state, $prefix) {
   $grupoDefault = Grupos::getGruposDefault();
   $grupoDefaultKey = variable_get('rjsimulador_grupo_default', 0);
 

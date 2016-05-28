@@ -498,7 +498,7 @@ function generate_form_infractions_user_analysis(&$form_state, GestorSimulacione
     );
 
   // Recuperamos los datos del grupo del resto de usuarios que está en el mismo grupo de kilometraje medio que el usuario analizado
-  /*$listaRestoUsuariosMismoGrupoKilometraje = $listaRestoUsuarios->filterBy(new FilterByInterval($usuarioActual->getGrupoKilometrajeMedioAnual(), FilterByInterval::AVERAGE_ANNUAL_MILEAGE));
+  $listaRestoUsuariosMismoGrupoKilometraje = $listaRestoUsuarios->filterBy(new FilterByInterval($usuarioActual->getGrupoKilometrajeMedioAnual(), FilterByInterval::AVERAGE_ANNUAL_MILEAGE));
   $retriever->setListaUsuarios($listaRestoUsuariosMismoGrupoKilometraje);
   $dataRestoUsuarioMismoGrupoKilometraje = round($retriever->retrieveAllPartidasByIdSimulacion($idSimulacion)
     ->calculateData(new CalculateAverageData($tipoDatoCalcular)), 2);
@@ -508,7 +508,7 @@ function generate_form_infractions_user_analysis(&$form_state, GestorSimulacione
       '#type' => 'chart_data',
       '#title' => t('Group of users with @user_group', array('@user_group' => $usuarioActual->getGrupoKilometrajeMedioAnual(true))),
       '#data' => array($dataRestoUsuarioMismoGrupoKilometraje),
-    );*/
+    );
 
   // Recuperamos los datos del grupo del resto de usuarios que está en es del mismo tipo de jugador habitual que el usuario analizado
   $listaRestoUsuariosMismoTipoJugador = $listaRestoUsuarios->filterBy(new FilterByEquality(array($usuarioActual->isUsualVideogamePlayer()),

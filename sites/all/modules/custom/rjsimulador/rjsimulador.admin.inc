@@ -1,6 +1,6 @@
 <?php
-function rjsimulador_configuration_admin_form($form, &$form_state) {
-  $form['general_configuration'] = arraY(
+function rjsimulador_configuration_groups_admin_form($form, &$form_state) {
+  $form['general_configuration'] = array(
     '#type' => 'fieldset',
     '#title' => t('General configuration'),
     '#description' => t('General configuration about module.')
@@ -403,4 +403,194 @@ function rjsimulador_configuration_admin_form_submit($form, &$form_state) {
   }
 
   drupal_set_message(t('Groups correctly saved.'), 'status');
+}
+
+function rjsimulador_configuration_infractions_admin_form($form, &$form_state) {
+  $provider = FactoryDataManager::createDataProvider();
+
+  $tiposInfraccion = $provider->loadAllTiposInfracciones();
+
+  // Creamos la tabla a sacar para mostrar las infracciones
+  // Headers array
+  $headers = array(
+    'infraction_id' => array('data' => t('Infraction ID')),
+    'infraction_name' => array('data' => t('Infraction Name')),
+  );
+
+  $options = array();
+  foreach ($tiposInfraccion as $idInfraccion => $nombreInfraccion) {
+    $options[$idInfraccion] = array(
+      'infraction_id' => array(
+        'data' => array(
+          '#markup' => $idInfraccion
+        )
+      ),
+      'infraction_name' => array(
+        'data' => array(
+          '#type' => 'textfield',
+          '#value' => $nombreInfraccion,
+          '#name' => 'infraction_name['.$idInfraccion.']',
+          '#size' => 100,
+          '#maxlength' => 250,
+          '#required' => TRUE,
+          '#attributes' => array('onChange' => 'document.getElementsByName("infractions_table['.$idInfraccion.']")[0].checked = true;')
+        ),
+      ),
+    );
+  }
+
+  $form['configure_infractions']['infractions_table'] = array(
+    '#type' => 'tableselect',
+    '#header' => $headers,
+    '#options' => $options,
+    '#empty' => t('There are no infractions in the database.'),
+  );
+
+  $form['configure_infractions']['infraction_name'] = array(
+    '#type' => 'value',
+  );
+
+  $form['configure_infractions']['actions'] = array (
+    '#type' => 'actions'
+  );
+
+  $form['configure_infractions']['actions']['submit'] = array (
+    '#type' => 'submit',
+    '#value' => t('Submit')
+  );
+
+  $form['configure_infractions']['actions']['reset'] = array(
+    '#type' => 'button',
+    '#value' => t('Reset'),
+    '#attributes' => array('onclick' => 'this.form.reset(); return false;')
+  );
+
+  return $form;
+}
+
+function rjsimulador_configuration_infractions_admin_form_validate($form, &$form_state) {
+  $data = array_filter($form_state['values']['infractions_table']);
+  if (empty($data)) {
+    form_set_error('infractions_table', t('You have to select at least one row to be processed.'));
+  }
+}
+
+function rjsimulador_configuration_infractions_admin_form_submit($form, &$form_state) {
+  $selectedRows = array_filter($form_state['values']['infractions_table']);
+
+  $saver = FactoryDataManager::createDataSaver();
+
+  $transaction = db_transaction();
+
+  try {
+    foreach($selectedRows as $idInfraccion) {
+      $nombreInfraccion = $form_state['values']['infraction_name'][$idInfraccion];
+
+      $tipoInfraccion = array(
+        'infraction_id' => $idInfraccion,
+        'infraction_name' => $nombreInfraccion
+      );
+
+      $saver->saveTipoInfraccion($tipoInfraccion);
+    }
+    // Damos por finalizada la transacción
+    unset($transaction);
+
+  } catch (Exception $e) {
+    $transaction->rollback();
+    watchdog_exception('rjsimulador', $e);
+  }
+
+  drupal_set_message(t('All infractions have been updated.'), 'status');
+}
+
+function rjsimulador_configuration_infractions_add_admin_form($form, &$form_state) {
+
+  $form['infractions_type_container']['infraction_type'] = array(
+    '#type' => 'fieldset',
+    '#prefix' => '<div id="infraction-type-container">',
+    '#suffix' => '</div>',
+    '#title' => t('Add infractions types'),
+    '#tree' => TRUE
+  );
+
+  $form_state['total_rows'] = isset($form_state['total_rows']) ? $form_state['total_rows'] : 1;
+
+  if (isset($form_state['clicked_button'])) {
+    if ($form_state['clicked_button']['#name'] == 'add_new_type_button') {
+      $form_state['total_rows']++;
+    }
+
+    if ($form_state['clicked_button']['#name'] == 'delete_new_type_button') {
+      $form_state['total_rows']--;
+    }
+  }
+
+  $form_state['total_rows'] = $form_state['total_rows'] == 0 ? 1 : $form_state['total_rows'];
+
+  for($index = 0; $index < $form_state['total_rows']; $index++) {
+    $form['infractions_type_container']['infraction_type'][$index] = array(
+      '#type' => 'textfield',
+      '#title' => t('New infraction name'),
+      '#size' => 100,
+      '#maxlength' => 250,
+      '#required' => TRUE
+    );
+  }
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit')
+  );
+
+  $form['add_button'] = array(
+    '#type' => 'button',
+    '#value' => t('Add new type'),
+    '#name' => 'add_new_type_button',
+    '#ajax' => array(
+      'callback' => 'ajax_infraction_type_add_callback',
+      'wrapper' => 'infraction-type-container',
+    ),
+  );
+
+  $form['delete_button'] = array(
+    '#type' => 'button',
+    '#value' => t('Delete new type'),
+    '#name' => 'delete_new_type_button',
+    '#ajax' => array(
+      'callback' => 'ajax_infraction_type_add_callback',
+      'wrapper' => 'infraction-type-container',
+    ),
+  );
+
+  return $form;
+}
+
+function ajax_infraction_type_add_callback($form, &$form_state) {
+  return $form['infractions_type_container']['infraction_type'];
+}
+
+function rjsimulador_configuration_infractions_add_admin_form_submit($form, &$form_state) {
+  $saver = FactoryDataManager::createDataSaver();
+
+  $transaction = db_transaction();
+
+  try {
+    foreach($form_state['values']['infraction_type'] as $infractionTypeName) {
+      // Como vamos a crear nuevas infraccione no tenemos id, así que no metemos nada
+      $infractionType = array(
+        'infraction_name' => check_plain($infractionTypeName)
+      );
+
+      $saver->saveTipoInfraccion($infractionType);
+    }
+    // Damos la transacción por finalizada
+    unset($transaction);
+
+  } catch (Exception $e) {
+    $transaction->rollback();
+    watchdog_exception('rjsimulador', $e);
+  }
+
+  drupal_set_message(t('New infractions added.'), 'status');
 }

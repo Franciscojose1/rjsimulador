@@ -2,28 +2,28 @@
 function rjsimulador_install() {
   db_insert('rjsim_infracciones')
     ->fields(array('nombre_infraccion'))
-    ->values(array('Atropello a un peatón'))
-    ->values(array('Colisión con un vehículo'))
-    ->values(array('Subirse a la acera'))
-    ->values(array('Exceso del límite de velocidad'))
-    ->values(array('Salida tomada en la rotonda incorrecta'))
-    ->values(array('Ruta en la rotonda realizada incorrectamente'))
-    ->values(array('Rotonda realizada en sentido inverso'))
-    ->values(array('Salida tomada en la intersección incorrecta'))
-    ->values(array('Stop realizado de forma incorrecta'))
-    ->values(array('Ceda el paso realizado incorrectamente'))
-    ->values(array('Realizado el cruce con el semáforo en rojo'))
-    ->values(array('Colisión con un objeto del escenario (no con un vehículo)'))
-    ->values(array('Se ha cruzado la línea continua de la carretera'))
+    ->values(array(1, 'Atropello a un peatón'))
+    ->values(array(2, 'Colisión con un vehículo'))
+    ->values(array(3, 'Subirse a la acera'))
+    ->values(array(4, 'Exceso del límite de velocidad'))
+    ->values(array(5, 'Salida tomada en la rotonda incorrecta'))
+    ->values(array(6, 'Ruta en la rotonda realizada incorrectamente'))
+    ->values(array(7, 'Rotonda realizada en sentido inverso'))
+    ->values(array(8, 'Salida tomada en la intersección incorrecta'))
+    ->values(array(9, 'Stop realizado de forma incorrecta'))
+    ->values(array(10, 'Ceda el paso realizado incorrectamente'))
+    ->values(array(11, 'Realizado el cruce con el semáforo en rojo'))
+    ->values(array(12, 'Colisión con un objeto del escenario (no con un vehículo)'))
+    ->values(array(13, 'Se ha cruzado la línea continua de la carretera'))
     ->execute();
 
   db_insert('rjsim_simulacion')
     ->fields(array('nombre_simulacion'))
-    ->values(array('Simulación 1: Recorrido por ciudad'))
-    ->values(array('Simulación 2: Recorrido por el exterior'))
-    ->values(array('Simulación 3: Recorrido del interior al exterior'))
-    ->values(array('Simulación 4: Recorrido del exterior al interior'))
-    ->values(array('Simulación 5: Recorrido libre'))
+    ->values(array(1, 'Simulación 1: Recorrido por ciudad'))
+    ->values(array(2, 'Simulación 2: Recorrido por el exterior'))
+    ->values(array(3, 'Simulación 3: Recorrido del interior al exterior'))
+    ->values(array(4, 'Simulación 4: Recorrido del exterior al interior'))
+    ->values(array(5, 'Simulación 5: Recorrido libre'))
     ->execute();
 }
 
@@ -274,4 +274,20 @@ function rjsimulador_uninstall() {
   variable_del('rjsimulador_grupos_edad');
   variable_del('rjsimulador_grupos_experiencia');
   variable_del('rjsimulador_grupos_kilometraje');
+}
+
+/**
+ * Inserta nuevas Infracciones en la base de datos
+ */
+function rjsimulador_update_7100() {
+  db_insert('rjsim_infracciones')
+    ->fields(array('id_infraccion', 'nombre_infraccion'))
+    ->values(array(14, 'Luces cortas no encendidas en el tunel'))
+    ->values(array(15, 'Luces no encendidas durante la noche'))
+    ->values(array(16, 'Realizado el giro incorrectamente en la intersección'))
+    ->values(array(17, 'No se ha respetado la distancia de seguridad entre vehículos'))
+    ->values(array(18, 'No ha activado el intermitente al realizar un giro'))
+    ->values(array(19, 'Ha realizado un adelantamiento sin activar los intermitentes'))
+    ->values(array(20, 'Velocidad por debajo de la mínima para la zona'))
+    ->execute();
 }

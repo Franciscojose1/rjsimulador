@@ -16,6 +16,10 @@ function rjsimulador_permission() {
       'title' => t('Access all information about Simulator'),
       'description' => t('Allows user with this permission see all information about the Simulator.'),
     ),
+    'configurar simulador' => array(
+      'title' => t('Configure Simulator module'),
+      'description' => t('Allows user with this permission configure Simulator module'),
+    )
   );
 }
 
@@ -114,13 +118,36 @@ function rjsimulador_menu() {
     'type' => MENU_NORMAL_ITEM,
   );
   $items['admin/config/media/rjsimulador'] = array(
-    'title' => 'Simulator module',
+    'title' => 'Simulator configuration',
     'description' => 'Configure groups of analysis for users in Simulator',
     'file' => 'rjsimulador.admin.inc',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('rjsimulador_configuration_admin_form'),
-    'access arguments' => array('comparar info partidas'),
+    'page arguments' => array('rjsimulador_configuration_groups_admin_form'),
+    'access arguments' => array('configurar simulador'),
     'type' => MENU_NORMAL_ITEM,
+  );
+  $items['admin/config/media/rjsimulador/groups'] = array(
+    'title' => 'Groups configuration',
+    'description' => 'Configure groups of analysis for users in Simulator',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+  $items['admin/config/media/rjsimulador/infractions'] = array(
+    'title' => 'Infractions configuration',
+    'description' => 'Configure infractions data',
+    'file' => 'rjsimulador.admin.inc',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('rjsimulador_configuration_infractions_admin_form'),
+    'access arguments' => array('configurar simulador'),
+    'type' => MENU_LOCAL_TASK,
+  );
+  $items['admin/config/media/rjsimulador/infractions/add'] = array(
+    'title' => 'Add new infraction type',
+    'description' => 'Add new infraction type',
+    'file' => 'rjsimulador.admin.inc',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('rjsimulador_configuration_infractions_add_admin_form'),
+    'access arguments' => array('configurar simulador'),
+    'type' => MENU_LOCAL_ACTION,
   );
 
   return $items;

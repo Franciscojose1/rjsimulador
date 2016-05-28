@@ -18,4 +18,12 @@ interface DataSaver {
    * @param DatoInstantaneo $dato El objeto a almacenar.
    */
   public function saveDatoInstantaneo(DatoInstantaneo $dato);
+
+  /**
+   * Almacena o actualiza un tipo de infracción.
+   * @param array $tipoInfraccion Tipo de infracción como un array con keys
+   * 'infraction_id' e 'infraction_name'. Si 'infraction_id' no existe se
+   * creará un nuevo tipo de infracción.
+   */
+  public function saveTipoInfraccion(array $tipoInfraccion);
 } 

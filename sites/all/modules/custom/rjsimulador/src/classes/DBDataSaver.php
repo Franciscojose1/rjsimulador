@@ -95,4 +95,38 @@ class DBDataSaver implements DataSaver {
 
     $queryDatos->execute();
   }
+
+  /**
+   * @inheritdoc
+   */
+  public function saveTipoInfraccion(array $tipoInfraccion) {
+    // Si se pasa la key infraction_id se va a actualizar
+    if (key_exists('infraction_id', $tipoInfraccion)) {
+      $existQuery = db_select('rjsim_infracciones', 'i')
+        ->fields('i', array('id_infraccion'))
+        ->condition('i.id_infraccion', $tipoInfraccion['infraction_id'], "=")
+        ->execute();
+
+      if ($existQuery->rowCount() > 0) {
+        $updateTipoInfraccion =
+          db_update('rjsim_infracciones')
+          ->fields(array('nombre_infraccion' => $tipoInfraccion['infraction_name']))
+          ->condition('id_infraccion', $tipoInfraccion['infraction_id'], '=')
+          ->execute();
+      } else {
+        throw new DatabaseSchemaObjectDoesNotExistException(t("Infraction type with id @infraction_id not exists in database.",
+          array('infraction_id', $tipoInfraccion['infraction_id'])));
+      }
+    } elseif (!key_exists('infraction_id', $tipoInfraccion) && key_exists('infraction_name', $tipoInfraccion)) {
+      $queryTipoInfraccion =
+        db_insert('rjsim_infracciones')
+          ->fields(
+            array('nombre_infraccion' => $tipoInfraccion['infraction_name'])
+          );
+
+      $queryTipoInfraccion->execute();
+    } else {
+      throw new LogicException(t("Array pass to function must have correct keys."));
+    }
+  }
 } 
