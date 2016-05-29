@@ -2,8 +2,12 @@
 namespace Drupal\rjsimulador\Factory;
 
 use Exception;
-use Drupal\rjsimulador\DAO\DataProvider, Drupal\rjsimulador\DAO\DataRemover, Drupal\rjsimulador\DAO\DataSaver;
-use Drupal\rjsimulador\DAO\Database\DBDataProvider, Drupal\rjsimulador\DAO\Database\DBDataRemover, Drupal\rjsimulador\DAO\Database\DBDataSaver;
+use Drupal\rjsimulador\DAO\DataProvider;
+use Drupal\rjsimulador\DAO\DataRemover;
+use Drupal\rjsimulador\DAO\DataSaver;
+use Drupal\rjsimulador\DAO\Database\DBDataProvider;
+use Drupal\rjsimulador\DAO\Database\DBDataRemover;
+use Drupal\rjsimulador\DAO\Database\DBDataSaver;
 
 /**
  * Class FactoryDataManager Factoría para crear las clases adecuadas de proveedores de datos.

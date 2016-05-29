@@ -1,8 +1,11 @@
 <?php
 namespace Drupal\rjsimulador\Filters;
 
-use Exception, InvalidArgumentException;
-use Drupal\rjsimulador\UsuarioSimulacion, Drupal\rjsimulador\Infraccion, Drupal\rjsimulador\DatoInstantaneo;
+use Exception;
+use InvalidArgumentException;
+use Drupal\rjsimulador\UsuarioSimulacion;
+use Drupal\rjsimulador\Infraccion;
+use Drupal\rjsimulador\DatoInstantaneo;
 
 class FilterByEquality implements FilterInterface {
   /* Campos por los que filtrar */

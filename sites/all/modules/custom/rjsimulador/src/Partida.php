@@ -2,10 +2,13 @@
 namespace Drupal\rjsimulador;
 
 use DateTime;
-use Exception, InvalidArgumentException;
+use Exception;
+use InvalidArgumentException;
 use Drupal\rjsimulador\Factory\FactoryDataManager;
-use Drupal\rjsimulador\DataCalculation\CalculateAverageData, Drupal\rjsimulador\DataCalculation\CalculateTypicalDeviation;
-use Drupal\rjsimulador\ListUtils\ListaInfracciones, Drupal\rjsimulador\ListUtils\ListaDatosInstantaneos;
+use Drupal\rjsimulador\DataCalculation\CalculateAverageData;
+use Drupal\rjsimulador\DataCalculation\CalculateTypicalDeviation;
+use Drupal\rjsimulador\ListUtils\ListaInfracciones;
+use Drupal\rjsimulador\ListUtils\ListaDatosInstantaneos;
 use Drupal\rjsimulador\WebServices\ServicesAdapterInterface;
 
 /**

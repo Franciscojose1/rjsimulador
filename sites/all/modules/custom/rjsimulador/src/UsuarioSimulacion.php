@@ -1,10 +1,14 @@
 <?php
 namespace Drupal\rjsimulador;
 
-use stdClass, DateTime, Exception;
+use stdClass;
+use DateTime;
+use Exception;
 use Drupal\rjsimulador\Factory\FactoryDataManager;
 use Drupal\rjsimulador\Filters\FilterByEquality;
-use Drupal\rjsimulador\ListUtils\ListaSimulaciones, Drupal\rjsimulador\ListUtils\ListaPartidas, Drupal\rjsimulador\ListUtils\ListaInfracciones;
+use Drupal\rjsimulador\ListUtils\ListaSimulaciones;
+use Drupal\rjsimulador\ListUtils\ListaPartidas;
+use Drupal\rjsimulador\ListUtils\ListaInfracciones;
 
 /**
  * Class UsuarioSimulacion Wrapper des la entidad user de Drupal para este módulo.

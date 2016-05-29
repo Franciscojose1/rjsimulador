@@ -1,10 +1,16 @@
 <?php
 namespace  Drupal\rjsimulador\DAO;
 
-use Exception, LogicException;
-use Drupal\rjsimulador\ListUtils\ListaPartidas, Drupal\rjsimulador\ListUtils\ListaSimulaciones, Drupal\rjsimulador\ListUtils\ListaInfracciones,
-  Drupal\rjsimulador\ListUtils\ListaUsuariosSimulacion, Drupal\rjsimulador\ListUtils\ListaDatosInstantaneos;
-use Drupal\rjsimulador\UsuarioSimulacion, Drupal\rjsimulador\Simulacion, Drupal\rjsimulador\Partida;
+use Exception;
+use LogicException;
+use Drupal\rjsimulador\ListUtils\ListaPartidas;
+use Drupal\rjsimulador\ListUtils\ListaSimulaciones;
+use Drupal\rjsimulador\ListUtils\ListaInfracciones;
+use Drupal\rjsimulador\ListUtils\ListaUsuariosSimulacion;
+use Drupal\rjsimulador\ListUtils\ListaDatosInstantaneos;
+use Drupal\rjsimulador\UsuarioSimulacion;
+use Drupal\rjsimulador\Simulacion;
+use Drupal\rjsimulador\Partida;
 
 /**
  * Interface DataProvider Interfaz que deben implementar las clases para recuperar datos.

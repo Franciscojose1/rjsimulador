@@ -2,7 +2,9 @@
 namespace Drupal\rjsimulador\DAO\Database;
 
 use Drupal\rjsimulador\DAO\DataRemover;
-use Drupal\rjsimulador\Partida, Drupal\rjsimulador\Infraccion, Drupal\rjsimulador\DatoInstantaneo;
+use Drupal\rjsimulador\Partida;
+use Drupal\rjsimulador\Infraccion;
+use Drupal\rjsimulador\DatoInstantaneo;
 
 /**
  * Class DBDataRemover Implementación de una clase para borrar datos en una BBDD.

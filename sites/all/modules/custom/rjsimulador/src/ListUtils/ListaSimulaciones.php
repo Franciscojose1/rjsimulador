@@ -1,7 +1,8 @@
 <?php
 namespace Drupal\rjsimulador\ListUtils;
 
-use Exception, InvalidArgumentException;
+use Exception;
+use InvalidArgumentException;
 use Drupal\rjsimulador\Simulacion;
 
 class ListaSimulaciones extends Lista {

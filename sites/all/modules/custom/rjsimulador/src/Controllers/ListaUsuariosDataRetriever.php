@@ -1,9 +1,10 @@
 <?php
 namespace Drupal\rjsimulador\Controllers;
 
-use Drupal\rjsimulador\ListUtils\ListaUsuariosSimulacion, Drupal\rjsimulador\ListUtils\ListaPartidas,
-  Drupal\rjsimulador\ListUtils\ListaInfracciones;
 use Drupal\rjsimulador\Filters\FilterByEquality;
+use Drupal\rjsimulador\ListUtils\ListaUsuariosSimulacion;
+use Drupal\rjsimulador\ListUtils\ListaPartidas;
+use Drupal\rjsimulador\ListUtils\ListaInfracciones;
 
 class ListaUsuariosDataRetriever {
 

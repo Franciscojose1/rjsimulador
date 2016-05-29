@@ -1,9 +1,12 @@
 <?php
 namespace Drupal\rjsimulador\DAO\Database;
 
-use DatabaseSchemaObjectDoesNotExistException, LogicException;
+use DatabaseSchemaObjectDoesNotExistException;
+use LogicException;
 use Drupal\rjsimulador\DAO\DataSaver;
-use Drupal\rjsimulador\Partida, Drupal\rjsimulador\Infraccion, Drupal\rjsimulador\DatoInstantaneo;
+use Drupal\rjsimulador\Partida;
+use Drupal\rjsimulador\Infraccion;
+use Drupal\rjsimulador\DatoInstantaneo;
 
 /**
  * Class DBDataSaver Implementación de una clase para almacenar datos en una BBDD.

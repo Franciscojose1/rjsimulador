@@ -2,7 +2,8 @@
 namespace Drupal\rjsimulador\DataCalculation;
 
 use Exception;
-use Drupal\rjsimulador\ListUtils\Lista, Drupal\rjsimulador\ListUtils\ListaDatosInstantaneos;
+use Drupal\rjsimulador\ListUtils\Lista;
+use Drupal\rjsimulador\ListUtils\ListaDatosInstantaneos;
 
 /**
  * Class CalculateTypicalDeviation Clase que permite calcular la desviación típica de los datos de la lista recibida.

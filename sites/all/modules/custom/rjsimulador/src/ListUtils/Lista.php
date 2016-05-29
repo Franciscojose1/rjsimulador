@@ -1,8 +1,12 @@
 <?php
 namespace Drupal\rjsimulador\ListUtils;
 
-use Iterator, Countable, InvalidArgumentException, Exception;
-use Drupal\rjsimulador\Filters\FilterInterface, Drupal\rjsimulador\DataCalculation\CalculatedDataInterface;
+use Iterator;
+use Countable;
+use InvalidArgumentException;
+use Exception;
+use Drupal\rjsimulador\DataCalculation\CalculatedDataInterface;
+use Drupal\rjsimulador\Filters\FilterInterface;
 
 /**
  * Class Lista Plantilla para una lista del módulo. Es un wrapper alrededor de array de objetos.

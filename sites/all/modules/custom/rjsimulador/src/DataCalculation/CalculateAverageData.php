@@ -2,7 +2,9 @@
 namespace Drupal\rjsimulador\DataCalculation;
 
 use Exception;
-use Drupal\rjsimulador\ListUtils\Lista, Drupal\rjsimulador\ListUtils\ListaPartidas, Drupal\rjsimulador\ListUtils\ListaDatosInstantaneos;
+use Drupal\rjsimulador\ListUtils\Lista;
+use Drupal\rjsimulador\ListUtils\ListaPartidas;
+use Drupal\rjsimulador\ListUtils\ListaDatosInstantaneos;
 
 /**
  * Class CalculateAverageData Clase que permite calcular datos medios la Lista recibida.

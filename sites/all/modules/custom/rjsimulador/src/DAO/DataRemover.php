@@ -2,7 +2,9 @@
 namespace Drupal\rjsimulador\DAO;
 
 use Exception;
-use Drupal\rjsimulador\Partida, Drupal\rjsimulador\Infraccion, Drupal\rjsimulador\DatoInstantaneo;
+use Drupal\rjsimulador\Partida;
+use Drupal\rjsimulador\Infraccion;
+use Drupal\rjsimulador\DatoInstantaneo;
 
 /**
  * Interface DataRemover Interfaz que deben implementar las clases para eliminar datos.

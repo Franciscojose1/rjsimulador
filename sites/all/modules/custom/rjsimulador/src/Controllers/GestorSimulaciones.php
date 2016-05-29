@@ -1,7 +1,8 @@
 <?php
 namespace Drupal\rjsimulador\Controllers;
 
-use Exception, LogicException;
+use Exception;
+use LogicException;
 use Drupal\rjsimulador\Factory\FactoryDataManager;
 use Drupal\rjsimulador\ListUtils\ListaUsuariosSimulacion;
 use Drupal\rjsimulador\UsuarioSimulacion;

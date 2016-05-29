@@ -1,7 +1,8 @@
 <?php
 namespace Drupal\rjsimulador;
 
-use Exception, InvalidArgumentException;
+use Exception;
+use InvalidArgumentException;
 use Drupal\rjsimulador\Factory\FactoryDataManager;
 use Drupal\rjsimulador\WebServices\ServicesAdapterInterface;
 

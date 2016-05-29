@@ -2,7 +2,8 @@
 namespace Drupal\rjsimulador\Filters;
 
 use DateTime;
-use Exception, InvalidArgumentException;
+use Exception;
+use InvalidArgumentException;
 use Drupal\rjsimulador\Partida;
 
 /**

@@ -1,7 +1,8 @@
 <?php
 namespace Drupal\rjsimulador\Filters;
 
-use Exception, InvalidArgumentException;
+use Exception;
+use InvalidArgumentException;
 use Drupal\rjsimulador\UsuarioSimulacion;
 
 /**

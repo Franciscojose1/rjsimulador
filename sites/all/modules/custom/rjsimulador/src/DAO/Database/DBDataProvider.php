@@ -1,12 +1,20 @@
 <?php
 namespace Drupal\rjsimulador\DAO\Database;
 
-use Exception, LogicException;
+use Exception;
+use LogicException;
 use Drupal\rjsimulador\DAO\DataProvider;
-use Drupal\rjsimulador\ListUtils\ListaUsuariosSimulacion, Drupal\rjsimulador\ListUtils\ListaPartidas, Drupal\rjsimulador\ListUtils\ListaSimulaciones,
-  Drupal\rjsimulador\ListUtils\ListaInfracciones, Drupal\rjsimulador\ListUtils\ListaDatosInstantaneos;
-use Drupal\rjsimulador\UsuarioSimulacion, Drupal\rjsimulador\Constants, Drupal\rjsimulador\DatoInstantaneo, Drupal\rjsimulador\Partida,
-  Drupal\rjsimulador\Simulacion, Drupal\rjsimulador\Infraccion;
+use Drupal\rjsimulador\ListUtils\ListaUsuariosSimulacion;
+use Drupal\rjsimulador\ListUtils\ListaPartidas;
+use Drupal\rjsimulador\ListUtils\ListaSimulaciones;
+use Drupal\rjsimulador\ListUtils\ListaInfracciones;
+use Drupal\rjsimulador\ListUtils\ListaDatosInstantaneos;
+use Drupal\rjsimulador\UsuarioSimulacion;
+use Drupal\rjsimulador\Constants;
+use Drupal\rjsimulador\DatoInstantaneo;
+use Drupal\rjsimulador\Partida;
+use Drupal\rjsimulador\Simulacion;
+use Drupal\rjsimulador\Infraccion;
 
 /**
  * Class DBDataProvider Implementación de una clase para recuperar datos de una BBDD.
