@@ -1,8 +1,4 @@
 <?php
-namespace RJSimulador\DataCalculation;
-
-use \Exception;
-use \RJSimulador\ListUtils\Lista;
 
 /**
  * Interface CalculatedDataInterface Interfaz que deben implementar las clases para hacer cálculos sobre los objetos de una lista.

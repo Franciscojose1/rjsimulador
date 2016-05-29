@@ -1,6 +1,4 @@
 <?php
-namespace RJSimulador\ListUtils;
-
 /**
  * Class Lista Plantilla para una lista del módulo. Es un wrapper alrededor de array de objetos.
  */
