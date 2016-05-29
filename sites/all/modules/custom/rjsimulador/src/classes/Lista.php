@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class Lista Plantilla para una lista del módulo. Es un wrapper alrededor de array de objetos.
+ */
 abstract class Lista implements Iterator, Countable {
   private $count = 0;
   private $position = 0;

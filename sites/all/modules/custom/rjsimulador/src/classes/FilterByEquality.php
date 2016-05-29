@@ -46,32 +46,28 @@ class FilterByEquality implements FilterInterface {
           break;
       }
     }
+    elseif ($item instanceof Infraccion) {
+      switch ($this->field) {
+        case self::INFRACCION_ID:
+          return $this->filterInfraccionByID($item);
+          break;
+        default:
+          throw new Exception("No se puede procesar el campo pasado (" . $this->field . ") para el tipo Infraccion.");
+          break;
+      }
+    }
+    elseif ($item instanceof DatoInstantaneo) {
+      switch ($this->field) {
+        case self::DATO_MARCHA:
+          return $this->filterDatoByMarcha($item);
+          break;
+        default:
+          throw new Exception("No se puede procesar el campo pasado (" . $this->field . ") para el tipo DatoInstantaneo.");
+          break;
+      }
+    }
     else {
-      if ($item instanceof Infraccion) {
-        switch ($this->field) {
-          case self::INFRACCION_ID:
-            return $this->filterInfraccionByID($item);
-            break;
-          default:
-            throw new Exception("No se puede procesar el campo pasado (" . $this->field . ") para el tipo Infraccion.");
-            break;
-        }
-      }
-      else {
-        if ($item instanceof DatoInstantaneo) {
-          switch ($this->field) {
-            case self::DATO_MARCHA:
-              return $this->filterDatoByMarcha($item);
-              break;
-            default:
-              throw new Exception("No se puede procesar el campo pasado (" . $this->field . ") para el tipo DatoInstantaneo.");
-              break;
-          }
-        }
-        else {
-          throw new Exception("El item pasado no es un tipo soportado.");
-        }
-      }
+      throw new Exception("El item pasado no es un tipo soportado.");
     }
   }
 

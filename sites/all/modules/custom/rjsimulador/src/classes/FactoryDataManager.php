@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class FactoryDataManager Factoría para crear las clases adecuadas de proveedores de datos.
+ * Por defecto recupera los datos de la base de datos.
+ */
 class FactoryDataManager {
   const DATABASE = 'database';
 

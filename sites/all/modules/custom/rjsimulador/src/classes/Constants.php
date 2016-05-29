@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class Constants Clase que almacena distintas constantes del Simulador.
+ */
 class Constants {
   /* var array @$tiposSimulacion  Array con todas las simulaciones de la forma id => nombreSimulacion */
   private static $tiposSimulacion;

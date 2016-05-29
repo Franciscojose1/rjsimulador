@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class DBDataRemover Implementación de una clase para borrar datos en una BBDD.
+ */
 class DBDataRemover implements DataRemover {
   /* @var DBDataRemover */
   private static $remover;

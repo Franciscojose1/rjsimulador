@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class Grupos Grupos en los que diividir a los usuarios del Simulador.
+ */
 class Grupos {
   private static $dataMinGroups = 1;
   private static $dataMaxGroups = 6;

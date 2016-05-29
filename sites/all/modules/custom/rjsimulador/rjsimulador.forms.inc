@@ -20,7 +20,7 @@ function rjsim_simulaciones_upper_left_form($form, &$form_state, GestorSimulacio
     '#title' => t('Total number of games played'),
     '#collapsible' => FALSE,
     '#description' => t('Total number of games played for each simulation.'),
-    '#attributes' => array('class' => array('rjsim-margin"'))
+    '#attributes' => array('class' => array('rjsim-margin'))
   );
 
   $form['rjsim_fieldset_partidas_simulacion']['chart_partidas_simulacion'] = array(
@@ -89,7 +89,7 @@ function rjsim_simulaciones_upper_left_form($form, &$form_state, GestorSimulacio
     '#title' => t('Played games by simulation in the last days'),
     '#collapsible' => FALSE,
     '#description' => t('Graph with number of last played games by simulation.'),
-    '#attributes' => array('class' => array('rjsim-margin"'))
+    '#attributes' => array('class' => array('rjsim-margin'))
   );
 
   $form['rjsim_fieldset_partidas_ultimos_dias']['chart_partidas_ultimos_dias'] = array(
@@ -205,7 +205,7 @@ function rjsim_simulaciones_upper_right_form($form, &$form_state, GestorSimulaci
     '#title' => t('Average number infractions by simulation'),
     '#collapsible' => FALSE,
     '#description' => t('Graph with average number of infractions committed by simulation.'),
-    '#attributes' => array('class' => array('rjsim-margin"'))
+    '#attributes' => array('class' => array('rjsim-margin'))
   );
 
   $form['rjsim_fieldset_infracciones_simulacion']['chart_infracciones_simulacion'] = array(
@@ -242,7 +242,7 @@ function rjsim_simulaciones_upper_right_form($form, &$form_state, GestorSimulaci
     '#title' => t('Average number infractions by simulation'),
     '#collapsible' => FALSE,
     '#description' => t('Graph with average number of infractions committed by simulation.'),
-    '#attributes' => array('class' => array('rjsim-margin"'))
+    '#attributes' => array('class' => array('rjsim-margin'))
   );
 
   $form['rjsim_fieldset_tiempo_partida']['chart_tiempo_por_partida_simulacion'] = array(
@@ -307,7 +307,7 @@ function rjsim_simulaciones_main_form($form, &$form_state, GestorSimulaciones $g
     '#title' => t('Infractions percentage for all simulations.'),
     '#collapsible' => FALSE,
     '#description' => t('Shows most committed infractions in the Simulator.'),
-    '#attributes' => array('class' => array('rjsim-margin"'))
+    '#attributes' => array('class' => array('rjsim-margin'))
   );
 
   $form['rjsim_fieldset_infracciones']['chart_infracciones'] = array(
@@ -371,7 +371,7 @@ function rjsim_partidas_simulacion_upper_left_form($form, &$form_state, GestorSi
     '#title' => t('Average consumption comparation.'),
     '#collapsible' => FALSE,
     '#description' => t('Comparation graph between average consumption by user and average consumption for simulation.'),
-    '#attributes' => array('class' => array('rjsim-margin"'))
+    '#attributes' => array('class' => array('rjsim-margin'))
   );
 
   $form['rjsim_fieldset_consumo_medio']['chart_consumo_medio'] = array(
@@ -437,7 +437,7 @@ function rjsim_partidas_simulacion_upper_right_form($form, &$form_state, GestorS
     '#title' => t('Average time by Partida comparation.'),
     '#collapsible' => FALSE,
     '#description' => t('Comparation graph between average total time by user and all users.'),
-    '#attributes' => array('class' => array('rjsim-margin"'))
+    '#attributes' => array('class' => array('rjsim-margin'))
   );
 
   $form['rjsim_fieldset_tiempo_medio']['chart_tiempo_medio'] = array(
@@ -503,7 +503,7 @@ function rjsim_partidas_simulacion_main_form($form, &$form_state, GestorSimulaci
     '#title' => t('Number of Infractions charts.'),
     '#collapsible' => FALSE,
     '#description' => t('Number of infractions in column stacked charts in last played games.'),
-    '#attributes' => array('class' => array('rjsim-margin"'))
+    '#attributes' => array('class' => array('rjsim-margin'))
   );
 
   $form['rjsim_fieldset_infracciones_simulacion']['chart_infracciones_simulacion'] = array(

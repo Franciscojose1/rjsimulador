@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class UsuarioSimulacion Wrapper des la entidad user de Drupal para este módulo.
+ */
 class UsuarioSimulacion {
   /* @var stdClass $user La entidad usuario */
   private $user;

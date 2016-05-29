@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class CalculateAverageData Clase que permite calcular datos medios la Lista recibida.
+ */
 class CalculateAverageData implements CalculatedDataInterface {
   const CONSUMO_MEDIO = 0;
   const TIEMPO_TOTAL = 1;
@@ -18,9 +21,7 @@ class CalculateAverageData implements CalculatedDataInterface {
   }
 
   /**
-   * @param Lista $lista
-   * @return mixed Valor de la media del campo pasado en el constructor.
-   * @throws Exception Si el campo pasado no es admisible para el tipo de lista o si la lista no es un tipo soportado.
+   * @inheritdoc
    */
   public function calculate(Lista $lista) {
     if ($lista instanceof ListaPartidas) {
@@ -48,23 +49,21 @@ class CalculateAverageData implements CalculatedDataInterface {
           break;
       }
     }
+    elseif ($lista instanceof ListaDatosInstantaneos) {
+      switch ($this->field) {
+        case self::VELOCIDAD:
+          return $this->calculateVelocidadMediaPartida($lista);
+          break;
+        case self::RPM:
+          return $this->calculateRpmsMediasPartida($lista);
+          break;
+        default:
+          throw new Exception("No se puede procesar el campo pasado para el tipo ListaDatosInstantaneos.");
+          break;
+      }
+    }
     else {
-      if ($lista instanceof ListaDatosInstantaneos) {
-        switch ($this->field) {
-          case self::VELOCIDAD:
-            return $this->calculateVelocidadMediaPartida($lista);
-            break;
-          case self::RPM:
-            return $this->calculateRpmsMediasPartida($lista);
-            break;
-          default:
-            throw new Exception("No se puede procesar el campo pasado para el tipo ListaDatosInstantaneos.");
-            break;
-        }
-      }
-      else {
-        throw new Exception("La lista pasada no es de un tipo soportado");
-      }
+      throw new Exception("La lista pasada no es de un tipo soportado");
     }
   }
 

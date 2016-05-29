@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class FilterByFecha Permite filtrar por una fecha. Puede filtrar por una fecha de inicio, de fin o ambas a la vez
+ * (un intervalo de fechas)
+ */
 class FilterByFecha implements FilterInterface {
   /* **************************************** */
   /*               CONSTANTES                 */

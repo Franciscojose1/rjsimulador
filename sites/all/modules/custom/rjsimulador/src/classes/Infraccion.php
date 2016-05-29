@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class Infraccion Representa una infraccion de Simulador.
+ */
 class Infraccion implements ServicesAdapterInterface {
   /* ********************************************************************************* */
   /*                                      PROPERTIES                                   */

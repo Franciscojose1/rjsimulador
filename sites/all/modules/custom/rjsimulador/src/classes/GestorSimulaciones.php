@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class GestorSimulaciones Realiza tareas de gestión para un usuario.
+ */
 class GestorSimulaciones {
   /* @var UsuarioSimulacion $usuarioActual EL usuario actual. */
   private $usuarioActual;

@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class DBDataProvider Implementación de una clase para recuperar datos de una BBDD.
+ */
 class DBDataProvider implements DataProvider {
   /* @var DBDataProvider */
   private static $provider;

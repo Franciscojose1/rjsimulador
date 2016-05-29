@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class DBDataSaver Implementación de una clase para almacenar datos en una BBDD.
+ */
 class DBDataSaver implements DataSaver {
   /* @var DBDataSaver */
   private static $saver;

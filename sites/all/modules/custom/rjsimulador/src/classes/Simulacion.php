@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class Simulacion Representa una simulación del Simulador.
+ */
 class Simulacion {
   /* @var int $id_simulacion El ID de la Simulación */
   private $id_simulacion;

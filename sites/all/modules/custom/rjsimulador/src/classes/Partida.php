@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class Partida Representa una partida del Simulador.
+ */
 class Partida implements ServicesAdapterInterface {
   /* ********************************************************************************* */
   /*                                      PROPERTIES                                   */

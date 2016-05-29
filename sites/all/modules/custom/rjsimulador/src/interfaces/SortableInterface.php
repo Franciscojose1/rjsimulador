@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Interface SortableInterface Interfaz que deben implementar las listas ordenables
+ */
 interface SortableInterface {
   /**
    * Ordena la lista en función del campo pasado en el orden dado.

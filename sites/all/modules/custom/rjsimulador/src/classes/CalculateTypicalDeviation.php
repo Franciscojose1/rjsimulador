@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class CalculateTypicalDeviation Clase que permite calcular la desviación típica de los datos de la lista recibida.
+ */
 class CalculateTypicalDeviation implements CalculatedDataInterface{
   const VELOCIDAD = 0;
   const RPM = 1;
@@ -8,6 +11,8 @@ class CalculateTypicalDeviation implements CalculatedDataInterface{
 
   /**
    * @param int $field Debe ser una de las constantes de la clase CalculateTypicalDeviation.
+   * @see CalculatedDataInterface
+   * @see CalculateAverageData
    */
   public function __construct($field) {
     $this->field = $field;

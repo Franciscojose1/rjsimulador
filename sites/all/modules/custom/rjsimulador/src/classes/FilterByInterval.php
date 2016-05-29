@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class FilterByInterval Permite filtrar una lista por un intervalo.
+ */
 class FilterByInterval implements FilterInterface {
   /* ********************************* */
   /* *          CONSTANTES           * */

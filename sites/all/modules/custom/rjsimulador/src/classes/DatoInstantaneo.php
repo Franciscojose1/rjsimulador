@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class DatoInstantaneo Representa un Dato en el Simulador.
+ */
 class DatoInstantaneo implements ServicesAdapterInterface {
   /* ********************************************************************************* */
   /*                                   PROPERTIES                                      */
