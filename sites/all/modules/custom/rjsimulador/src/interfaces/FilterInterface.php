@@ -5,7 +5,7 @@
  */
 interface FilterInterface {
   /**
-   * \short Filtra un item de una lista según las condiciones establecidas.
+   * Filtra un item de una lista según las condiciones establecidas.
    *
    * Permite filtrar una Lista según unas condiciones establecidas. Las condiciones deben ser establecidas en la clase implementadora
    * de la interfaz.
