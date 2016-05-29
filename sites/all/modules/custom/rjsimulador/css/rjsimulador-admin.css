@@ -1,0 +1,92 @@
+.rjsimulador-analysis {
+    width:1000px;
+}
+
+.rjsimulador-analysis .form-actions .form-item {
+    width:32%;
+    float:left;
+}
+
+.rjsimulador-analysis .group-analysis {
+    width:28%;
+    margin-left: 1%;
+    margin-right: 1%;
+    float:left;
+}
+
+.rjsimulador-analysis .form-submit {
+    width: 20%;
+    font-size:1.15em;
+    padding:10px 12px;
+}
+
+/* Green Button */
+.rjsimulador-analysis input.filter-btn {
+    border: none;
+    padding: 10px 12px;
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.25em;
+    background: #4d8f46;
+}
+
+.rjsimulador-analysis input.filter-btn:hover {
+    background: #0a6700;
+    border-radius: 0;
+    border: none;
+    color: #fff;
+}
+
+.rjsimulador-analysis input.filter-btn:active {
+    border-radius: 0;
+    border: none;
+    color: #fff;
+}
+
+.rjsimulador-analysis input.filter-btn:focus {
+    outline: 3px solid #D0E8CE;
+}
+
+.rjsimulador-analysis .group-analysis .entradas {
+    padding: 5px;
+}
+
+.rjsimulador-analysis .group-analysis > div.fieldset-wrapper > fieldset.form-wrapper.entradas > div.fieldset-wrapper .form-item {
+    padding-top: 5px;
+    width:auto;
+    float:left;
+}
+
+.rjsimulador-analysis .group-analysis > div.fieldset-wrapper > fieldset.form-wrapper.entradas > div.fieldset-wrapper .form-item .field-prefix {
+    padding-right: 2px;
+}
+
+.rjsimulador-analysis .group-analysis > div.fieldset-wrapper > fieldset.form-wrapper.entradas > div.fieldset-wrapper .form-item .field-suffix {
+    padding-left: 2px;
+}
+
+.rjsimulador-config .group {
+    width:30%;
+    margin-left: 1.5%;
+    margin-right: 1.5%;
+    float:left;
+}
+
+.rjsimulador-config .form-item > span.field-prefix {
+    display: inline-block;
+    min-width: 40px;
+}
+
+.rjsimulador-config .form-item > span.field-suffix {
+    margin-left: 10px;
+}
+
+.rjsimulador-config .form-actions {
+    text-align: center;
+}
+
+.rjsimulador-config .form-actions input[type="submit"][id^="edit-submit"].form-submit {
+    width: 15%;
+    font-size:1.2em;
+    padding:10px;
+}
