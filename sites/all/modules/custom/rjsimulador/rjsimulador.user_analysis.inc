@@ -88,3 +88,183 @@ function rjsimulador_simulaciones_usuarios_admin_page() {
 
   return $renderArrayFinal;
 }
+
+function rjsimulador_load_from_file($form, &$form_state) {
+  $users = entity_load('user');
+
+  $options = array();
+  foreach ($users as $user) {
+    $options[$user->uid] = $user->name;
+  }
+
+  $form['load_user'] = array(
+    '#type' => 'select',
+    '#title' => t('Select game user'),
+    '#options' => $options,
+    '#default_value' => 1,
+    '#required' => TRUE
+  );
+
+  $form['load_date'] = array(
+    '#type' => 'date',
+    '#title' => t('Select game date'),
+    '#required' => TRUE
+  );
+
+  $form['load_files'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('JSON Game files to load'),
+    '#prefix' => '<div id="container-files">',
+    '#suffix' => '</div>',
+    '#tree' => TRUE
+  );
+
+  $form_state['total_files'] = isset($form_state['total_files']) ? $form_state['total_files'] : 1;
+
+  if (isset($form_state['clicked_button'])) {
+    if ($form_state['clicked_button']['#name'] == 'add_one_file') {
+      $form_state['total_files']++;
+    }
+
+    if ($form_state['clicked_button']['#name'] == 'remove_one_file') {
+      $form_state['total_files']--;
+    }
+  }
+
+  $form_state['total_files'] = $form_state['total_files'] == 0 ? 1 : $form_state['total_files'];
+
+  for ($index = 0; $index < $form_state['total_files']; $index++) {
+    $form['load_files'][$index] = array(
+      '#type' => 'managed_file',
+      '#description' => t('Add JSON file to save new game'),
+      '#upload_validators' => array('file_validate_extensions' => array('txt, log')),
+    );
+  }
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit')
+  );
+
+  $form['add_button'] = array(
+    '#type' => 'button',
+    '#value' => t('Add new file'),
+    '#name' => 'add_one_file',
+    '#ajax' => array(
+      'callback' => 'ajax_file_rebuild',
+      'wrapper' => 'container-files',
+    ),
+  );
+
+  $form['delete_button'] = array(
+    '#type' => 'button',
+    '#value' => t('Delete file'),
+    '#name' => 'remove_one_file',
+    '#limit_validation_errors' => array(),
+    '#ajax' => array(
+      'callback' => 'ajax_file_rebuild',
+      'wrapper' => 'container-files',
+    ),
+  );
+
+  return $form;
+}
+
+function ajax_file_rebuild($form, &$form_state) {
+  return $form['load_files'];
+}
+
+function rjsimulador_load_from_file_submit($form, &$form_state) {
+  $userId = $form_state['values']['load_user'];
+  $submittedDate = $form_state['values']['load_date'];
+  $dateTime = DateTime::createFromFormat('Y-m-d', $submittedDate['year'].'-'.$submittedDate['month'].'-'.$submittedDate['day']);
+  $operations = array();
+  foreach($form_state['values']['load_files'] as $idFile) {
+    $operations[] = array('json_file_process', array($userId, $dateTime->getTimestamp(), $idFile));
+  }
+
+  $batch = array(
+    'operations' => $operations,
+    'finished' => 'json_load_finished',
+    'title' => t('Processing Example Batch'),
+    'init_message' => t('Example Batch is starting.'),
+    'progress_message' => t('Processed @current out of @total.'),
+    'error_message' => t('Example Batch has encountered an error.'),
+    'file' => drupal_get_path('module', 'rjsimulador') . '/rjsimulador.user_analysis.inc',
+  );
+
+  batch_set($batch);
+}
+
+function json_file_process($userId, $dateUnix, $file_id, &$context) {
+
+  $file = file_load($file_id);
+  $content = file_get_contents($file->uri);
+  $partida = drupal_json_decode($content);
+
+  $tiposSimulaciones = Constants::getTiposSimulacion();
+  if (!array_key_exists($partida["id_simulacion"], $tiposSimulaciones)) {
+    throw new InvalidArgumentException("No existe una simulación con el ID " . $partida["id_simulacion"] . ".");
+  }
+
+  $newPartida = new Partida($userId, $dateUnix, $partida['id_simulacion']);
+  $newPartida->setConsumoMedio($partida['consumo_medio']);
+  $newPartida->setConsumoTotal($partida['consumo_total']);
+  $newPartida->setTiempoTotal($partida['tiempo_total']);
+
+  $tiposInfracciones = Constants::getTiposInfracciones();
+  foreach ($partida['infracciones'] as $infraccion) {
+    if (!array_key_exists($infraccion["id_infraccion"], $tiposInfracciones)) {
+      throw new InvalidArgumentException("No existe una infracción con el ID " . $infraccion["id_infraccion"] . ".");
+    }
+
+    $record = new Infraccion($infraccion['instante'], $infraccion['id_infraccion']);
+    $record->setPosicionX($infraccion['posicion_x']);
+    $record->setPosicionY($infraccion['posicion_y']);
+    $record->setPosicionZ($infraccion['posicion_z']);
+    $record->setObservaciones($infraccion['observaciones']);
+    $newPartida->getListaInfracciones()->add($record);
+  }
+
+  foreach ($partida['datos'] as $dato) {
+    $record = new DatoInstantaneo($dato['instante'], $dato['velocidad'], $dato['rpm'], $dato['marcha']);
+    $record->setPosicionX($dato['posicion_x']);
+    $record->setPosicionY($dato['posicion_y']);
+    $record->setPosicionZ($dato['posicion_z']);
+    $record->setConsumoInstantaneo($dato['consumo_instantaneo']);
+    $record->setConsumoTotal($dato['consumo_total']);
+    $newPartida->getListaDatos()->add($record);
+  }
+
+  // Creamos una transacción para almacenar la partida; si algo falla hacemos rollback
+  $transaction = db_transaction();
+  try {
+    $newPartida->save();
+    // Hacemos commit deseteando la variable.
+    unset($transaction);
+  } catch (Exception $e) {
+    $transaction->rollback();
+    throw $e;
+  }
+
+  $context['message'] = t('Now processing file');
+
+  $context['finished'] = 1;
+}
+
+/**
+ * Batch 'finished' callback
+ */
+function json_load_finished($success, $results, $operations) {
+  if ($success) {
+    // Here we do something meaningful with the results.
+    $message = t('Items successfully processed');
+    drupal_set_message($message);
+  } else {
+    // An error occurred.
+    // $operations contains the operations that remained unprocessed.
+    $error_operation = reset($operations);
+    $message = t('An error occurred while processing %error_operation with arguments: @arguments', array('%error_operation' => $error_operation[0], '@arguments' => print_r($error_operation[1], TRUE)));
+    drupal_set_message($message, 'error');
+  }
+}

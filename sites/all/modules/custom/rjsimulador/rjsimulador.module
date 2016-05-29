@@ -19,6 +19,10 @@ function rjsimulador_permission() {
     'configurar simulador' => array(
       'title' => t('Configure Simulator module'),
       'description' => t('Allows user with this permission configure Simulator module'),
+    ),
+    'cargar partida fichero' => array(
+      'title' => t('Load games from file'),
+      'description' => t('Allows user with this permission to add Games from file'),
     )
   );
 }
@@ -70,6 +74,15 @@ function rjsimulador_menu() {
     'access arguments' => array('comparar info partidas'),
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -50,
+  );
+  $items['admin/simulaciones_analysis/simulaciones_users/load_from_file'] = array(
+    'title' => 'Load from file',
+    'file' => 'rjsimulador.user_analysis.inc',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('rjsimulador_load_from_file'),
+    'access arguments' => array('cargar partida fichero'),
+    'type' => MENU_LOCAL_ACTION,
+    'weight' => 0,
   );
   $items['admin/simulaciones_analysis/data_analysis'] = array(
     'title' => 'Data analysis',

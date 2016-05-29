@@ -500,8 +500,7 @@ function generate_form_infractions_user_analysis(&$form_state, GestorSimulacione
   // Recuperamos los datos del grupo del resto de usuarios que está en el mismo grupo de kilometraje medio que el usuario analizado
   $listaRestoUsuariosMismoGrupoKilometraje = $listaRestoUsuarios->filterBy(new FilterByInterval($usuarioActual->getGrupoKilometrajeMedioAnual(), FilterByInterval::AVERAGE_ANNUAL_MILEAGE));
   $retriever->setListaUsuarios($listaRestoUsuariosMismoGrupoKilometraje);
-  $dataRestoUsuarioMismoGrupoKilometraje = round($retriever->retrieveAllPartidasByIdSimulacion($idSimulacion)
-    ->calculateData(new CalculateAverageData($tipoDatoCalcular)), 2);
+  $dataRestoUsuarioMismoGrupoKilometraje = round($retriever->getAverageInfraccionesByPartida($idInfraccion, $idSimulacion), 2);
 
   $form['infractions_user_container']['infractions_user_chart']['infractions_user_same_average_annual_mileage_group'] =
     array(
