@@ -1,4 +1,7 @@
 <?php
+use Drupal\rjsimulador\Factory\FactoryDataManager;
+use Drupal\rjsimulador\Partida;
+
 /**
  * Implementation of hook_permission().
  */

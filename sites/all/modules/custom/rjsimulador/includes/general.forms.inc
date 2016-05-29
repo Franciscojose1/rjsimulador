@@ -1,4 +1,7 @@
 <?php
+use Drupal\rjsimulador\Filters\FilterByInterval;
+use Drupal\rjsimulador\Grupos;
+
 /* ******************************************************************************* */
 /* *                      General forms functions                                * */
 /* ******************************************************************************* */

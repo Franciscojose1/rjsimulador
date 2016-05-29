@@ -1,6 +1,9 @@
 <?php
 module_load_include('inc', 'rjsimulador', 'rjsimulador.forms.admin');
 
+use Drupal\rjsimulador\Controllers\GestorSimulaciones;
+use Drupal\rjsimulador\Partida, Drupal\rjsimulador\Infraccion, Drupal\rjsimulador\DatoInstantaneo, Drupal\rjsimulador\Constants;
+
 /* *************************************************************************** */
 /* *                    PÁGINA DE ADMIN SIMULACIONES                           */
 /* *************************************************************************** */
@@ -179,6 +182,8 @@ function rjsimulador_load_from_file_submit($form, &$form_state) {
   $submittedDate = $form_state['values']['load_date'];
   $dateTime = DateTime::createFromFormat('Y-m-d', $submittedDate['year'].'-'.$submittedDate['month'].'-'.$submittedDate['day']);
   $operations = array();
+
+  // Gestionamos cada fichero como una operacion
   foreach($form_state['values']['load_files'] as $idFile) {
     $operations[] = array('json_file_process', array($userId, $dateTime->getTimestamp(), $idFile));
   }
@@ -186,20 +191,23 @@ function rjsimulador_load_from_file_submit($form, &$form_state) {
   $batch = array(
     'operations' => $operations,
     'finished' => 'json_load_finished',
-    'title' => t('Processing Example Batch'),
-    'init_message' => t('Example Batch is starting.'),
+    'title' => t('Processing JSON Files'),
+    'init_message' => t('JSON Files Batch is starting.'),
     'progress_message' => t('Processed @current out of @total.'),
-    'error_message' => t('Example Batch has encountered an error.'),
+    'error_message' => t('JSON Files Batch has encountered an error.'),
     'file' => drupal_get_path('module', 'rjsimulador') . '/rjsimulador.user_analysis.inc',
   );
 
+  // Lanzamos el proceso en batch
   batch_set($batch);
 }
 
 function json_file_process($userId, $dateUnix, $file_id, &$context) {
-
+  // Cargamos el fichero, recuoperamos el contenido y los parseamos a JSON
   $file = file_load($file_id);
   $content = file_get_contents($file->uri);
+
+  $context['message'] = t('Parsing the file');
   $partida = drupal_json_decode($content);
 
   $tiposSimulaciones = Constants::getTiposSimulacion();
@@ -239,6 +247,7 @@ function json_file_process($userId, $dateUnix, $file_id, &$context) {
   // Creamos una transacción para almacenar la partida; si algo falla hacemos rollback
   $transaction = db_transaction();
   try {
+    $context['message'] = t('Creating game from file');
     $newPartida->save();
     // Hacemos commit deseteando la variable.
     unset($transaction);
@@ -247,8 +256,13 @@ function json_file_process($userId, $dateUnix, $file_id, &$context) {
     throw $e;
   }
 
-  $context['message'] = t('Now processing file');
+  if (!isset($context['results']['total_files'])) {
+    $context['results']['total_files'] = 1;
+  } else {
+    $context['results']['total_files']++;
+  }
 
+  // Damos la operación sobre el fichero por finalizada y pasamos a la siguiente
   $context['finished'] = 1;
 }
 
@@ -257,9 +271,7 @@ function json_file_process($userId, $dateUnix, $file_id, &$context) {
  */
 function json_load_finished($success, $results, $operations) {
   if ($success) {
-    // Here we do something meaningful with the results.
-    $message = t('Items successfully processed');
-    drupal_set_message($message);
+    drupal_set_message(t('All @total_files files have been successfully processed', array('@total_files' => $results['total_files'])));
   } else {
     // An error occurred.
     // $operations contains the operations that remained unprocessed.
