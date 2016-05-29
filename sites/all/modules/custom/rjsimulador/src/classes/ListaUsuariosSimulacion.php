@@ -1,4 +1,9 @@
 <?php
+namespace RJSimulador\ListUtils;
+
+use Exception, InvalidArgumentException;
+use RJSimulador\Filters\FilterInterface;
+use RJSimulador\UsuarioSimulacion;
 
 class ListaUsuariosSimulacion extends  Lista implements SortableInterface {
   /**

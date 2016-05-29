@@ -1,4 +1,9 @@
 <?php
+namespace RJSimulador\Factory;
+
+use Exception;
+use RJSimulador\DAO\DataProvider, RJSimulador\DAO\DataRemover, RJSimulador\DAO\DataSaver;
+use RJSimulador\DAO\Database\DBDataProvider, RJSimulador\DAO\Database\DBDataRemover, RJSimulador\DAO\Database\DBDataSaver;
 
 /**
  * Class FactoryDataManager Factoría para crear las clases adecuadas de proveedores de datos.
@@ -8,7 +13,7 @@ class FactoryDataManager {
   const DATABASE = 'database';
 
   /**
-   * @param string $config Un valor constante de FactoryDataManager para seleccionar instancia
+   * @param string $config Un valor constante de FactoryDataManager para seleccionar instancia.
    * @return DataProvider
    * @throws Exception Si no se selecciona un tipo adecuado en la Factory.
    */
@@ -24,7 +29,7 @@ class FactoryDataManager {
   }
 
   /**
-   * @param string $config Un valor constante de FactoryDataManager para seleccionar la instancia
+   * @param string $config Un valor constante de FactoryDataManager para seleccionar la instancia.
    * @return DataSaver
    * @throws Exception Si no se selecciona un tipo adecuado en la Factory.
    */
@@ -40,7 +45,7 @@ class FactoryDataManager {
   }
 
   /**
-   * @param string $config Un valor constante de FactoryDataManager para seleccionar la instancia
+   * @param string $config Un valor constante de FactoryDataManager para seleccionar la instancia.
    * @return DataRemover
    * @throws Exception Si no se selecciona un tipo adecuado en la Factory.
    */

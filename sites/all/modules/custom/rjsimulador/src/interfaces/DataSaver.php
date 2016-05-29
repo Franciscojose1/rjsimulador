@@ -1,4 +1,7 @@
 <?php
+namespace RJSimulador\DAO;
+
+use RJSimulador\Partida, RJSimulador\Infraccion, RJSimulador\DatoInstantaneo;
 
 /**
  * Interface DataSaver Interfaz que deben implementar las clases para guardar datos.

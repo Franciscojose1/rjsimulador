@@ -1,4 +1,9 @@
 <?php
+namespace RJSimulador\DAO\Database;
+
+use DatabaseSchemaObjectDoesNotExistException, LogicException;
+use RJSimulador\DAO\DataSaver;
+use RJSimulador\Partida, RJSimulador\Infraccion, RJSimulador\DatoInstantaneo;
 
 /**
  * Class DBDataSaver Implementación de una clase para almacenar datos en una BBDD.

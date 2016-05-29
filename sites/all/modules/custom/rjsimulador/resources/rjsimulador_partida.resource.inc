@@ -1,4 +1,7 @@
 <?php
+use RJSimulador\Factory\FactoryDataManager;
+use RJSimulador\Partida, RJSimulador\Infraccion, RJSimulador\DatoInstantaneo, RJSimulador\Constants;
+
 function partida_resource_definition() {
   $resources = array(
     'rjsimulador_partida' => array(

@@ -1,4 +1,8 @@
 <?php
+namespace RJSimulador\DAO;
+
+use Exception;
+use RJSimulador\Partida, RJSimulador\Infraccion, RJSimulador\DatoInstantaneo;
 
 /**
  * Interface DataRemover Interfaz que deben implementar las clases para eliminar datos.

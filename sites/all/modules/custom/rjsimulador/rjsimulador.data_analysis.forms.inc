@@ -1,6 +1,12 @@
 <?php
 module_load_include('inc', 'rjsimulador', 'includes/general.forms');
 
+use RJSimulador\Controllers\GestorSimulaciones, RJSimulador\Controllers\ListaUsuariosDataRetriever;
+use RJSimulador\DataCalculation\CalculateAverageData;
+use RJSimulador\Factory\FactoryDataManager;
+use RJSimulador\Filters\FilterByInterval, RJSimulador\Filters\FilterByEquality;
+use RJSimulador\Constants, RJSimulador\Grupos;
+
 /* *************************************************************************** */
 /* *                     FORMULARIO POR SIMULACIÓN                             */
 /* *************************************************************************** */

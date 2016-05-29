@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Class CalculateAverageData Clase que permite calcular datos medios la Lista recibida.
  */

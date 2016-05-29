@@ -1,4 +1,8 @@
 <?php
+namespace RJSimulador\ListUtils;
+
+use Exception, InvalidArgumentException;
+use RJSimulador\Simulacion;
 
 class ListaSimulaciones extends Lista {
   /**

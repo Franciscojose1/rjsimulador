@@ -1,4 +1,8 @@
 <?php
+namespace RJSimulador\Controllers;
+
+use RJSimulador\ListUtils\ListaUsuariosSimulacion, RJSimulador\ListUtils\ListaPartidas, RJSimulador\ListUtils\ListaInfracciones;
+use RJSimulador\Filters\FilterByEquality;
 
 class ListaUsuariosDataRetriever {
 
@@ -56,7 +60,7 @@ class ListaUsuariosDataRetriever {
   /**
    * Devuelve todas las infracciones de todas las partidas de la lista de usuarios para una simulación en concreto.
    * @param int $idSimulacion ID de la Simulación para la que recuperar las infracciones.
-   * @return \ListaInfracciones Lista de infracciones para la simulación pasada.
+   * @return ListaInfracciones Lista de infracciones para la simulación pasada.
    */
   public function retrieveAllInfraccionesByIdSimulacion($idSimulacion) {
     $listaInfracciones = new ListaInfracciones();
@@ -72,7 +76,7 @@ class ListaUsuariosDataRetriever {
    * Devuelve todas las infracciones de un cierto tipo de la lista de ususarios para las simulación pasada.
    * @param int $idInfraccion El ID de la infracción a recuperar.
    * @param int $idSimulacion ID de la simulación para la que recuperar las infracciones.
-   * @return \ListaInfracciones Lista de infracciones del tipo pasado para la simulación.
+   * @return ListaInfracciones Lista de infracciones del tipo pasado para la simulación.
    */
   public function retrieveAllInfraccionesByTypeAndIdSimulacion($idInfraccion, $idSimulacion) {
     $listaInfracciones = $this->retrieveAllInfraccionesByIdSimulacion($idSimulacion);

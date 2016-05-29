@@ -1,4 +1,5 @@
 <?php
+namespace  RJSimulador;
 
 /**
  * Class Constants Clase que almacena distintas constantes del Simulador.

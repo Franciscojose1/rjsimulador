@@ -1,4 +1,9 @@
 <?php
+namespace RJSimulador;
+
+use Exception, InvalidArgumentException;
+use RJSimulador\Factory\FactoryDataManager;
+use RJSimulador\ListUtils\ListaPartidas;
 
 /**
  * Class Simulacion Representa una simulación del Simulador.
@@ -16,7 +21,7 @@ class Simulacion {
   /**
    * Simulacion constructor.
    * @param int $id_simulacion
-   * @param \UsuarioSimulacion $usuario
+   * @param int $usuario
    * @throws InvalidArgumentException Si los datos del constructor son erróneos.
    */
   public function __construct($id_simulacion, $userUid) {
@@ -79,8 +84,8 @@ class Simulacion {
   }
 
   /**
-   * @return \ListaPartidas
-   * @throws \Exception Error recuperando la lista de partidas.
+   * @return ListaPartidas
+   * @throws Exception Error recuperando la lista de partidas.
    */
   public function getListaPartidas() {
     if (!isset($this->listaPartidas)) {

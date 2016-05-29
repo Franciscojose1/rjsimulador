@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Class CalculateTypicalDeviation Clase que permite calcular la desviación típica de los datos de la lista recibida.
  */

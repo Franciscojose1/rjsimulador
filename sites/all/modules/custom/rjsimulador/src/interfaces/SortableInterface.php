@@ -1,4 +1,7 @@
 <?php
+namespace RJSimulador\ListUtils;
+
+use Exception;
 
 /**
  * Interface SortableInterface Interfaz que deben implementar las listas ordenables

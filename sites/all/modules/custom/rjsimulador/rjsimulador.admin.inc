@@ -1,4 +1,8 @@
 <?php
+use RJSimulador\Factory\FactoryDataManager;
+use RJSimulador\Filters\FilterByInterval;
+use RJSimulador\Grupos;
+
 function rjsimulador_configuration_groups_admin_form($form, &$form_state) {
   $form['general_configuration'] = array(
     '#type' => 'fieldset',

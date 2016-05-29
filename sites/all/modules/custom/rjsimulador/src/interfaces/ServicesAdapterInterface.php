@@ -1,4 +1,5 @@
 <?php
+namespace RJSimulador\WebServices;
 
 /**
  * Interface ServicesAdapterInterface Interfaz que deben implementar los objetos que vayan a mandarse por WebService.

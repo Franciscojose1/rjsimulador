@@ -1,4 +1,7 @@
 <?php
+namespace  RJSimulador\Filters;
+
+use Exception;
 
 /**
  * Interface FilterInterface Interfaz que deben implementar las clases para filtrar los objetos de una lista.

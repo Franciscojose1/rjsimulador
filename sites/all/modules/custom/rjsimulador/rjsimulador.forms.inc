@@ -1,4 +1,9 @@
 <?php
+use RJSimulador\Controllers\GestorSimulaciones, RJSimulador\Controllers\ListaUsuariosDataRetriever;
+use RJSimulador\DataCalculation\CalculateAverageData;
+use RJSimulador\Filters\FilterByFecha, RJSimulador\Filters\FilterByEquality;
+use RJSimulador\ListUtils\ListaInfracciones;
+use RJSimulador\Constants;
 /* *************************************************************************** */
 /* *                           LISTA SIMULACIONES                              */
 /* *************************************************************************** */

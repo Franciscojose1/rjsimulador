@@ -1,4 +1,10 @@
 <?php
+namespace  RJSimulador\DAO;
+
+use Exception, LogicException;
+use RJSimulador\ListUtils\ListaPartidas, RJSimulador\ListUtils\ListaSimulaciones, RJSimulador\ListUtils\ListaInfracciones,
+  RJSimulador\ListUtils\ListaUsuariosSimulacion, RJSimulador\ListUtils\ListaDatosInstantaneos;
+use RJSimulador\UsuarioSimulacion, RJSimulador\Simulacion, RJSimulador\Partida;
 
 /**
  * Interface DataProvider Interfaz que deben implementar las clases para recuperar datos.

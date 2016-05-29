@@ -1,4 +1,12 @@
 <?php
+namespace RJSimulador;
+
+use DateTime;
+use Exception, InvalidArgumentException;
+use RJSimulador\Factory\FactoryDataManager;
+use RJSimulador\DataCalculation\CalculateAverageData, RJSimulador\DataCalculation\CalculateTypicalDeviation;
+use RJSimulador\ListUtils\ListaInfracciones, RJSimulador\ListUtils\ListaDatosInstantaneos;
+use RJSimulador\WebServices\ServicesAdapterInterface;
 
 /**
  * Class Partida Representa una partida del Simulador.

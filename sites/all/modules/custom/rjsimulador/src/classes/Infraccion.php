@@ -1,4 +1,9 @@
 <?php
+namespace  RJSimulador;
+
+use Exception, InvalidArgumentException;
+use RJSimulador\Factory\FactoryDataManager;
+use RJSimulador\WebServices\ServicesAdapterInterface;
 
 /**
  * Class Infraccion Representa una infraccion de Simulador.

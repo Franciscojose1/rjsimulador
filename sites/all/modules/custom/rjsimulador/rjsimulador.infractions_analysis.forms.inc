@@ -1,6 +1,11 @@
 <?php
 module_load_include('inc', 'rjsimulador', 'includes/general.forms');
 
+use RJSimulador\Controllers\GestorSimulaciones, RJSimulador\Controllers\ListaUsuariosDataRetriever;
+use RJSimulador\Factory\FactoryDataManager;
+use RJSimulador\Filters\FilterByEquality, RJSimulador\Filters\FilterByInterval;
+use RJSimulador\Constants;
+
 function rjsimulador_admin_form_infractions_analysis($form, &$form_state) {
   // Gestor de simulaciones
   try {

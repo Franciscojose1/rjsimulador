@@ -1,4 +1,8 @@
 <?php
+namespace RJSimulador\DAO\Database;
+
+use RJSimulador\DAO\DataRemover;
+use RJSimulador\Partida, RJSimulador\Infraccion, RJSimulador\DatoInstantaneo;
 
 /**
  * Class DBDataRemover Implementación de una clase para borrar datos en una BBDD.

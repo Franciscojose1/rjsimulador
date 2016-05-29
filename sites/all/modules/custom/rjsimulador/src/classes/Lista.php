@@ -1,6 +1,9 @@
 <?php
 namespace RJSimulador\ListUtils;
 
+use Iterator, Countable, InvalidArgumentException, Exception;
+use RJSimulador\Filters\FilterInterface, RJSimulador\DataCalculation\CalculatedDataInterface;
+
 /**
  * Class Lista Plantilla para una lista del módulo. Es un wrapper alrededor de array de objetos.
  */

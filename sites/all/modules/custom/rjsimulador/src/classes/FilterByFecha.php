@@ -1,4 +1,9 @@
 <?php
+namespace RJSimulador\Filters;
+
+use DateTime;
+use Exception, InvalidArgumentException;
+use RJSimulador\Partida;
 
 /**
  * Class FilterByFecha Permite filtrar por una fecha. Puede filtrar por una fecha de inicio, de fin o ambas a la vez

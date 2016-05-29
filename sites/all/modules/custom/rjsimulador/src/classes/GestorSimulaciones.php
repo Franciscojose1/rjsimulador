@@ -1,4 +1,10 @@
 <?php
+namespace RJSimulador\Controllers;
+
+use Exception, LogicException;
+use RJSimulador\Factory\FactoryDataManager;
+use RJSimulador\ListUtils\ListaUsuariosSimulacion;
+use RJSimulador\UsuarioSimulacion;
 
 /**
  * Class GestorSimulaciones Realiza tareas de gestión para un usuario.

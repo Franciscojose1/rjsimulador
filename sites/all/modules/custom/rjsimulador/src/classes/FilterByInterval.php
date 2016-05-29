@@ -1,4 +1,8 @@
 <?php
+namespace RJSimulador\Filters;
+
+use Exception, InvalidArgumentException;
+use RJSimulador\UsuarioSimulacion;
 
 /**
  * Class FilterByInterval Permite filtrar una lista por un intervalo.

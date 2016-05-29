@@ -1,4 +1,10 @@
 <?php
+namespace RJSimulador;
+
+use stdClass, DateTime, Exception;
+use RJSimulador\Factory\FactoryDataManager;
+use RJSimulador\Filters\FilterByEquality;
+use RJSimulador\ListUtils\ListaSimulaciones, RJSimulador\ListUtils\ListaPartidas, RJSimulador\ListUtils\ListaInfracciones;
 
 /**
  * Class UsuarioSimulacion Wrapper des la entidad user de Drupal para este módulo.
@@ -225,7 +231,7 @@ class UsuarioSimulacion {
   /**
    * Devuelve todas las infracciones de todas las partidas del usuario una simulación en concreto.
    * @param int $idSimulacion ID de la Simulación para la que recuperar las infracciones.
-   * @return \ListaInfracciones Lista de infracciones para la simulación pasada.
+   * @return ListaInfracciones Lista de infracciones para la simulación pasada.
    */
   public function retrieveAllInfraccionesByIdSimulacion($idSimulacion) {
     $listaInfracciones = new ListaInfracciones();
@@ -241,7 +247,7 @@ class UsuarioSimulacion {
    * Devuelve todas las infracciones de un cierto tipo de todas las partidas del usuario para la simulación pasada.
    * @param int $idInfraccion El ID de la infracción a recuperar.
    * @param int $idSimulacion ID de la simulación para la que recuperar las infracciones.
-   * @return \ListaInfracciones Lista de infracciones del tipo pasado para la simulación.
+   * @return ListaInfracciones Lista de infracciones del tipo pasado para la simulación.
    */
   public function retrieveAllInfraccionesByTypeAndIdSimulacion($idInfraccion, $idSimulacion) {
     $listaInfracciones = $this->retrieveAllInfraccionesByIdSimulacion($idSimulacion);

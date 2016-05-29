@@ -1,4 +1,7 @@
 <?php
+namespace RJSimulador;
+
+use RJSimulador\Filters\FilterByInterval;
 
 /**
  * Class Grupos Grupos en los que diividir a los usuarios del Simulador.

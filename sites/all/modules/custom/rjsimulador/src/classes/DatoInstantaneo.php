@@ -1,4 +1,9 @@
 <?php
+namespace RJSimulador;
+
+use Exception, InvalidArgumentException;
+use RJSimulador\Factory\FactoryDataManager;
+use RJSimulador\WebServices\ServicesAdapterInterface;
 
 /**
  * Class DatoInstantaneo Representa un Dato en el Simulador.

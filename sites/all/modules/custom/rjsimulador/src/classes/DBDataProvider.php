@@ -1,4 +1,12 @@
 <?php
+namespace RJSimulador\DAO\Database;
+
+use Exception, LogicException;
+use RJSimulador\DAO\DataProvider;
+use RJSimulador\ListUtils\ListaUsuariosSimulacion, RJSimulador\ListUtils\ListaPartidas, RJSimulador\ListUtils\ListaSimulaciones,
+  RJSimulador\ListUtils\ListaInfracciones, RJSimulador\ListUtils\ListaDatosInstantaneos;
+use RJSimulador\UsuarioSimulacion, RJSimulador\Constants, RJSimulador\DatoInstantaneo, RJSimulador\Partida,
+  RJSimulador\Simulacion, RJSimulador\Infraccion;
 
 /**
  * Class DBDataProvider Implementación de una clase para recuperar datos de una BBDD.

@@ -1,4 +1,8 @@
 <?php
+namespace RJSimulador\Filters;
+
+use Exception, InvalidArgumentException;
+use RJSimulador\UsuarioSimulacion, RJSimulador\Infraccion, RJSimulador\DatoInstantaneo;
 
 class FilterByEquality implements FilterInterface {
   /* Campos por los que filtrar */
