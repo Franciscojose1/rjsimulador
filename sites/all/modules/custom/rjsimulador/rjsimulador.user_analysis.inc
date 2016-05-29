@@ -1,8 +1,8 @@
 <?php
 module_load_include('inc', 'rjsimulador', 'rjsimulador.forms.admin');
 
-use RJSimulador\Controllers\GestorSimulaciones;
-use RJSimulador\Partida, RJSimulador\Infraccion, RJSimulador\DatoInstantaneo, RJSimulador\Constants;
+use Drupal\rjsimulador\Controllers\GestorSimulaciones;
+use Drupal\rjsimulador\Partida, Drupal\rjsimulador\Infraccion, Drupal\rjsimulador\DatoInstantaneo, Drupal\rjsimulador\Constants;
 
 /* *************************************************************************** */
 /* *                    PÁGINA DE ADMIN SIMULACIONES                           */

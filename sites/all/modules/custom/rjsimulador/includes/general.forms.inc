@@ -1,6 +1,6 @@
 <?php
-use RJSimulador\Filters\FilterByInterval;
-use RJSimulador\Grupos;
+use Drupal\rjsimulador\Filters\FilterByInterval;
+use Drupal\rjsimulador\Grupos;
 
 /* ******************************************************************************* */
 /* *                      General forms functions                                * */

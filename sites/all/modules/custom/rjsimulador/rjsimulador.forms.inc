@@ -1,9 +1,9 @@
 <?php
-use RJSimulador\Controllers\GestorSimulaciones, RJSimulador\Controllers\ListaUsuariosDataRetriever;
-use RJSimulador\DataCalculation\CalculateAverageData;
-use RJSimulador\Filters\FilterByFecha, RJSimulador\Filters\FilterByEquality;
-use RJSimulador\ListUtils\ListaInfracciones;
-use RJSimulador\Constants;
+use Drupal\rjsimulador\Controllers\GestorSimulaciones, Drupal\rjsimulador\Controllers\ListaUsuariosDataRetriever;
+use Drupal\rjsimulador\DataCalculation\CalculateAverageData;
+use Drupal\rjsimulador\Filters\FilterByFecha, Drupal\rjsimulador\Filters\FilterByEquality;
+use Drupal\rjsimulador\ListUtils\ListaInfracciones;
+use Drupal\rjsimulador\Constants;
 /* *************************************************************************** */
 /* *                           LISTA SIMULACIONES                              */
 /* *************************************************************************** */

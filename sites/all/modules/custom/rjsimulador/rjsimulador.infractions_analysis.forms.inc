@@ -1,10 +1,10 @@
 <?php
 module_load_include('inc', 'rjsimulador', 'includes/general.forms');
 
-use RJSimulador\Controllers\GestorSimulaciones, RJSimulador\Controllers\ListaUsuariosDataRetriever;
-use RJSimulador\Factory\FactoryDataManager;
-use RJSimulador\Filters\FilterByEquality, RJSimulador\Filters\FilterByInterval;
-use RJSimulador\Constants;
+use Drupal\rjsimulador\Controllers\GestorSimulaciones, Drupal\rjsimulador\Controllers\ListaUsuariosDataRetriever;
+use Drupal\rjsimulador\Factory\FactoryDataManager;
+use Drupal\rjsimulador\Filters\FilterByEquality, Drupal\rjsimulador\Filters\FilterByInterval;
+use Drupal\rjsimulador\Constants;
 
 function rjsimulador_admin_form_infractions_analysis($form, &$form_state) {
   // Gestor de simulaciones
