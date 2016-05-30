@@ -1,14 +1,14 @@
 <?php
 namespace Drupal\rjsimulador\Controllers;
 
-use Exception;
-use LogicException;
 use Drupal\rjsimulador\Factory\FactoryDataManager;
 use Drupal\rjsimulador\ListUtils\ListaUsuariosSimulacion;
 use Drupal\rjsimulador\UsuarioSimulacion;
 
 /**
- * Class GestorSimulaciones Realiza tareas de gestión para un usuario.
+ * Class GestorSimulaciones
+ *
+ * Realiza tareas de gestión para un usuario
  */
 class GestorSimulaciones {
   /* @var UsuarioSimulacion $usuarioActual EL usuario actual. */
@@ -19,8 +19,10 @@ class GestorSimulaciones {
   private $arrayUsuariosUidName;
 
   /**
-   * @param UsuarioSimulacion $usuarioActual El usuario actual.
-   * @throws LogicException Si no existen usuarios en la BBD.
+   * GestorSimulaciones constructor.
+   *
+   * @param UsuarioSimulacion|NULL $usuarioActual El usuario actual.
+   * @throws \LogicException Si no existen usuarios en la BBD.
    */
   public function __construct(UsuarioSimulacion $usuarioActual = NULL) {
     $provider = FactoryDataManager::createDataProvider();
@@ -29,7 +31,7 @@ class GestorSimulaciones {
     $listaDeTodosLosUsuarios = $provider->loadAllSimulatorUsers();
 
     if ($listaDeTodosLosUsuarios->count() == 0) {
-      throw new LogicException("Ningún usuario ha guardado partidas en la BBDD.");
+      throw new \LogicException("Ningún usuario ha guardado partidas en la BBDD.");
     }
 
     $this->setListaTodosUsuarios($listaDeTodosLosUsuarios);
@@ -42,11 +44,11 @@ class GestorSimulaciones {
 
   /**
    * @return UsuarioSimulacion
-   * @throws Exception Si no se ha pasado un usuario al constructor del GestorSimulaciones.
+   * @throws \LogicException Si no se ha pasado un usuario al constructor del GestorSimulaciones.
    */
   public function getUsuarioActual() {
     if (!isset($this->usuarioActual)) {
-      throw new LogicException("No se ha pasado un usuario como usuario actual.");
+      throw new \LogicException("No se ha pasado un usuario como usuario actual.");
     }
 
     return $this->usuarioActual;
@@ -54,14 +56,14 @@ class GestorSimulaciones {
 
   /**
    * @param UsuarioSimulacion $usuarioActual
-   * @throws LogicException Si el usuario no tiene partidas guardadas.
+   * @throws \LogicException Si el usuario no tiene partidas guardadas.
    */
   public function setUsuarioActual(UsuarioSimulacion $usuarioActual) {
     if ($usuarioActual->countPartidas() > 0) {
       $this->usuarioActual = $usuarioActual;
     }
     else {
-      throw new LogicException("No existen partidas guardadas en la BBDD.");
+      throw new \LogicException("No existen partidas guardadas en la BBDD.");
     }
   }
 
@@ -80,7 +82,11 @@ class GestorSimulaciones {
   }
 
   /**
-   * @return array
+   * Devuelve un array de todos los usuarios.
+   *
+   * El array viene de la forma uid => name.
+   *
+   * @return array Todos los usuarios de la forma uid=>name.
    */
   public function getArrayUsuariosUidName() {
     if (!isset($this->arrayUsuariosUidName)) {
@@ -94,7 +100,12 @@ class GestorSimulaciones {
   }
 
   /**
-   * @return ListaUsuariosSimulacion
+   * Devuelve una lista con todos los usuarios excepto el actual.
+   *
+   * Devuelve un listado de objetos UsuarioSimulacion con todos salvo el usuario actual.
+   *
+   * @return ListaUsuariosSimulacion Listado de usuarios.
+   * @see UsuarioSimulacion
    */
   public function getListaTodosUsuariosExceptoActual() {
     if (!isset($this->usuarioActual)) {
