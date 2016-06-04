@@ -100,3 +100,40 @@
     background-color: #bb2101;
     color: white;
 }
+
+.div-imagen {
+    position:relative;
+    width:1200px;
+    height:800px;
+    background-color: #61a643;
+    margin: auto;
+    margin-bottom: 20px;
+}
+
+.infraccion-tag, .dato-tag {
+    display: inline-block;
+    color: white;
+    border-top: 2px solid white;
+    border-left: 2px solid white;
+    padding: 2px 4px;
+    z-index: 0;
+}
+
+.infraccion-tag {
+    background-color: #D32F2F;
+}
+
+.dato-tag {
+    background-color: #2E3D4A;
+}
+
+.oculto {
+    color:white;
+    display: none;
+}
+
+.iluminado {
+    border: 5px solid #e5e58f;
+    padding: 5px;
+    z-index: 50;
+}

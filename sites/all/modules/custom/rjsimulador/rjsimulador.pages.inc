@@ -239,33 +239,35 @@ function rjsimulador_partida_page($id_partida) {
     array('data' => t('Instant')),
   );
 
+  $elementsDataAndInfraction = array();
+
   $rows = array();
   $contador = 1;
   foreach ($miPartida->getListaDatos() as $dato) {
+    $elementsDataAndInfraction[] = $dato->renderableArray();
+
     $rows[] =
       array(
         'data' =>
           array(
             array('data' => $contador),
-            array('data' => $dato->getInstante()),
+            array('data' => $dato->getInstante(),
+                  'class' => array('dato-value')),
           ),
         'class' => array('fila-datos'),
       );
     $contador++;
   }
 
-  $renderArrayTableDatos = NULL;
-  if (!empty($rows)) {
-    $renderArrayTableDatos =
+  $renderArrayTableDatos =
+    array(
       array(
-        array(
-          '#theme' => 'table',
-          '#header' => $headers,
-          '#rows' => $rows,
-          '#empty' => t('There is no data for this game.'),
-        ),
-      );
-  }
+        '#theme' => 'table',
+        '#header' => $headers,
+        '#rows' => $rows,
+        '#empty' => t('There is no data for this game.'),
+      ),
+    );
 
   // Creamos la tabla a sacar para mostrar las infracciones de la partida
   // Headers array
@@ -277,30 +279,36 @@ function rjsimulador_partida_page($id_partida) {
   $rows = array();
   $contador = 1;
   foreach ($miPartida->getListaInfracciones() as $elemento_lista) {
+    $elementsDataAndInfraction[] = $elemento_lista->renderableArray();
+
     $rows[] =
       array(
         'data' =>
           array(
             array('data' => $contador),
-            array('data' => $elemento_lista->getInstante()),
+            array('data' => $elemento_lista->getInstante(),
+                  'class' => array('infraccion-value')),
           ),
         'class' => array('fila-infraccion'),
       );
     $contador++;
   }
 
-  $renderArrayTableInfracciones = NULL;
-  if (!empty($rows)) {
-    $renderArrayTableInfracciones =
+  $renderArrayTableInfracciones =
+    array(
       array(
-        array(
-          '#theme' => 'table',
-          '#header' => $headers,
-          '#rows' => $rows,
-          '#empty' => t('There is no data for this game.'),
-        ),
-      );
-  }
+        '#theme' => 'table',
+        '#header' => $headers,
+        '#rows' => $rows,
+        '#empty' => t('There is no data for this game.'),
+      ),
+    );
+
+  $renderImagen = array(
+    '#type' => 'container',
+    '#attributes' => array('class' => array('div-imagen')),
+    'etiquetas' => $elementsDataAndInfraction,
+  );
 
   $link = array(
     '#type' => 'link',
@@ -321,7 +329,8 @@ function rjsimulador_partida_page($id_partida) {
     '#theme' => 'partida',
     '#upper_content' => array(
       $renderArrayTableDatosEstadisticos,
-      $renderArrayTableRpmMarchas
+      $renderArrayTableRpmMarchas,
+      $renderImagen
     ),
     '#upper_left' => $renderArrayTableDatos,
     '#upper_right' => $renderArrayTableInfracciones,

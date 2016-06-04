@@ -1,6 +1,7 @@
 <?php
 namespace  Drupal\rjsimulador;
 
+use Drupal\rjsimulador\Renderers\Renderable;
 use Exception;
 use InvalidArgumentException;
 use Drupal\rjsimulador\Factory\FactoryDataManager;
@@ -9,7 +10,7 @@ use Drupal\rjsimulador\WebServices\ServicesAdapterInterface;
 /**
  * Class Infraccion Representa una infraccion de Simulador.
  */
-class Infraccion implements ServicesAdapterInterface {
+class Infraccion implements ServicesAdapterInterface, Renderable {
   /* ********************************************************************************* */
   /*                                      PROPERTIES                                   */
   /* ********************************************************************************* */
@@ -215,6 +216,10 @@ class Infraccion implements ServicesAdapterInterface {
    * @return string
    */
   public function getObservaciones() {
+    if (!isset($this->observaciones)) {
+      return '';
+    }
+
     return $this->observaciones;
   }
 
@@ -259,5 +264,34 @@ class Infraccion implements ServicesAdapterInterface {
    */
   public function convertPropertiesToArray() {
     return get_object_vars($this);
+  }
+
+  public function renderableArray() {
+    $left = round($this->getPosicionX() * 0.8, 0);
+    $bottom = round($this->getPosicionZ() * 0.8, 0);
+
+    $value = '<div class="breve">Infracción</div>';
+    $value .= '<div class="completo oculto">';
+    $value .= 'Instante: ' . $this->getInstante() . ' s.<br>';
+    $value .= 'Posición: (' . $this->getPosicionX() . ', ' . $this->getPosicionZ() . ') m.<br>';
+    $value .= 'Infracción cometida: ' . $this->getNombreInfraccion() . '.<br>';
+
+    if (strlen($this->getObservaciones()) > 0) {
+      $value .= 'Observaciones: ' . $this->getObservaciones();
+    }
+
+    $value .= '</div>';
+
+    $renderArray = array(
+      '#type' => 'html_tag',
+      '#tag' => 'div',
+      '#attributes' => array(
+        'id' => array('infraccion-' . str_replace('.', '-', $this->getInstante())),
+        'class' =>  array('infraccion-tag'),
+        'style' => array('position:absolute;', 'bottom:' . $bottom . 'px;', 'left: ' . $left . 'px;')),
+      '#value' => $value,
+    );
+
+    return $renderArray;
   }
 }

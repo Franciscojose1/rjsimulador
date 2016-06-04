@@ -1,6 +1,7 @@
 <?php
 namespace Drupal\rjsimulador;
 
+use Drupal\rjsimulador\Renderers\Renderable;
 use Exception;
 use InvalidArgumentException;
 use Drupal\rjsimulador\Factory\FactoryDataManager;
@@ -9,7 +10,7 @@ use Drupal\rjsimulador\WebServices\ServicesAdapterInterface;
 /**
  * Class DatoInstantaneo Representa un Dato en el Simulador.
  */
-class DatoInstantaneo implements ServicesAdapterInterface {
+class DatoInstantaneo implements ServicesAdapterInterface,  Renderable {
   /* ********************************************************************************* */
   /*                                   PROPERTIES                                      */
   /* ********************************************************************************* */
@@ -309,5 +310,30 @@ class DatoInstantaneo implements ServicesAdapterInterface {
    */
   public function convertPropertiesToArray() {
     return get_object_vars($this);
+  }
+
+  public function renderableArray() {
+    $left = round($this->getPosicionX() * 0.8, 0);
+    $bottom = round($this->getPosicionZ() * 0.8, 0);
+
+    $value = '<div class="breve">Dato</div>';
+    $value .= '<div class="completo oculto">';
+    $value .= 'Instante: ' . $this->getInstante() . ' s.<br>';
+    $value .= 'Posición: (' . $this->getPosicionX() . ', ' . $this->getPosicionZ() . ') m.<br>';
+    $value .= 'Velocidad: ' . $this->getVelocidad() . ' km/h.<br>';
+    $value .= $this->getMarcha() . 'ª marcha - RPMs: ' . $this->getRpm() . '';
+    $value .= '</div>';
+
+    $renderArray = array(
+      '#type' => 'html_tag',
+      '#tag' => 'div',
+      '#attributes' => array(
+        'id' => array('dato-' . str_replace('.', '-', $this->getInstante())),
+        'class' =>  array('dato-tag'),
+        'style' => array('position:absolute;', 'bottom:' . $bottom . 'px;', 'left: ' . $left . 'px;')),
+      '#value' => $value,
+    );
+
+    return $renderArray;
   }
 }

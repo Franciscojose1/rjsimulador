@@ -1,7 +1,9 @@
 <?php
 use Drupal\rjsimulador\Factory\FactoryDataManager;
-use Drupal\rjsimulador\Partida, Drupal\rjsimulador\Infraccion, Drupal\rjsimulador\DatoInstantaneo,
-  Drupal\rjsimulador\Constants;
+use Drupal\rjsimulador\Partida;
+use Drupal\rjsimulador\Infraccion;
+use Drupal\rjsimulador\DatoInstantaneo;
+use Drupal\rjsimulador\Constants;
 
 function partida_resource_definition() {
   $resources = array(
