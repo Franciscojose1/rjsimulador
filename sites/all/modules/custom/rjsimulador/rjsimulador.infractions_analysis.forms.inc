@@ -7,6 +7,7 @@ use Drupal\rjsimulador\Factory\FactoryDataManager;
 use Drupal\rjsimulador\Filters\FilterByEquality;
 use Drupal\rjsimulador\Filters\FilterByInterval;
 use Drupal\rjsimulador\Constants;
+use Drupal\rjsimulador\Grupos;
 
 function rjsimulador_admin_form_infractions_analysis($form, &$form_state) {
   // Gestor de simulaciones
