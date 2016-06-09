@@ -523,7 +523,7 @@ function generate_form_infractions_user_analysis(&$form_state, GestorSimulacione
   $retriever->setListaUsuarios($listaRestoUsuariosMismoTipoJugador);
   $dataRestoUsuarioMismoTipoJugador = round($retriever->getAverageInfraccionesByPartida($idInfraccion, $idSimulacion), 2);
 
-  $form['infractions_user_container']['infractions_user_chart']['infractions_user_same_average_annual_mileage_group'] =
+  $form['infractions_user_container']['infractions_user_chart']['infractions_user_same_usual_videogame_player_group'] =
     array(
       '#type' => 'chart_data',
       '#title' => t('Group of users which @user_group usual players of games',

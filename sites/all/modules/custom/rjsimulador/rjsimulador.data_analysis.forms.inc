@@ -590,7 +590,7 @@ function generate_form_data_user_analysis(&$form_state, GestorSimulaciones $gest
   $dataRestoUsuarioMismoTipoJugador = round($retriever->retrieveAllPartidasByIdSimulacion($idSimulacion)
     ->calculateData(new CalculateAverageData($tipoDatoCalcular)), 2);
 
-  $form['data_user_container']['data_user_chart']['data_user_same_average_annual_mileage_group'] =
+  $form['data_user_container']['data_user_chart']['data_user_same_usual_videogame_player_group'] =
     array(
       '#type' => 'chart_data',
       '#title' => t('Group of users which @userGroup usual players of games',
