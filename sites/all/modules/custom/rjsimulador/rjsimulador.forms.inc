@@ -124,7 +124,7 @@ function rjsim_simulaciones_upper_left_form($form, &$form_state, GestorSimulacio
     $arrayPartidasPorSimulacion = array_reverse($arrayPartidasPorSimulacion);
     $form['rjsim_fieldset_partidas_ultimos_dias']['chart_partidas_ultimos_dias'][$idSimulacion] = array(
       '#type' => 'chart_data',
-      '#title' => t('Simulation @idSimulation', array('@idSimulacion' => $idSimulacion)),
+      '#title' => t('Simulation @idSimulacion', array('@idSimulacion' => $idSimulacion)),
       '#data' => $arrayPartidasPorSimulacion,
     );
   }
