@@ -81,12 +81,7 @@ class DatoInstantaneo implements ServicesAdapterInterface,  Renderable {
    */
   public function setInstante($instante) {
     if (is_numeric($instante)) {
-      //PHP no se lleva bien con 0.0 como valor float, de ahí que lo adaptemos para evitar
-      if ($instante = 0) {
-        $this->instante = 0.0001;
-      } else {
-        $this->instante = floatval($instante);
-      }
+      $this->instante = floatval($instante);
     }
     else {
       throw new InvalidArgumentException("El instante del dato debe ser un número.");
