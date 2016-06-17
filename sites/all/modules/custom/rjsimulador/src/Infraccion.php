@@ -60,7 +60,12 @@ class Infraccion implements ServicesAdapterInterface, Renderable {
    */
   private function setInstante($instante) {
     if (is_numeric($instante)) {
-      $this->instante = floatval($instante);
+      //PHP no se lleva bien con 0.0 como valor float, de ahí que lo adaptemos para evitar
+      if ($instante = 0) {
+        $this->instante = 0.0001;
+      } else {
+        $this->instante = floatval($instante);
+      }
     }
     else {
       throw new InvalidArgumentException("El instante de la infracción debe ser un número.");
