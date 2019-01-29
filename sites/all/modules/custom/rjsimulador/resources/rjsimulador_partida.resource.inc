@@ -114,12 +114,26 @@ function _rjsimulador_partida_add($partida) {
   }
 }
 
+/**
+ * @param $id_partida
+ *
+ * @return array|mixed
+ * @throws \ServicesException
+ */
 function _rjsimulador_partida_retrieve($id_partida) {
   try {
+
     $partida = Partida::loadById($id_partida);
+
+    file_put_contents("partida.txt", json_encode($partida->convertPropertiesToArray(),true));
+
     return $partida->convertPropertiesToArray();
+
   } catch (Exception $e) {
+
     watchdog_exception('rjsimulador', $e, 'Error retrieving Partida.');
+
     return services_error('Error recuperando partida.', 406, array("error" => 'Error al recuperar la partida: ' . $e->getMessage()));
+
   }
 }
